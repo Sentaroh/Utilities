@@ -31,7 +31,7 @@ android {
 //                        def newName = "${mod_name}_${verName}_${verCode}.${fileExtension}"
                         def newName = "${mod_name}_${verName}.${fileExtension}"
                         outputFileName = newName
-//                        println(newName)
+                        println(newName)
                     }
                 }
             }
