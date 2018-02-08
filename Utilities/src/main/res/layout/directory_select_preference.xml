@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE layout>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/directory_select_preference_view"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    tools:ignore="SpUsage" >
+
+    <Spinner
+        android:id="@+id/directory_select_preference_rdir"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/spinner_color_background"
+        android:minHeight="40dp"
+        android:paddingLeft="5dp"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <include layout="@layout/divider_line1" />
+
+    <ListView
+        android:id="@+id/android:list"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.00"
+        android:text=""
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <include layout="@layout/divider_line1" />
+
+    <TextView
+        android:id="@+id/directory_select_preference_spacer"
+        android:layout_width="fill_parent"
+        android:layout_height="72dp"
+        android:layout_marginLeft="5dp"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:visibility="gone" />
+
+    <EditText
+        android:id="@+id/directory_select_preference_filename"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:inputType="text" />
+
+
+</LinearLayout>

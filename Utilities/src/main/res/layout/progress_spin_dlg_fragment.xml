@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE layout>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/progress_spin_dlg_fragment"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/progress_spin_dlg_fragment_ll_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+    
+		<TextView
+		    android:id="@+id/progress_spin_dlg_fragment_title"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:gravity="center_horizontal"
+		    android:minHeight="32dp"
+		    android:text=""
+		    android:textAppearance="?android:attr/textAppearanceLarge" />
+				<include layout="@layout/divider_line1_turquoise" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/progress_spin_dlg_fragment_ll_ps"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
+        <ProgressBar
+            android:id="@+id/progress_spin_dlg_fragment_progress_spin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="5dp" />
+	    <LinearLayout
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:orientation="vertical" >
+        	        <TextView
+	            android:id="@+id/progress_spin_dlg_fragment_msg"
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_marginLeft="5dp"
+	            android:layout_marginRight="5dp"
+	            android:gravity="center_vertical"
+	            android:minHeight="60dp"
+	            android:text="@string/msgs_progress_spin_dlg_processing"
+	            android:textAppearance="?android:attr/textAppearanceMedium" />
+		</LinearLayout>
+    </LinearLayout>
+		
+    <Button
+        android:id="@+id/progress_spin_dlg_fragment_btn_cancel"
+        android:layout_marginTop="5dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/msgs_common_dialog_cancel" />
+
+</LinearLayout>

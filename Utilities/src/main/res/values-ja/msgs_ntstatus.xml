@@ -1,0 +1,12 @@
+<resources>
+    <string name="msgs_ntstatus_common_info" formatted="false">ユーザー=%s, NT Status=0x%x, リモート=%s, 共有名=%s, ファイルパス=%s</string>
+    <string name="msgs_ntstatus_unsuccesful">システムに接続された装置が動作していません。</string>
+    <string name="msgs_ntstatus_access_denied">アクセスが拒否されました。</string>
+    <string name="msgs_ntstatus_logon_failure_unknown_user_name_or_bad_password">ユーザー名またはパスワードが間違っているためにログオンできませんでした。</string>
+    <string name="msgs_ntstatus_logon_failure_user_account_restriction">アカウントが制限されているためにログオンできませんでした。</string>
+    <string name="msgs_ntstatus_logon_failure_account_logon_time_restriction_violation">アカウントのログオン時間制限のためにログオンできませんでした。</string>
+    <string name="msgs_ntstatus_logon_failure_user_not_allowed_to_log_on_to_this_computer">アカウントはログオンを禁止されているためにログオンできませんでした。</string>
+    <string name="msgs_ntstatus_logon_failure_the_specified_account_password_has_expired">パスワードの有効期限が過ぎているためにログオンできませんでした。</string>
+    <string name="msgs_ntstatus_logon_failure_account_currently_disabled">アカウントが無効になっているためにログオンできませんでした。</string>
+    <string name="msgs_ntstatus_bad_network_name">共有名が正しくありません</string>
+</resources>

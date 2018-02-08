@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/single_item_input_dlg_view"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+    
+    <LinearLayout
+        android:id="@+id/single_item_input_title_view"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+    
+	    <TextView
+	        android:id="@+id/single_item_input_title"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/msgs_single_item_input_dlg_title"
+	        android:layout_gravity="center"
+	        android:layout_marginLeft="5dp"
+	        android:layout_marginRight="5dp"
+	        android:layout_marginTop="5dp"
+	        android:layout_marginBottom="5dp"
+	        android:textAppearance="?android:attr/textAppearanceLarge" />
+	    <include layout="@layout/divider_line1_turquoise" />
+
+    </LinearLayout>
+    
+    <TextView
+        android:id="@+id/single_item_input_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#ff0000"
+        android:text=""
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+    
+    <TextView
+        android:id="@+id/single_item_input_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <CheckedTextView
+        android:id="@+id/single_item_input_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:checkMark="?android:attr/listChoiceIndicatorMultiple"
+        android:gravity="center_vertical"
+        android:text="aa"
+        android:visibility="gone"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+    
+    <EditText
+        android:id="@+id/single_item_input_dir"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:ems="10" 
+        android:textAppearance="?android:attr/textAppearanceMedium">
+
+        <requestFocus />
+    </EditText>
+
+    <include layout="@layout/single_item_input_dlg_ok_cancel"/>
+
+</LinearLayout>

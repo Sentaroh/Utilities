@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="msgs_file_select_edit_dlg_create">作成</string>
+    <string name="msgs_file_select_edit_dlg_home_dir">ホーム</string>
+	<string name="msgs_file_select_edit_dlg_refresh">リスト再読込</string>    
+    <string name="msgs_file_select_edit_dlg_ok">了解</string>
+    <string name="msgs_file_select_edit_dlg_cancel">キャンセル</string>
+    <string name="msgs_file_select_edit_dlg_filename">ファイル名</string>
+    <string name="msgs_file_select_edit_dlg_dir_name">ディレクトリー名</string>
+    <string name="msgs_file_select_edit_dlg_dir_created">%s を作成しました</string>
+    <string name="msgs_file_select_edit_dlg_dir_not_created">%s の作成に失敗しました</string>
+    <string name="msgs_file_select_edit_dlg_dir_create_file">ファイルを作成する</string>
+    <string name="msgs_file_select_edit_dlg_filename_not_specified">ファイル名が指定されていません</string>
+    <string name="msgs_file_select_edit_dlg_directory_not_specified">ディレクトリーが指定されていません</string>
+    <string name="msgs_file_select_edit_dlg_directory_not_selected">ディレクトリーが選択されていません</string>
+    <string name="msgs_single_item_input_dlg_title">ディレクトリ作成</string>
+    <string name="msgs_single_item_input_dlg_duplicate_dir">既に存在しています</string>
+    <string name="msgs_file_select_edit_dir_empty">--- ディレクトリは空です ---</string>
+    <string name="msgs_file_select_edit_local_mount_point">マウントポイント</string>
+    <string name="msgs_file_select_edit_parent_directory">親ディレクトリー</string>
+    <string name="msgs_file_select_edit_confirm_create_directory">ディレクトリーを作成しますか？</string>
+    <string name="msgs_file_select_edit_confirm_create_file">ファイルを作成しますか？</string>
+    <string name="msgs_file_select_select_this_entry">選択する</string>
+    <string name="msgs_file_select_unselect_this_entry">選択を解除</string>
+</resources>

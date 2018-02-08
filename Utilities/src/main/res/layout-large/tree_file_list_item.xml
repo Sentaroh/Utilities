@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tree_file_list_view"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    tools:ignore="UseCompoundDrawables,HardcodedText" >
+	<LinearLayout
+        android:id="@+id/tree_file_list_expand_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent" >
+
+        <TextView
+            android:id="@+id/tree_file_list_spacer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <ImageView
+            android:id="@+id/tree_file_list_expand"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:scaleType="centerInside"
+            android:src="@drawable/cc_collapsed" />
+
+    </LinearLayout>
+	<ImageView
+	        android:id="@+id/tree_file_list_icon"
+	        android:layout_width="40dp"
+	        android:layout_height="40dp"
+	        android:layout_gravity="center_vertical"
+	        android:gravity="center" />
+
+    <TextView
+        android:id="@+id/tree_file_list_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="TEST"
+        android:layout_marginRight="5dp"
+        android:layout_gravity="center_vertical"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/tree_file_list_size"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_gravity="center_vertical"
+        android:gravity="right"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+    <LinearLayout
+        android:id="@+id/tree_file_list_select_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:orientation="horizontal" >
+	    <LinearLayout
+			android:id="@+id/tree_file_list_date_time_view"        
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_marginRight="15dp"
+	        android:layout_marginLeft="5dp"
+	        android:orientation="vertical" >
+	
+	        <TextView
+	            android:id="@+id/tree_file_list_date"
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:text=""
+	            android:textAppearance="?android:attr/textAppearanceSmall" />
+	
+	        <TextView
+	            android:id="@+id/tree_file_list_time"
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:text=""
+	            android:textAppearance="?android:attr/textAppearanceSmall" />
+	    </LinearLayout>
+	
+	    <CheckBox
+	        android:id="@+id/tree_file_list_checkbox"
+	        android:layout_width="40dp"
+	        android:layout_height="40dp"
+	        android:layout_gravity="center_horizontal|center_vertical"
+	        android:layout_marginLeft="10dp"
+	        android:focusable="false"
+	        android:focusableInTouchMode="false"
+	        android:layout_marginRight="10dp"
+	        android:text="" />
+	    <RadioButton
+	        android:id="@+id/tree_file_list_radiobtn"
+	        android:layout_width="40dp"
+	        android:layout_height="40dp"
+	        android:layout_gravity="center_horizontal|center_vertical"
+	        android:layout_marginLeft="10dp"
+	        android:layout_marginRight="10dp"
+	        android:focusable="false"
+	        android:focusableInTouchMode="false"
+	        android:text="" />
+        
+    </LinearLayout>
+    
+</LinearLayout>

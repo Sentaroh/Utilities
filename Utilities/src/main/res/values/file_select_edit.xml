@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="msgs_file_select_edit_dlg_create">Create</string>
+    <string name="msgs_file_select_edit_dlg_home_dir">Home</string>
+    <string name="msgs_file_select_edit_dlg_refresh">Refresh</string>
+    <string name="msgs_file_select_edit_dlg_ok">OK</string>
+    <string name="msgs_file_select_edit_dlg_cancel">Cancel</string>
+    <string name="msgs_file_select_edit_dlg_filename">File name</string>
+    <string name="msgs_file_select_edit_dlg_dir_name">Directory name</string>
+    <string name="msgs_file_select_edit_dlg_dir_created">%s has created</string>
+    <string name="msgs_file_select_edit_dlg_dir_not_created">%s failed to create</string>
+    <string name="msgs_file_select_edit_dlg_dir_create_file">Create new file</string>
+    <string name="msgs_file_select_edit_dlg_filename_not_specified">File name was not specified</string>
+    <string name="msgs_file_select_edit_dlg_directory_not_specified">Directory was not specified</string>
+    <string name="msgs_file_select_edit_dlg_directory_not_selected">Directory was not selected</string>
+    <string name="msgs_single_item_input_dlg_title">Create directory</string>
+    <string name="msgs_single_item_input_dlg_duplicate_dir">Specified name already exists.</string>
+    <string name="msgs_file_select_edit_dir_empty">--- Directory is empty ---</string>
+    <string name="msgs_file_select_edit_local_mount_point">Mount Point</string>
+    <string name="msgs_file_select_edit_parent_directory">Parent directory</string>
+    <string name="msgs_file_select_edit_confirm_create_directory">Do you want to create a directory?</string>
+    <string name="msgs_file_select_edit_confirm_create_file">Do you want to create a file?</string>
+    
+    <string name="msgs_file_select_select_this_entry">Select this Dir/File</string>
+    <string name="msgs_file_select_unselect_this_entry">Unselect this Dir/File</string>
+</resources>

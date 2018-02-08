@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 非選択時 -->
+    <item
+       android:state_selected="false"
+       android:drawable="@drawable/spinner_color_unselected_light"
+       />
+    <!-- 選択時 -->
+    <item
+       android:state_selected="true"
+       android:drawable="@drawable/spinner_color_unselected_light"
+       />
+</selector>

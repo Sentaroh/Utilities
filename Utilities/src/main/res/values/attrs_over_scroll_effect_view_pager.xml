@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="OverscrollEffectViewPager">
+	    <!--
+	    determines the maximum amount of translation along the z-axis during the overscroll. 
+	    Default is 150.
+	    -->
+	    <attr name="translation" format="dimension" />
+	
+	    <!-- Duration of animation when user releases the over scroll. Default is 400 ms. -->
+	    <attr name="animation_duration" format="integer" />
+	    
+	    <!-- Angle of Image rotation. Default is 60 degree. -->
+	    <attr name="rotation_angle" format="integer" >
+	    </attr>
+	    
+	    <!-- Overscroll effect mode. Default is rotate. -->
+	    <attr name="effect_mode" format="integer" >
+		    <enum name="bounce" value="0" />  
+	        <enum name="rotate" value="1" />  
+		</attr>	        
+	</declare-styleable>
+</resources>
