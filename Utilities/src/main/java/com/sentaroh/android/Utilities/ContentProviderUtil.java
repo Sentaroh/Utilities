@@ -13,6 +13,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.util.Log;
 
 public class ContentProviderUtil {
 	@SuppressLint("NewApi")
@@ -35,12 +36,7 @@ public class ContentProviderUtil {
 		    cursor.close();
 		} else if (content_uri.toString().startsWith("content://com.android.providers.downloads.documents")) {
 			//Download
-            String id = null;
-            if (DocumentsContract.getDocumentId(content_uri).indexOf(":")>0) {
-                id = DocumentsContract.getDocumentId(content_uri).substring(0,DocumentsContract.getDocumentId(content_uri).indexOf(":"));
-            } else {
-                id = DocumentsContract.getDocumentId(content_uri);
-            }
+            final String id = getIdFromUri(content_uri);
 
             final Uri contentUri = ContentUris.withAppendedId(
 	                    Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
@@ -56,7 +52,7 @@ public class ContentProviderUtil {
 		    cursor.close();
         } else if (content_uri.toString().startsWith("content://downloads/all_downloads")) {
             //Download
-            final String id = DocumentsContract.getDocumentId(content_uri);
+            final String id = getIdFromUri(content_uri);
             final Uri contentUri = ContentUris.withAppendedId(
                     Uri.parse("content://downloads/all_downloads"), Long.valueOf(id));
 
@@ -121,8 +117,21 @@ public class ContentProviderUtil {
 		}
 		return tlf==null?null:tlf.getAbsolutePath();
 	};
-	
-	private static void clearCacheFile(String cd) {
+
+    private static String getIdFromUri(Uri uri) {
+        String f_path=uri.getPath();
+        String f_name=f_path.substring(f_path.lastIndexOf("/")+1);
+        String id="";
+        if (f_name.lastIndexOf(":")>=0) {
+            id=f_name.substring(0,f_name.indexOf(":")-1);
+        } else {
+            id=f_name;
+        }
+//        Log.v("","path="+f_path+", name="+f_name+", id="+id);
+        return id;
+    }
+
+    private static void clearCacheFile(String cd) {
 		File df=new File(cd);
 		File[] cf_list=df.listFiles();
 		if (cf_list!=null && cf_list.length>0) {
