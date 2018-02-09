@@ -35,8 +35,14 @@ public class ContentProviderUtil {
 		    cursor.close();
 		} else if (content_uri.toString().startsWith("content://com.android.providers.downloads.documents")) {
 			//Download
-			final String id = DocumentsContract.getDocumentId(content_uri);
-			final Uri contentUri = ContentUris.withAppendedId(
+            String id = null;
+            if (DocumentsContract.getDocumentId(content_uri).indexOf(":")>0) {
+                id = DocumentsContract.getDocumentId(content_uri).substring(0,DocumentsContract.getDocumentId(content_uri).indexOf(":"));
+            } else {
+                id = DocumentsContract.getDocumentId(content_uri);
+            }
+
+            final Uri contentUri = ContentUris.withAppendedId(
 	                    Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
 			
 			String sel = MediaStore.Images.Media._ID + "=?";
