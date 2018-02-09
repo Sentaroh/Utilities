@@ -48,7 +48,23 @@ public class ContentProviderUtil {
 				tlf=new File(path);
 			}
 		    cursor.close();
-		} else if (content_uri.toString().startsWith("content://com.fsck.k9.attachmentprovider")) {
+        } else if (content_uri.toString().startsWith("content://downloads/all_downloads")) {
+            //Download
+            final String id = DocumentsContract.getDocumentId(content_uri);
+            final Uri contentUri = ContentUris.withAppendedId(
+                    Uri.parse("content://downloads/all_downloads"), Long.valueOf(id));
+
+            String sel = MediaStore.Images.Media._ID + "=?";
+            Cursor cursor = c.getContentResolver().query(contentUri,
+                    column, sel, new String[]{ id }, null);
+            int columnIndex = cursor.getColumnIndex(column[1]);
+            if (cursor.moveToFirst()) {
+                String path = cursor.getString(columnIndex);
+                tlf=new File(path);
+            }
+            cursor.close();
+        } else if (content_uri.toString().startsWith("content://com.fsck.k9.attachmentprovider") ||
+                content_uri.toString().startsWith("content://com.fsck.k9.tempfileprovider")) {
 			//K9
 			Cursor cursor = c.getContentResolver().query(content_uri, column, null, null, null);
 			if (cursor.moveToFirst()) {
