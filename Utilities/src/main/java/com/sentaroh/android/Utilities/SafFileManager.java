@@ -292,7 +292,8 @@ public class SafFileManager {
 			Collections.sort(removableStorageList, new Comparator<SafFileItem>(){
 				@Override
 				public int compare(SafFileItem l_item, SafFileItem r_item) {
-					return l_item.storageUuid.compareToIgnoreCase(r_item.storageUuid);
+				    if (l_item!=null && l_item.storageUuid!=null && r_item!=null && r_item.storageUuid!=null) return l_item.storageUuid.compareToIgnoreCase(r_item.storageUuid);
+				    else return 0;
 				}
 			});
 		} else {
