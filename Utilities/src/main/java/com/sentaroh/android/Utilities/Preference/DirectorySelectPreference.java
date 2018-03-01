@@ -48,6 +48,7 @@ import com.sentaroh.android.Utilities.Widget.CustomSpinnerAdapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcel;
@@ -68,7 +69,17 @@ public class DirectorySelectPreference extends DialogPreference{
 	private final static boolean DEBUG_ENABLE=false;
 	private final static String APPLICATION_TAG="DirectorySelectPreference";
 
-	public DirectorySelectPreference(Context context, AttributeSet attrs) {
+    private boolean showMountpointSelector=false;
+
+    public void setShowMountpointSelector(boolean show) {
+        showMountpointSelector=show;
+    }
+
+    public boolean isShowMountpointSelector() {
+        return showMountpointSelector;
+    }
+
+    public DirectorySelectPreference(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		if (DEBUG_ENABLE) Log.v(APPLICATION_TAG,"DirectorySelectPreference");
 	}
@@ -265,20 +276,34 @@ public class DirectorySelectPreference extends DialogPreference{
 	    	adapter.add("/mnt/sdcard");
 	    	mLocalMountPointSpinner.setEnabled(false);
 	    } else {
-	    	mLocalMountPointSpinner.setEnabled(true);
-	    	for (int i=0;i<ml.size();i++) {
-	    		adapter.add(ml.get(i));
-	    		if (mDialogDirName.startsWith(ml.get(i))) {
-	    			sel_no=i;
-	    		}
-	    	}
+            mLocalMountPointSpinner.setEnabled(true);
+            int jk=0;
+            for (int i=0;i<ml.size();i++) {
+                if (Build.VERSION.SDK_INT>=22) {//Android 5.0以上
+                    if (ml.get(i).startsWith("/storage/") &&
+                            ml.get(i).indexOf("/Android/data")==-1) {
+                        adapter.add(ml.get(i));
+                        if (mDialogDirName.startsWith(ml.get(i))) {
+                            sel_no=jk;
+                        }
+                        jk++;
+                    }
+                } else {
+                    adapter.add(ml.get(i));
+                    if (mDialogDirName.startsWith(ml.get(i))) {
+                        sel_no=i;
+                    }
+                }
+            }
 	    	if (mTreeFilelistArrayList==null) {
 	    		mLocalMountPointSpinnerSelectedPos=sel_no;
+	    		Log.v("","sel="+sel_no);
 	    	}
 	    }
 	    mLocalMountPointSpinner.setOnItemSelectedListener(null);
 	    mLocalMountPointSpinner.setSelection(mLocalMountPointSpinnerSelectedPos);
-	    mLocalMountPointSpinner.setVisibility(Spinner.GONE);
+        if (showMountpointSelector) mLocalMountPointSpinner.setVisibility(Spinner.VISIBLE);
+        else mLocalMountPointSpinner.setVisibility(Spinner.GONE);
 	    
 	//	final TextView v_spacer=(TextView)mDialog.findViewById(R.id.file_select_edit_dlg_spacer);
 		mTreeFileListView = (ListView) file_select_view.findViewById(android.R.id.list);
@@ -303,7 +328,7 @@ public class DirectorySelectPreference extends DialogPreference{
     		else n_dir=sel_dir;
     		if (n_dir.endsWith("/")) e_dir=n_dir.substring(0,n_dir.length()-1);
     		else e_dir=n_dir;
-//    		Log.v("","mp="+lmp+", dir="+mDialogDirName+", sel="+e_dir);
+    		Log.v("","mp="+lmp+", dir="+mDialogDirName+", sel="+e_dir);
     		selectLocalDirTree(e_dir);
         }
 	    mTreeFileListView.setScrollingCacheEnabled(false);
