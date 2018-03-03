@@ -286,7 +286,7 @@ public class DirectorySelectPreference extends DialogPreference{
             mLocalMountPointSpinner.setEnabled(true);
             int jk=0;
             for (int i=0;i<ml.size();i++) {
-                if (Build.VERSION.SDK_INT>=22) {//Android 5.0以上
+                if (Build.VERSION.SDK_INT>=21) {//Android 5.0以上
                     if (ml.get(i).startsWith("/storage/") &&
                             ml.get(i).indexOf("/Android/data")==-1) {
                         adapter.add(ml.get(i));
