@@ -255,8 +255,8 @@ public class DirectorySelectPreference extends DialogPreference{
 		final Context context=getContext();
 
 		mDialogDirName = getPersistedString(mDialogDirName);
-		
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);  
+
+		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View file_select_view = inflater.inflate(R.layout.directory_select_preference, null);
         mDirectoryListView=file_select_view;
 
