@@ -255,6 +255,7 @@ public class LocalMountPoint {
 					}
 				} else {
 					if (fl_1[i].getName().equals("sdcard0")) addMountPointPrimary(fl_1[i].getPath(), ml);
+					else if (fl_1[i].getName().equals("sdcard1")) addMountPointPrimary(fl_1[i].getPath(), ml);
 					else if (fl_1[i].getName().equals("remote")) addMountPointPrimary(fl_1[i].getPath(), ml);
 					else if (fl_1[i].getName().equals("uicc0")) addMountPointPrimary(fl_1[i].getPath(), ml);
 					else addMountPointPrimaryAndSecondary(fl_1[i].getPath(), ml, pkg_name);
