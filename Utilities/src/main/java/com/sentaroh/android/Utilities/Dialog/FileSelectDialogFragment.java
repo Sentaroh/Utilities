@@ -803,7 +803,9 @@ public class FileSelectDialogFragment extends DialogFragment {
 		
 		btnHome.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				dir_name.setText(mLocalMountPointSpinner.getSelectedItem().toString()+"/");
+			    if (mLocalMountPointSpinner!=null && mLocalMountPointSpinner.getSelectedItem()!=null) {
+                    dir_name.setText(mLocalMountPointSpinner.getSelectedItem().toString()+"/");
+                }
 			}
 		});
 		
