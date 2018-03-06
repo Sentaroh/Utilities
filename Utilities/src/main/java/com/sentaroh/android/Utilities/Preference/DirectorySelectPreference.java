@@ -48,7 +48,6 @@ import com.sentaroh.android.Utilities.Widget.CustomSpinnerAdapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcel;
@@ -83,6 +82,14 @@ public class DirectorySelectPreference extends DialogPreference{
     }
     public boolean isShowRootDirectory() {
         return showRootDirectory;
+    }
+
+    private boolean showReadOnlyMountPoint=false;
+    public void setShowReadOnlyMountPoint(boolean show) {
+        showReadOnlyMountPoint=show;
+    }
+    public boolean isShowReadOnlyMountPoint() {
+        return showReadOnlyMountPoint;
     }
 
     public DirectorySelectPreference(Context context, AttributeSet attrs) {
@@ -276,7 +283,7 @@ public class DirectorySelectPreference extends DialogPreference{
 	    mLocalMountPointSpinner.setAdapter(adapter);
 	//    adapter.setTextColor(Color.BLACK);
 	
-	    ArrayList<String>ml=LocalMountPoint.getLocalMountPointList(context);
+	    ArrayList<String>ml=LocalMountPoint.getLocalMountpointList2(context);
 	    mLocalMountPointSpinner.setOnItemSelectedListener(null);
 	    int sel_no=0;
 	    if (ml.size()==0) {
@@ -286,25 +293,24 @@ public class DirectorySelectPreference extends DialogPreference{
             mLocalMountPointSpinner.setEnabled(true);
             int jk=0;
             for (int i=0;i<ml.size();i++) {
-                if (Build.VERSION.SDK_INT>=21) {//Android 5.0以上
-                    if (ml.get(i).startsWith("/storage/") &&
-                            ml.get(i).indexOf("/Android/data")==-1) {
-                        adapter.add(ml.get(i));
-                        if (mDialogDirName.startsWith(ml.get(i))) {
-                            sel_no=jk;
-                        }
-                        jk++;
+                boolean dup=false;
+                for(int j=0;j<adapter.getCount();j++) {
+                    if (adapter.getItem(j).equals(ml.get(i))) {
+                        dup=true;
+                        break;
                     }
-                } else {
-                    adapter.add(ml.get(i));
-                    if (mDialogDirName.startsWith(ml.get(i))) {
-                        sel_no=i;
+                }
+                if (!dup) {
+                    if (showReadOnlyMountPoint ||
+                            (!showReadOnlyMountPoint &&  LocalMountPoint.isMountPointCanWrite(ml.get(i)))) {
+                        if (mDialogDirName.startsWith(ml.get(i))) sel_no=adapter.getCount();
+                        adapter.add(ml.get(i));
                     }
                 }
             }
 	    	if (mTreeFilelistArrayList==null) {
 	    		mLocalMountPointSpinnerSelectedPos=sel_no;
-	    		Log.v("","sel="+sel_no);
+//	    		Log.v("","sel="+sel_no);
 	    	}
 	    }
 	    mLocalMountPointSpinner.setOnItemSelectedListener(null);
@@ -363,16 +369,16 @@ public class DirectorySelectPreference extends DialogPreference{
 						if (mTreeFilelistAdapter.getDataItem(p).isChecked()) {
                             if (showRootDirectory) {
                                 filename.setText((turl+mTreeFilelistAdapter.getDataItem(p).getPath()+
-                                        mTreeFilelistAdapter.getDataItem(p).getName()+"/").replaceAll("//","/"));
+                                        mTreeFilelistAdapter.getDataItem(p).getName()).replaceAll("//","/"));
                             } else {
                                 filename.setText((mTreeFilelistAdapter.getDataItem(p).getPath()+
-                                        mTreeFilelistAdapter.getDataItem(p).getName()+"/").replaceAll("//","/"));
+                                        mTreeFilelistAdapter.getDataItem(p).getName()).replaceAll("//","/"));
                             }
 							filename.setSelection(filename.getText().toString().length());
 						}
 					} else {
-                        if (showRootDirectory) filename.setText((turl+mTreeFilelistAdapter.getDataItem(0).getPath()+"/").replaceAll("//","/"));
-                        else filename.setText((mTreeFilelistAdapter.getDataItem(0).getPath()+"/").replaceAll("//","/"));
+                        if (showRootDirectory) filename.setText((turl+mTreeFilelistAdapter.getDataItem(0).getPath()).replaceAll("//","/"));
+                        else filename.setText((mTreeFilelistAdapter.getDataItem(0).getPath()).replaceAll("//","/"));
 						filename.setSelection(filename.getText().toString().length());
 					}
 				}
