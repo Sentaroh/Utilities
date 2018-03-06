@@ -140,7 +140,7 @@ public class CommonLogReceiver extends BroadcastReceiver{
 	private void initParms(Context context) {
 		mGp=new CommonGlobalParms();
 		setLogParms(context, mGp);
-		log_dir=mGp.getLogDirName();
+		log_dir=mGp.getLogDirName()+"/";
 		debug_level=mGp.getDebugLevel();
 		log_enabled=mGp.isLogEnabled();
 		logFile=new File(log_dir+mGp.getLogFileName()+".txt");

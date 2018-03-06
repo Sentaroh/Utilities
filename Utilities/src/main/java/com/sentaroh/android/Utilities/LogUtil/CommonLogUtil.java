@@ -203,7 +203,7 @@ public class CommonLogUtil {
 		return getLogFilePath(mGp);
 	};
 	final static public String getLogFilePath(CommonGlobalParms cgp) {
-		return cgp.getLogDirName()+cgp.getLogFileName()+".txt";
+		return cgp.getLogDirName()+"/"+cgp.getLogFileName()+".txt";
 	};
 	
     final static public ArrayList<CommonLogFileListItem> createLogFileList(CommonGlobalParms gp) {

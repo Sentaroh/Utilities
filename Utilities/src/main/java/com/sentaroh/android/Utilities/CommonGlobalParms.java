@@ -26,7 +26,10 @@ public class CommonGlobalParms extends Application{
 	public void setLogcatEnabled(boolean p) {logcat_enabled=p;}
 	public boolean isLogcatEnabled() {return logcat_enabled;}
 
-	public void setLogDirName(String p) {log_dir_name=p;}
+	public void setLogDirName(String p) {
+	    if (p.endsWith("/")) log_dir_name=p.substring(0,p.length()-1);
+	    else log_dir_name=p;
+	}
 	public String getLogDirName() {return log_dir_name;}
 	
 	public void setLogFileName(String p) {log_file_name=p;}

@@ -458,7 +458,7 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
 			public void onClick(View arg0) {
 				Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
 				intent.setDataAndType(Uri.parse("file://"+
-						mGp.getLogDirName()+"temp_log.txt"),
+						mGp.getLogDirName()+"/temp_log.txt"),
 						"text/plain");
 				startActivity(intent);
 			}
@@ -467,7 +467,7 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
 		btn_ok.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
-				sendLogFileToDeveloper(mGp.getLogDirName()+"temp_log.txt");
+				sendLogFileToDeveloper(mGp.getLogDirName()+"/temp_log.txt");
 				dialog.dismiss();
 			}
 		});
@@ -491,8 +491,8 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
 	};
 
 	private void createTempLogFile() {
-		File olf=new File(mGp.getLogDirName()+"temp_log.txt");
-		File ilf=new File(mGp.getLogDirName()+mGp.getLogFileName()+".txt");
+		File olf=new File(mGp.getLogDirName()+"/temp_log.txt");
+		File ilf=new File(mGp.getLogDirName()+"/"+mGp.getLogFileName()+".txt");
 		try {
 			FileInputStream fis=new FileInputStream(ilf);
 			FileOutputStream fos=new FileOutputStream(olf);
@@ -516,7 +516,7 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
 	final public void sendLogFileToDeveloper(String log_file_path) {
 		CommonLogUtil.resetLogReceiver(mContext, mGp);
 		
-		String zip_file_name=mGp.getLogDirName()+"log.zip";
+		String zip_file_name=mGp.getLogDirName()+"/log.zip";
 		
 		File lf=new File(zip_file_name);
 		lf.delete();
@@ -711,7 +711,7 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
     };
 
     private void sendLogFile(final CommonLogFileListAdapter lfm_adapter) {
-		final String zip_file_name=mGp.getLogDirName()+"log.zip";
+		final String zip_file_name=mGp.getLogDirName()+"/log.zip";
 		
 		int no_of_files=0;
 		for (int i=0;i<lfm_adapter.getCount();i++) {

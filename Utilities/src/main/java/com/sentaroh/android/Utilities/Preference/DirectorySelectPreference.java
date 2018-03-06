@@ -63,6 +63,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.TextView;
 
 public class DirectorySelectPreference extends DialogPreference{
 	private final static boolean DEBUG_ENABLE=false;
@@ -317,11 +318,12 @@ public class DirectorySelectPreference extends DialogPreference{
 	    mLocalMountPointSpinner.setSelection(mLocalMountPointSpinnerSelectedPos);
         if (showMountpointSelector) mLocalMountPointSpinner.setVisibility(Spinner.VISIBLE);
         else mLocalMountPointSpinner.setVisibility(Spinner.GONE);
+//        if (adapter.getCount()>=2) mLocalMountPointSpinner.setEnabled(true);
+//        else mLocalMountPointSpinner.setEnabled(false);
 	    
 	//	final TextView v_spacer=(TextView)mDialog.findViewById(R.id.file_select_edit_dlg_spacer);
 		mTreeFileListView = (ListView) file_select_view.findViewById(android.R.id.list);
-		final EditText filename = (EditText) file_select_view
-				.findViewById(R.id.directory_select_preference_filename);
+		final EditText filename = (EditText) file_select_view.findViewById(R.id.directory_select_preference_filename);
 	//    if (dirs.size()<=2)	v_spacer.setVisibility(TextView.VISIBLE);
 		
 		mTreeFilelistAdapter= new TreeFilelistAdapter(context,true,true,false);
