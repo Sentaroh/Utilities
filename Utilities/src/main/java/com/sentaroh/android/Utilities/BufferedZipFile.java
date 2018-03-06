@@ -78,7 +78,8 @@ public class BufferedZipFile {
 	public BufferedZipFile(File input, String encoding, boolean debug) {
 		debug_enabled=debug;
 		file_name_encoding=encoding;
-		try {
+        primary_file_header_list=new ArrayList<BzfFileHeaderItem>();
+        try {
 			if (!input.exists()) {
 				input.createNewFile();
 				primary_zip_file=new ZipFile(input);
@@ -103,7 +104,6 @@ public class BufferedZipFile {
 				}
 			}
 			
-			primary_file_header_list=new ArrayList<BzfFileHeaderItem>();
 			if (primary_zip_model!=null && primary_zip_model.getCentralDirectory()!=null) {
 				@SuppressWarnings("unchecked")
 				ArrayList<FileHeader>file_header_list=
