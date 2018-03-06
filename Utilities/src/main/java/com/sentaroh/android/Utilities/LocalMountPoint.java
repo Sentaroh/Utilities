@@ -235,7 +235,52 @@ public class LocalMountPoint {
 //		return ml;
 //	};
 
-	@SuppressLint("SdCardPath")
+    static public boolean isMountPointCanWrite(String mp) {
+	    boolean result=false;
+        File lf=new File(mp+"/isLocalMountPointWritable_temp.tmp");
+        if (lf.exists()) lf.delete();
+        try {
+            result=lf.createNewFile();
+            lf.delete();
+        } catch (IOException e) {
+        }
+        return result;
+    }
+
+    static public ArrayList<String> getLocalMountpointList2(Context c) {
+        ArrayList<String>ml=LocalMountPoint.getLocalMountPointList(c);
+        ArrayList<String>new_ml=new ArrayList<String>();
+        for (int i=0;i<ml.size();i++) {
+            if (ml.get(i).indexOf("/Android/data")<0 &&
+                    !ml.get(i).equals("/sdcard") &&
+                    !ml.get(i).equals("/mnt/sdcard") &&
+                    !ml.get(i).equals("/mnt/user") &&
+                    !ml.get(i).equals("/mnt/media_rw") &&
+                    !ml.get(i).equals("/mnt/sdcard2") &&
+                    !ml.get(i).equals("/storage/emulated/legacy")
+                    ) {
+//                String sub_item=ml.get(i).replace("/storage/","");
+//                if (!sub_item.matches("....-....")) {
+                File lf=new File(ml.get(i));
+                if (lf.canWrite()) {
+//                    Log.v("","ml="+ml.get(i));
+                    boolean dup=false;
+                    for(int j=0;j<new_ml.size();j++) {
+                        if (new_ml.get(j).equals(ml.get(i))) {
+                            dup=true;
+                            break;
+                        }
+                    }
+                    if (!dup) {
+                        new_ml.add(ml.get(i));
+                    }
+                }
+            }
+        }
+        return new_ml;
+    }
+
+    @SuppressLint("SdCardPath")
 	static public ArrayList<String> getLocalMountPointList(Context c) {
 		String pkg_name=c.getClass().getPackage().getName();
 		String primary_esd=getExternalStorageDir();

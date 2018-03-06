@@ -140,4 +140,35 @@ public class CommonDialog {
 						true, lurl, ldir, file_name, dlg_title);
 		fsdf.showDialog(mFragmentMgr, fsdf, ntfy);
 	}
+
+
+    public void fileSelectorFileOnlySelectWithCreateHideMP(Boolean inc_mp, String mount_point, String dir_name, String file_name, String title, NotifyEvent ntfy) {
+        CommonFileSelector fsdf=
+                CommonFileSelector.newInstance(false, true, true, true, false,
+                        true, inc_mp, mount_point, dir_name, file_name, title);
+        fsdf.showDialog(mFragmentMgr, fsdf, ntfy);
+    };
+
+    public void fileSelectorFileOnlySelectWithCreate(Boolean inc_mp, String mount_point, String dir_name, String file_name, String title, NotifyEvent ntfy) {
+        boolean include_root=false;
+        CommonFileSelector fsdf=
+                CommonFileSelector.newInstance(false, true, true, false, false,
+                        true, inc_mp, mount_point, dir_name, file_name, title);
+        fsdf.showDialog(mFragmentMgr, fsdf, ntfy);
+    };
+
+    public void fileSelectorDirOnlySelectWithCreate(Boolean inc_mp, String mount_point, String dir_name, String title, NotifyEvent ntfy) {
+        CommonFileSelector fsdf=
+                CommonFileSelector.newInstance(false, true, false, false, true,
+                        true, inc_mp, mount_point, dir_name, "", title);
+        fsdf.showDialog(mFragmentMgr, fsdf, ntfy);
+    };
+
+    public void fileSelectorDirOnlySelectWithCreateHideMP(Boolean inc_mp, String mount_point, String dir_name, String title, NotifyEvent ntfy) {
+        CommonFileSelector fsdf=
+                CommonFileSelector.newInstance(false, true, false, true, true,
+                        true, inc_mp, mount_point, dir_name, "", title);
+        fsdf.showDialog(mFragmentMgr, fsdf, ntfy);
+    };
+
 }
