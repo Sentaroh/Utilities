@@ -363,7 +363,7 @@ public class BufferedZipFile {
 		}
 	};
 	
-	public void close() throws ZipException {
+	public void close() throws ZipException, Exception {
 		checkClosed();
 		isClosed=true;
 		try {
@@ -413,7 +413,7 @@ public class BufferedZipFile {
 		}
 	};
 	
-	private void writePrimaryZipFile() throws IOException {
+	private void writePrimaryZipFile() throws IOException, Exception {
 		primary_raf.seek(0);
 		if (primary_fos==null) {
 			primary_fos=new FileOutputStream(primary_output_file);
@@ -460,7 +460,7 @@ public class BufferedZipFile {
 	};
 	
 	@SuppressWarnings("unchecked")
-	private void writeAddZipFile() throws ZipException {
+	private void writeAddZipFile() throws ZipException, Exception {
 		try {
 			add_fos.flush();;
 //			add_fos.finish();
@@ -504,14 +504,17 @@ public class BufferedZipFile {
 	}
 	
 	@SuppressLint("NewApi")
-	private long copyZipFile(String name, BufferedOutputStream bos, RandomAccessFile input_file, long start_pos, long end_pos) 
-			throws IOException {
+	private long copyZipFile(String name, BufferedOutputStream bos, RandomAccessFile input_file, long start_pos, long end_pos)
+			throws IOException, Exception {
 		if (debug_enabled) putDebugMsg("CopyZipFile", "output="+String.format("%#010x",primary_output_pos)+
 				", start="+String.format("%#010x",start_pos)+", end="+String.format("%#010x",end_pos)+", Name="+name);
 		int item_size=(int) (end_pos-start_pos)+1;
 		byte[] buff=null;
 		if (item_size>IO_AREA_SIZE) buff=new byte[IO_AREA_SIZE];
-		else buff=new byte[item_size];
+		else {
+		    if (item_size<1) throw(new Exception("Buffer size error. size="+item_size));
+		    buff=new byte[item_size];
+        }
 		int bufsz=buff.length;
 		
 		long output_size=0;
