@@ -259,11 +259,15 @@ public class LocalMountPoint {
                     !ml.get(i).equals("/mnt/sdcard2") &&
                     !ml.get(i).equals("/storage/emulated/legacy")
                     ) {
-//                String sub_item=ml.get(i).replace("/storage/","");
-//                if (!sub_item.matches("....-....")) {
-                File lf=new File(ml.get(i));
-                if (lf.canWrite()) {
-//                    Log.v("","ml="+ml.get(i));
+
+                boolean exclude=false;
+                String sd_id=ml.get(i).replace("/storage/","");
+                if (ml.get(i).startsWith("/storage/")) {
+                    if (sd_id.matches("....-....")) {
+                        exclude=true;
+                    }
+                }
+                if (!exclude) {
                     boolean dup=false;
                     for(int j=0;j<new_ml.size();j++) {
                         if (new_ml.get(j).equals(ml.get(i))) {
@@ -271,9 +275,7 @@ public class LocalMountPoint {
                             break;
                         }
                     }
-                    if (!dup) {
-                        new_ml.add(ml.get(i));
-                    }
+                    if (!dup) new_ml.add(ml.get(i));
                 }
             }
         }
@@ -301,7 +303,7 @@ public class LocalMountPoint {
 				} else {
 					if (fl_1[i].getName().equals("sdcard0")) addMountPointPrimary(fl_1[i].getPath(), ml);
 					else if (fl_1[i].getName().equals("sdcard1")) addMountPointPrimary(fl_1[i].getPath(), ml);
-					else if (fl_1[i].getName().equals("remote")) addMountPointPrimary(fl_1[i].getPath(), ml);
+					else if (fl_1[i].getName().equals("remote")) {}//nop;
 					else if (fl_1[i].getName().equals("uicc0")) addMountPointPrimary(fl_1[i].getPath(), ml);
 					else addMountPointPrimaryAndSecondary(fl_1[i].getPath(), ml, pkg_name);
 				}
@@ -319,7 +321,15 @@ public class LocalMountPoint {
 			}
 		}
 
-		addMountPointPrimary("/sdcard", ml);
+        lf =new File("/storage/remote");
+        fl_1=lf.listFiles();
+        if (fl_1!=null) {
+            for (int i=0;i<fl_1.length;i++) {
+                addMountPointPrimary(fl_1[i].getPath(), ml);
+            }
+        }
+
+        addMountPointPrimary("/sdcard", ml);
 		addMountPointPrimaryAndSecondary("/Removable/SD", ml, pkg_name);
 		addMountPointPrimaryAndSecondary("/Removable/MicroSD", ml, pkg_name);
 		
