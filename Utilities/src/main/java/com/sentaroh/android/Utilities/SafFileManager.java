@@ -113,12 +113,14 @@ public class SafFileManager {
 	
 	public boolean isSdcardMounted(){
 		boolean result=false;
-		for(SafFileItem rsi:removableStorageList) {
-			if (rsi.storageTypeSdcard && rsi.storageRootFile!=null) {
-				result=true;
-				break;
-			}
-		}
+        synchronized(removableStorageList) {
+            for(SafFileItem rsi:removableStorageList) {
+                if (rsi.storageTypeSdcard && rsi.storageRootFile!=null) {
+                    result=true;
+                    break;
+                }
+            }
+        }
 		return result;
 	};
 	
@@ -185,13 +187,14 @@ public class SafFileManager {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 		String uuid_list=prefs.getString(REMOVABLE_UUID_KEY, "");
 //		Log.v("","uuid_list="+uuid_list);
-		
-		removableStorageList.clear();
-		
-		if (!uuid_list.equals("")) {
-			File slf=new File("/storage");
-			File[] stor_list=slf.listFiles();
-			String[] uuid_array=uuid_list.split("\t");
+
+        synchronized(removableStorageList) {
+            removableStorageList.clear();
+
+            if (!uuid_list.equals("")) {
+                File slf=new File("/storage");
+                File[] stor_list=slf.listFiles();
+                String[] uuid_array=uuid_list.split("\t");
 //			sdcardRootDirectory=(getExternalSdcardPath().equals(""))?UNKNOWN_SDCARD_DIRECTORY:getExternalSdcardPath();
 //			for (String uuid:uuid_array) {
 //				SafFileItem rsi=new SafFileItem();
@@ -204,17 +207,17 @@ public class SafFileManager {
 //									rsi.storageRootDirectory=sdcardRootDirectory;
 //									rsi.storageTypeSdcard=true;
 //									rsi.storageIsMounted=true;
-//									break;							
+//									break;
 //								}
 //							}
 //						}
 //						if (!rsi.storageTypeSdcard) {
-//							SafFile sf=SafFile.fromTreeUri(mContext, 
+//							SafFile sf=SafFile.fromTreeUri(mContext,
 //									Uri.parse("content://com.android.externalstorage.documents/tree/"+rsi.storageUuid+"%3A"));
 //							if (sf!=null && sf.getName()!=null) rsi.storageIsMounted=true;
 //						}
 //					} else {
-//						SafFile sf=SafFile.fromTreeUri(mContext, 
+//						SafFile sf=SafFile.fromTreeUri(mContext,
 //								Uri.parse("content://com.android.externalstorage.documents/tree/"+rsi.storageUuid+"%3A"));
 //						if (sf!=null && sf.getName()!=null) {
 //							rsi.storageRootFile=sf;
@@ -224,7 +227,7 @@ public class SafFileManager {
 //						}
 //
 //					}
-//					rsi.storageRootFile=SafFile.fromTreeUri(mContext, 
+//					rsi.storageRootFile=SafFile.fromTreeUri(mContext,
 //							Uri.parse("content://com.android.externalstsorage.documents/tree/"+rsi.storageUuid+"%3A"));
 //					if (mDebugEnabled) Log.v(APPLICATION_TAG,"loadRemovableUuid Uuid="+uuid+
 //							", mounted="+rsi.storageIsMounted+
@@ -234,129 +237,140 @@ public class SafFileManager {
 //					removableStorageList.add(rsi);
 //				}
 //			}
-			String sdcard_dir=getExternalSdcardPath();
-			if (Build.VERSION.SDK_INT>=23) {
-				for (String uuid:uuid_array) {
-					SafFileItem rsi=new SafFileItem();
-					rsi.storageUuid=uuid;
-					rsi.storageRootDirectory=UNKNOWN_SDCARD_DIRECTORY;
-					if (uuid!=null && !uuid.equals("")) {
-						for(File fl_item:stor_list) {
-							if (fl_item.canRead()) {
-								if (fl_item.getName().equals(uuid)) {
-									sdcardRootDirectory=getExternalSdcardPath();
-									rsi.storageRootDirectory=sdcard_dir;
-									rsi.storageTypeSdcard=true;
-									rsi.storageIsMounted=true;
-									break;
-								}
-							}
-						}
-						SafFile sf=SafFile.fromTreeUri(mContext, 
-								Uri.parse("content://com.android.externalstorage.documents/tree/"+rsi.storageUuid+"%3A"));
-						if (sf!=null && sf.getName()!=null) rsi.storageIsMounted=true;
-						rsi.storageRootFile=sf;
-						if (mDebugEnabled) Log.v(APPLICATION_TAG,"loadRemovableUuid Uuid="+uuid+
-								", mounted="+rsi.storageIsMounted+
-								", sdcard="+rsi.storageTypeSdcard+
-								", SafFile name="+rsi.storageRootFile.getName()+
-								", path="+rsi.storageRootDirectory);
-						removableStorageList.add(rsi);
-					}
-				}
-			} else {
-				for (String uuid:uuid_array) {
-					SafFileItem rsi=new SafFileItem();
-					rsi.storageUuid=uuid;
-					rsi.storageRootDirectory=UNKNOWN_SDCARD_DIRECTORY;
-					if (uuid!=null && !uuid.equals("")) {
-						SafFile sf=SafFile.fromTreeUri(mContext, 
-								Uri.parse("content://com.android.externalstorage.documents/tree/"+rsi.storageUuid+"%3A"));
-						if (sf!=null && sf.getName()!=null) {
-							rsi.storageRootFile=sf;
-							rsi.storageRootDirectory=sdcard_dir;
-							rsi.storageTypeSdcard=true;
-							rsi.storageIsMounted=true;
-							sdcardRootDirectory=getExternalSdcardPath();							
-						}
-						rsi.storageRootFile=sf;
-						if (mDebugEnabled) Log.v(APPLICATION_TAG,"loadRemovableUuid Uuid="+uuid+
-								", mounted="+rsi.storageIsMounted+
-								", sdcard="+rsi.storageTypeSdcard+
-								", SafFile name="+rsi.storageRootFile.getName()+
-								", path="+rsi.storageRootDirectory);
-						removableStorageList.add(rsi);
-					}
-				}
-			}
-			Collections.sort(removableStorageList, new Comparator<SafFileItem>(){
-				@Override
-				public int compare(SafFileItem l_item, SafFileItem r_item) {
-				    if (l_item!=null && l_item.storageUuid!=null && r_item!=null && r_item.storageUuid!=null) return l_item.storageUuid.compareToIgnoreCase(r_item.storageUuid);
-				    else return 0;
-				}
-			});
-		} else {
-			
-		}
+                String sdcard_dir=getExternalSdcardPath();
+                if (Build.VERSION.SDK_INT>=23) {
+                    for (String uuid:uuid_array) {
+                        SafFileItem rsi=new SafFileItem();
+                        rsi.storageUuid=uuid;
+                        rsi.storageRootDirectory=UNKNOWN_SDCARD_DIRECTORY;
+                        if (uuid!=null && !uuid.equals("")) {
+                            for(File fl_item:stor_list) {
+                                if (fl_item.canRead()) {
+                                    if (fl_item.getName().equals(uuid)) {
+                                        sdcardRootDirectory=getExternalSdcardPath();
+                                        rsi.storageRootDirectory=sdcard_dir;
+                                        rsi.storageTypeSdcard=true;
+                                        rsi.storageIsMounted=true;
+                                        break;
+                                    }
+                                }
+                            }
+                            SafFile sf=SafFile.fromTreeUri(mContext,
+                                    Uri.parse("content://com.android.externalstorage.documents/tree/"+rsi.storageUuid+"%3A"));
+                            if (sf!=null && sf.getName()!=null) rsi.storageIsMounted=true;
+                            rsi.storageRootFile=sf;
+                            if (mDebugEnabled) Log.v(APPLICATION_TAG,"loadRemovableUuid Uuid="+uuid+
+                                    ", mounted="+rsi.storageIsMounted+
+                                    ", sdcard="+rsi.storageTypeSdcard+
+                                    ", SafFile name="+rsi.storageRootFile.getName()+
+                                    ", path="+rsi.storageRootDirectory);
+                            removableStorageList.add(rsi);
+                        }
+                    }
+                } else {
+                    for (String uuid:uuid_array) {
+                        SafFileItem rsi=new SafFileItem();
+                        rsi.storageUuid=uuid;
+                        rsi.storageRootDirectory=UNKNOWN_SDCARD_DIRECTORY;
+                        if (uuid!=null && !uuid.equals("")) {
+                            SafFile sf=SafFile.fromTreeUri(mContext,
+                                    Uri.parse("content://com.android.externalstorage.documents/tree/"+rsi.storageUuid+"%3A"));
+                            if (sf!=null && sf.getName()!=null) {
+                                rsi.storageRootFile=sf;
+                                rsi.storageRootDirectory=sdcard_dir;
+                                rsi.storageTypeSdcard=true;
+                                rsi.storageIsMounted=true;
+                                sdcardRootDirectory=getExternalSdcardPath();
+                            }
+                            rsi.storageRootFile=sf;
+                            if (mDebugEnabled) Log.v(APPLICATION_TAG,"loadRemovableUuid Uuid="+uuid+
+                                    ", mounted="+rsi.storageIsMounted+
+                                    ", sdcard="+rsi.storageTypeSdcard+
+                                    ", SafFile name="+rsi.storageRootFile.getName()+
+                                    ", path="+rsi.storageRootDirectory);
+                            removableStorageList.add(rsi);
+                        }
+                    }
+                }
+                Collections.sort(removableStorageList, new Comparator<SafFileItem>(){
+                    @Override
+                    public int compare(SafFileItem l_item, SafFileItem r_item) {
+                        if (l_item!=null && l_item.storageUuid!=null && r_item!=null && r_item.storageUuid!=null) return l_item.storageUuid.compareToIgnoreCase(r_item.storageUuid);
+                        else return 0;
+                    }
+                });
+            } else {
+
+            }
+        }
 	};
 
 	public SafFile getSdcardSafFile() {
 		SafFile result=null;
-		for(SafFileItem rsi:removableStorageList) {
+        synchronized(removableStorageList) {
+            for(SafFileItem rsi:removableStorageList) {
 //			if (rsi.storageTypeSdcard && rsi.storageRootFile!=null && rsi.storageRootFile.getName()!=null) {
-			if (rsi.storageTypeSdcard && rsi.storageRootFile!=null) {
-				result=rsi.storageRootFile;
-				break;
-			}
-		}
-		if (mDebugEnabled) Log.v(APPLICATION_TAG,"getSdcardSafFile result="+((result==null)?null:result.getName()));
+                if (rsi.storageTypeSdcard && rsi.storageRootFile!=null) {
+                    result=rsi.storageRootFile;
+                    break;
+                }
+            }
+            if (mDebugEnabled) Log.v(APPLICATION_TAG,"getSdcardSafFile result="+((result==null)?null:result.getName()));
+        }
 		return result;
 	};
 	
 	public SafFile getUsbSafFile() {
 		SafFile result=null;
-		for(SafFileItem rsi:removableStorageList) {
-			if (!rsi.storageTypeSdcard && rsi.storageRootFile!=null && rsi.storageRootFile.getName()!=null) {
-				result=rsi.storageRootFile;
-				break;
-			}
-		}
-		if (mDebugEnabled) Log.v(APPLICATION_TAG,"getUsbSafFile result="+((result==null)?null:result.getName()));
+        synchronized(removableStorageList) {
+            for(SafFileItem rsi:removableStorageList) {
+                if (!rsi.storageTypeSdcard && rsi.storageRootFile!=null && rsi.storageRootFile.getName()!=null) {
+                    result=rsi.storageRootFile;
+                    break;
+                }
+            }
+            if (mDebugEnabled) Log.v(APPLICATION_TAG,"getUsbSafFile result="+((result==null)?null:result.getName()));
+        }
 		return result;
 	};
 
 	public SafFile getSafFileByUuid(String uuid) {
 		SafFile result=null;
-		for(SafFileItem rsi:removableStorageList) {
-			if (rsi.storageUuid.equals(uuid)) {
-				result=rsi.storageRootFile;
-				break;
-			}
-		}
-		if (mDebugEnabled) Log.v(APPLICATION_TAG,"getSafFileByUuid result="+((result==null)?null:result.getName()));
+        synchronized(removableStorageList) {
+            for(SafFileItem rsi:removableStorageList) {
+                if (rsi.storageUuid.equals(uuid)) {
+                    result=rsi.storageRootFile;
+                    break;
+                }
+            }
+            if (mDebugEnabled) Log.v(APPLICATION_TAG,"getSafFileByUuid result="+((result==null)?null:result.getName()));
+        }
 		return result;
 	};
 	
 	public boolean isUuidRegistered(String uuid) {
 		boolean result=false;
-		for(SafFileItem rsi:removableStorageList) {
+        synchronized(removableStorageList) {
+            for(SafFileItem rsi:removableStorageList) {
 //			Log.v("","is uuid="+rsi.storageUuid+", s="+uuid);
-			if (rsi.storageUuid.equals(uuid)) {
-				result=true;
-				break;
-			}
-		}
+                if (rsi.storageUuid.equals(uuid)) {
+                    result=true;
+                    break;
+                }
+            }
+        }
 		return result;
 	};
 
 	@SuppressLint("NewApi")
 	public String saveSafFileList() {
         String edit_string="", sep="";
-        for(SafFileItem rsi:removableStorageList) {
+        synchronized(removableStorageList) {
+            for(SafFileItem rsi:removableStorageList) {
 //        	Log.v("","uuid="+rsi.storageUuid);
-        	edit_string+=sep+rsi.storageUuid;
-        	sep="\t";
+                edit_string+=sep+rsi.storageUuid;
+                sep="\t";
+            }
         }
 //        Log.v("","edit_string="+edit_string);
         if (!edit_string.equals("")) {
@@ -391,8 +405,10 @@ public class SafFileManager {
 //			Log.v("","size="+removableStorageList.size());
 			SafFileItem rsi=new SafFileItem();
 			rsi.storageUuid=uuid;
-			
-			removableStorageList.add(rsi);
+
+            synchronized(removableStorageList) {
+                removableStorageList.add(rsi);
+            }
 			saveSafFileList();
 			mContext.getContentResolver().takePersistableUriPermission(
 					Uri.parse("content://com.android.externalstorage.documents/tree/"+uuid+"%3A"),
