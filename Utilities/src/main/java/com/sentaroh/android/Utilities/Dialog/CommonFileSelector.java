@@ -454,12 +454,13 @@ public class CommonFileSelector extends DialogFragment {
         mLocalMountPointSpinner.setPrompt(context.getString(com.sentaroh.android.Utilities.R.string.msgs_file_select_edit_local_mount_point));
         mLocalMountPointSpinner.setAdapter(adapter);
 
-        int a_no=-1;
+        int a_no=0;
         ArrayList<String>ml= LocalMountPoint.getLocalMountpointList2(context);
         mLocalMountPointSpinner.setOnItemSelectedListener(null);
-        if (ml.size()==0) {
+        if (ml.size()==0 || mDialogHideMp) {
             adapter.add(mDialogLocalMP);
             mLocalMountPointSpinner.setEnabled(false);
+            mLocalMountPointSpinner.setSelection(0);
         } else {
             mLocalMountPointSpinner.setEnabled(true);
             for (int i=0;i<ml.size();i++) {
@@ -475,6 +476,7 @@ public class CommonFileSelector extends DialogFragment {
                     adapter.add(ml.get(i));
                 }
             }
+//            Log.v("","sel="+mLocalMountPointSpinner.getSelectedItemPosition()+", a_no="+a_no);
             mLocalMountPointSpinner.setSelection(a_no);
         }
         LinearLayout ll_mp=(LinearLayout)mDialog.findViewById(com.sentaroh.android.Utilities.R.id.file_select_edit_dlg_mp_view);
