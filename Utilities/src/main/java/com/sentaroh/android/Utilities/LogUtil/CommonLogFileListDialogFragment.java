@@ -572,8 +572,10 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
 			}
 		});
 		String msg="";
-		if (enabled) msg=getString(R.string.msgs_log_file_list_confirm_log_enable);
-		else  msg=getString(R.string.msgs_log_file_list_confirm_log_disable);
+		if (enabled) {
+		    msg=getString(R.string.msgs_log_file_list_confirm_log_enable)+"\n\n"+
+                    getString(R.string.msgs_log_file_list_confirm_log_enable_msg);
+        } else  msg=getString(R.string.msgs_log_file_list_confirm_log_disable);
         MessageDialogFragment cdf =MessageDialogFragment.newInstance(true, "W", msg, "");
         cdf.showDialog(getFragmentManager(),cdf,ntfy);
 	};
