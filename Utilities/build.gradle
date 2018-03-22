@@ -28,8 +28,8 @@ android {
                         def fileExtension= outputFileName.toString().substring(outputFileName.toString().lastIndexOf(".")+1)
 //                        def newName = "${mod_name}_${verName}_${verCode}.${fileExtension}"
                         def newName = "${mod_name}-${verName}.${fileExtension}"
-                        outputFileName = newName
-//                        println(newName)
+                        outputFileName = "../../../../release/"+newName
+                        println(newName)
                     }
                 }
             }
