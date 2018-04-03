@@ -381,7 +381,10 @@ public class SafFileManager {
 	};
 	
 	public static String getUuidFromUri(String uri) {
-		String result=uri.substring(uri.lastIndexOf("/")+1,uri.length()-3);
+		String result="";
+		try {
+            result=uri.substring(uri.lastIndexOf("/")+1,uri.length()-3);
+        } catch(Exception e) {}
 //		Log.v("","result="+result);
 		return result;
 	};
@@ -396,7 +399,8 @@ public class SafFileManager {
 	};
 
 	public void addSafFileFromUri(Uri uri) {
-		addSafFile(getUuidFromUri(uri.toString()));
+	    String uuid=getUuidFromUri(uri.toString());
+	    if (uuid.length()>0) addSafFile(uuid);
 	};
 	
 	@SuppressLint("NewApi")

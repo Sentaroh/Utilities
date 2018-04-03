@@ -98,19 +98,22 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
 	private NotifyEvent mNotifyUpdateLogOption=null;
 	
 	private ArrayList<CommonLogFileListItem> mLogFileList=null;
-	
+
+	private boolean mShowSaveButton =true;
+
 	public static CommonLogFileListDialogFragment newInstance(boolean retainInstance, String title) {
 		if (DEBUG_ENABLE) Log.v(APPLICATION_TAG,"newInstance");
 		CommonLogFileListDialogFragment frag = new CommonLogFileListDialogFragment();
         Bundle bundle = new Bundle();
         bundle.putBoolean("retainInstance", retainInstance);
+        bundle.putBoolean("showSaveButton", true);
         bundle.putString("title", title);
 //        bundle.putString("msgtext", msgtext);
         frag.setArguments(bundle);
         return frag;
     }
 
-	public CommonLogFileListDialogFragment() {
+    public CommonLogFileListDialogFragment() {
 		if (DEBUG_ENABLE) Log.v(APPLICATION_TAG,"Constructor(Default)");
 	}; 
 	
@@ -164,6 +167,7 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
             Bundle bd=getArguments();
             setRetainInstance(bd.getBoolean("retainInstance"));
             mDialogTitle=bd.getString("title");
+            mShowSaveButton =bd.getBoolean("showSaveButton");
         	mContext=getActivity().getApplicationContext();
         	
         	mLogFileList=CommonLogUtil.createLogFileList(mGp);
@@ -325,6 +329,8 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
     	final Button btn_save=(Button)mDialog.findViewById(R.id.log_file_list_dlg_log_save);
     	final Button btn_send_dev=(Button)mDialog.findViewById(R.id.log_file_list_dlg_log_send);
     	final CheckBox cb_log_enabled=(CheckBox)mDialog.findViewById(R.id.log_file_list_dlg_log_enabled);
+    	if (mShowSaveButton) btn_save.setVisibility(Button.VISIBLE);
+    	else btn_save.setVisibility(Button.GONE);
     	btn_save.setEnabled(mGp.isLogEnabled());
     	btn_send_dev.setEnabled(mGp.isLogEnabled());
     	cb_log_enabled.setChecked(mGp.isLogEnabled());
