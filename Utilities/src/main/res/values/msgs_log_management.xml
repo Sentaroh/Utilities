@@ -27,7 +27,9 @@
     <string name="msgs_log_file_list_confirm_log_delete">Do you want to erase the log?</string>
     <string name="msgs_log_file_list_confirm_log_disable">Do you want to disable the log?</string>
     <string name="msgs_log_file_list_confirm_log_enable">Do you want to enable the log?</string>
-    <string name="msgs_log_file_list_confirm_log_enable_msg">By enabling it, the application log will be recorded. If you tap "Send log to developers" without performing operations such as synchronization, an empty log will be sent. Tap "Send logs to developers" after performing operations such as synchronization and recording errors.</string>
+    <string name="msgs_log_file_list_confirm_log_enable_msg">By enabling it, the application log will be recorded. Tap "Send logs to developers" after performing operations such as synchronization and recording errors.</string>
+
+    <string name="msgs_log_file_list_empty_can_not_send">The log file is empty and can not be sent to the developer. Tap "Send logs to developers" after performing operations such as synchronization and recording errors.</string>
 
     <string name="msgs_log_file_list_no_log_files">No log files</string>
 

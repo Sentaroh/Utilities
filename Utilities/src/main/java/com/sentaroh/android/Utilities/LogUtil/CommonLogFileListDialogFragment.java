@@ -437,6 +437,15 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
     private ThemeColorList mThemeColorList=null;
 	private void confirmSendLog() {
 		CommonLogUtil.flushLog(mContext, mGp);
+
+        File ilf=new File(mGp.getLogDirName()+"/"+mGp.getLogFileName()+".txt");
+        if (ilf.length()==0) {
+            MessageDialogFragment mdf =MessageDialogFragment.newInstance(false, "W",
+                    mContext.getString(R.string.msgs_log_file_list_empty_can_not_send), "");
+            mdf.showDialog(mFragment.getFragmentManager(), mdf, null);
+            return ;
+        }
+
 		mThemeColorList=ThemeUtil.getThemeColorList(getActivity());
 		createTempLogFile();
 		
@@ -556,11 +565,11 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
 		ntfy.setListener(new NotifyEventListener(){
 			@Override
 			public void positiveResponse(Context c, Object[] o) {
-				if (mNotifyUpdateLogOption!=null) 
+				if (mNotifyUpdateLogOption!=null)
 					mNotifyUpdateLogOption.notifyToListener(true, new Object[]{enabled});
 		    	btn_save.setEnabled(enabled);
 		    	btn_send_dev.setEnabled(enabled);
-		    	
+
 		    	Handler hndl=new Handler();
 		    	hndl.postDelayed(new Runnable(){
 					@Override
