@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="msgs_common_file_selector_up_btn">上へ</string>
+    <string name="msgs_common_file_selector_top_btn">トップ</string>
+    <string name="msgs_common_file_selector_create_btn">作成</string>
+    <string name="msgs_common_file_selector_refresh_btn">再読込み</string>
+</resources>

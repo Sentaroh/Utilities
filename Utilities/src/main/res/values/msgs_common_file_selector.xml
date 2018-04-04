@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="msgs_common_file_selector_up_btn">Up</string>
+    <string name="msgs_common_file_selector_top_btn">Top</string>
+    <string name="msgs_common_file_selector_create_btn">Create</string>
+    <string name="msgs_common_file_selector_refresh_btn">Refresh</string>
+</resources>
