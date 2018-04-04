@@ -314,14 +314,14 @@ public class CommonFileSelector extends DialogFragment {
         public int mainDialogSpinnerPos=-1;
     }
 
-    private CommonFileSelector.SavedViewContentsValue mSavedViewContentsValue=null;
+    private SavedViewContentsValue mSavedViewContentsValue=null;
     private void resetSavedViewContents() {
         mSavedViewContentsValue=null;
     }
 
     private void saveViewContents() {
         if (mDebugEnable) Log.v(APPLICATION_TAG,"saveViewContents");
-        mSavedViewContentsValue=new CommonFileSelector.SavedViewContentsValue();
+        mSavedViewContentsValue=new SavedViewContentsValue();
         if (mCreateDirDialog!=null) {
             final EditText etDir=(EditText) mCreateDirDialog.findViewById(com.sentaroh.android.Utilities.R.id.single_item_input_dir);
             mSavedViewContentsValue.createDialogEditText=etDir.getText().toString();
