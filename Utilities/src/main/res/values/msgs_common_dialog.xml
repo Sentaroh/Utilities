@@ -12,6 +12,7 @@
     <string name="msgs_common_dialog_add">Add</string>
     <string name="msgs_common_dialog_search">Search</string>
     <string name="msgs_common_dialog_close">Close</string>
+    <string name="msgs_common_dialog_select">Select</string>
     
     <string name="msgs_progress_spin_dlg_processing">Being processed, please wait.</string>
     

@@ -19,6 +19,6 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/msgs_common_dialog_save" />
+        android:text="@string/msgs_common_dialog_select" />
 
 </LinearLayout>

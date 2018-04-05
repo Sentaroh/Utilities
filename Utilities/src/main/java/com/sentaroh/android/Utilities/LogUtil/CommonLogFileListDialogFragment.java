@@ -459,7 +459,7 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
 		TextView title=(TextView)dialog.findViewById(R.id.confirm_send_log_dlg_title);
 		title.setTextColor(mThemeColorList.text_color_dialog_title);
 		TextView msg=(TextView)dialog.findViewById(R.id.confirm_send_log_dlg_msg);
-		msg.setTextColor(mThemeColorList.text_color_info);
+		msg.setTextColor(mThemeColorList.text_color_primary);
 		msg.setBackgroundColor(mThemeColorList.dialog_msg_background_color);
 		
 		final Button btn_ok=(Button)dialog.findViewById(R.id.confirm_send_log_dlg_ok_btn);

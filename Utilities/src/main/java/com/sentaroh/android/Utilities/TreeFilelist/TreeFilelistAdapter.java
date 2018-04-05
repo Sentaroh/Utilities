@@ -61,7 +61,8 @@ public class TreeFilelistAdapter extends BaseAdapter {
 			R.drawable.cc_folder,
 			R.drawable.cc_sheet,
 			R.drawable.cc_blank};
-	
+
+	private boolean mSelectable=true;
 	private ThemeColorList mThemeColorList;
 	
 	private NotifyEvent mNotifyExpand=null;
@@ -109,7 +110,10 @@ public class TreeFilelistAdapter extends BaseAdapter {
 	public long getItemId(int arg0) {return mShowItems.get(arg0);}
 	
 	public ArrayList<TreeFilelistItem> getDataList() {return mDataItems;}
-	
+
+	public void setSelectable(boolean selectable) {mSelectable=selectable;}
+    public boolean isSelectable() {return mSelectable;}
+
 	public void setDataList(ArrayList<TreeFilelistItem> fl) {
 //		mDataItems.clear();
 //		if (fl!=null) {
@@ -522,15 +526,19 @@ public class TreeFilelistAdapter extends BaseAdapter {
 	            	holder.tv_name.setEnabled(false);
 	            	holder.tv_size.setEnabled(false);
             	}
-        		if (mSingleSelectMode) {
-        			holder.cb_cb1.setVisibility(CheckBox.GONE);
-        			holder.rb_rb1.setVisibility(RadioButton.VISIBLE);
-        		} else {
-        			holder.cb_cb1.setVisibility(CheckBox.VISIBLE);
-        			holder.rb_rb1.setVisibility(RadioButton.GONE);
-        		}
+                if (isSelectable()) {
+                    if (mSingleSelectMode) {
+                        holder.cb_cb1.setVisibility(CheckBox.GONE);
+                        holder.rb_rb1.setVisibility(RadioButton.VISIBLE);
+                    } else {
+                        holder.cb_cb1.setVisibility(CheckBox.VISIBLE);
+                        holder.rb_rb1.setVisibility(RadioButton.GONE);
+                    }
+                } else {
+                    holder.cb_cb1.setVisibility(CheckBox.GONE);
+                    holder.rb_rb1.setVisibility(RadioButton.GONE);
+                }
             	if (o.getName().startsWith("---")) {
-            		//空処�?
             		holder.cb_cb1.setVisibility(CheckBox.GONE);
             		holder.rb_rb1.setVisibility(CheckBox.GONE);
             		holder.iv_expand.setVisibility(ImageView.GONE);

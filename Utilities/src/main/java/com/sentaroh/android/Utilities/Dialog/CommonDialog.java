@@ -30,10 +30,10 @@ import android.support.v4.app.FragmentManager;
 import android.view.ViewGroup.LayoutParams;
 
 public class CommonDialog {
-	private FragmentManager mFragmentMgr=null;
+	private FragmentManager mFragMgr =null;
 	
 	public CommonDialog(Context c, FragmentManager fm) {
-		mFragmentMgr=fm;
+		mFragMgr =fm;
 	};
 	
 	public void showCommonDialog(
@@ -41,7 +41,7 @@ public class CommonDialog {
 			final NotifyEvent ntfy) {
         MessageDialogFragment cdf =MessageDialogFragment.newInstance(
         		negative, type, title, msgtext);
-        cdf.showDialog(mFragmentMgr,cdf,ntfy);
+        cdf.showDialog(mFragMgr,cdf,ntfy);
 	};
 	
 	@SuppressWarnings("deprecation")
@@ -109,7 +109,7 @@ public class CommonDialog {
 		FileSelectDialogFragment fsdf=
 				FileSelectDialogFragment.newInstance(false, true, true, false, false, true, true, lurl, ldir, 
 					file_name, dlg_title);
-		fsdf.showDialog(mFragmentMgr, fsdf, ntfy);
+		fsdf.showDialog(mFragMgr, fsdf, ntfy);
 	};
 	public void fileOnlySelectWithCreateHideMP(String lurl, String ldir, 
 			String file_name,String dlg_title, NotifyEvent ntfy) {
@@ -138,37 +138,37 @@ public class CommonDialog {
 		FileSelectDialogFragment fsdf=
 				FileSelectDialogFragment.newInstance(false, enableCreate, fileOnly, hideMp, include_root, 
 						true, lurl, ldir, file_name, dlg_title);
-		fsdf.showDialog(mFragmentMgr, fsdf, ntfy);
+		fsdf.showDialog(mFragMgr, fsdf, ntfy);
 	}
 
-
-    public void fileSelectorFileOnlySelectWithCreateHideMP(Boolean inc_mp, String mount_point, String dir_name, String file_name, String title, NotifyEvent ntfy) {
-        CommonFileSelector fsdf=
-                CommonFileSelector.newInstance(false, true, true, true, false,
-                        true, inc_mp, mount_point, dir_name, file_name, title);
-        fsdf.showDialog(mFragmentMgr, fsdf, ntfy);
-    };
 
     public void fileSelectorFileOnlySelectWithCreate(Boolean inc_mp, String mount_point, String dir_name, String file_name, String title, NotifyEvent ntfy) {
         boolean include_root=false;
         CommonFileSelector fsdf=
-                CommonFileSelector.newInstance(false, true, true, false, false,
+                CommonFileSelector.newInstance(false, true, true, CommonFileSelector.DIALOG_SELECT_CATEGORY_FILE,
                         true, inc_mp, mount_point, dir_name, file_name, title);
-        fsdf.showDialog(mFragmentMgr, fsdf, ntfy);
+        fsdf.showDialog(mFragMgr, fsdf, ntfy);
     };
 
     public void fileSelectorDirOnlySelectWithCreate(Boolean inc_mp, String mount_point, String dir_name, String title, NotifyEvent ntfy) {
         CommonFileSelector fsdf=
-                CommonFileSelector.newInstance(false, true, false, false, true,
+                CommonFileSelector.newInstance(false, true, false, CommonFileSelector.DIALOG_SELECT_CATEGORY_DIRECTORY,
                         true, inc_mp, mount_point, dir_name, "", title);
-        fsdf.showDialog(mFragmentMgr, fsdf, ntfy);
+        fsdf.showDialog(mFragMgr, fsdf, ntfy);
+    };
+
+    public void fileSelectorFileOnlySelectWithCreateHideMP(Boolean inc_mp, String mount_point, String dir_name, String file_name, String title, NotifyEvent ntfy) {
+        CommonFileSelector fsdf=
+                CommonFileSelector.newInstance(false, true, true, CommonFileSelector.DIALOG_SELECT_CATEGORY_FILE,
+                        true, inc_mp, mount_point, dir_name, file_name, title);
+        fsdf.showDialog(mFragMgr, fsdf, ntfy);
     };
 
     public void fileSelectorDirOnlySelectWithCreateHideMP(Boolean inc_mp, String mount_point, String dir_name, String title, NotifyEvent ntfy) {
         CommonFileSelector fsdf=
-                CommonFileSelector.newInstance(false, true, false, true, true,
+                CommonFileSelector.newInstance(false, true, false, CommonFileSelector.DIALOG_SELECT_CATEGORY_DIRECTORY,
                         true, inc_mp, mount_point, dir_name, "", title);
-        fsdf.showDialog(mFragmentMgr, fsdf, ntfy);
+        fsdf.showDialog(mFragMgr, fsdf, ntfy);
     };
 
 }

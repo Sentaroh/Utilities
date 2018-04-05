@@ -12,6 +12,7 @@
     <string name="msgs_common_dialog_add">追加</string>
     <string name="msgs_common_dialog_search">検索</string>
     <string name="msgs_common_dialog_close">閉じる</string>
+    <string name="msgs_common_dialog_select">選択</string>
     
     <string name="msgs_progress_spin_dlg_processing">処理中です、お待ちください。</string>
 	
