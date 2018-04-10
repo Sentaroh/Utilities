@@ -456,7 +456,8 @@ public class TreeFilelistAdapter extends BaseAdapter {
 	@Override
 	public boolean isEnabled(int p) {
 //		Log.v("","n="+getDataItem(p).getName()+", e="+getDataItem(p).isEnableItem());
-		return getDataItem(p).isEnableItem();
+        if (mDataItems.size()>p) return getDataItem(p).isEnableItem();
+        else return false;
 	}
 	
 	@Override
