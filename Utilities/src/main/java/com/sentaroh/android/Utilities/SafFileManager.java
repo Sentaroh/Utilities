@@ -414,10 +414,18 @@ public class SafFileManager {
                 removableStorageList.add(rsi);
             }
 			saveSafFileList();
-			mContext.getContentResolver().takePersistableUriPermission(
-					Uri.parse("content://com.android.externalstorage.documents/tree/"+uuid+"%3A"),
-				    Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-			loadSafFileList();
+            try {
+                mContext.getContentResolver().takePersistableUriPermission(
+                        Uri.parse("content://com.android.externalstorage.documents/tree/"+uuid+"%3A"),
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                loadSafFileList();
+            } catch(Exception e) {
+                e.printStackTrace();
+                if (mDebugEnabled) {
+                    Log.v(APPLICATION_TAG,"addSafFile error, uuid="+uuid);
+                }
+                msg_area="addSafFile error, uuid="+uuid+"\n";
+            }
 		} else {
 			if (mDebugEnabled) Log.v(APPLICATION_TAG,"addUuid already registerd, Uuid="+uuid);
 		}
