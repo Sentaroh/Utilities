@@ -453,8 +453,10 @@ public class BufferedZipFile {
 					offsetStartCentralDir = primary_zip_model.getZip64EndCentralDirRecord().getOffsetStartCenDirWRTStartDiskNo();
 				}
 			}
-			end_pos=offsetStartCentralDir-1;
-			primary_output_pos+=copyZipFile("**copy_all_local_record", primary_bos, primary_raf, 0, end_pos);
+            if (offsetStartCentralDir>1) {
+                end_pos=offsetStartCentralDir-1;
+                primary_output_pos+=copyZipFile("**copy_all_local_record", primary_bos, primary_raf, 0, end_pos);
+            }
 		}
 		primary_raf.close();
 	};
