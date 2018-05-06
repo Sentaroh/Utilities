@@ -162,14 +162,12 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
         mUiHandler=new Handler();
     	mFragment=this;
         if (!mTerminateRequired) {
-            mGp=(CommonGlobalParms)getActivity().getApplication();
-
+//            mGp=(CommonGlobalParms)getActivity().getApplication();
+            mContext=getActivity().getApplicationContext();
             Bundle bd=getArguments();
             setRetainInstance(bd.getBoolean("retainInstance"));
             mDialogTitle=bd.getString("title");
             mShowSaveButton =bd.getBoolean("showSaveButton");
-        	mContext=getActivity().getApplicationContext();
-        	
         	mLogFileList=CommonLogUtil.createLogFileList(mGp);
         }
     };
