@@ -537,10 +537,12 @@ public class FileSelectDialogFragment extends DialogFragment {
 	    	adapter.add(Environment.getExternalStorageDirectory().toString());
 			File[] fl=ContextCompat.getExternalFilesDirs(context, null);
 			for(File item:fl) {
-				if (!item.getPath().startsWith(Environment.getExternalStorageDirectory().toString())) {
-					adapter.add(item.getPath().substring(0,item.getPath().indexOf("/Android")));
-					break;
-				}
+			    if (item!=null && item.getPath()!=null) {
+                    if (!item.getPath().startsWith(Environment.getExternalStorageDirectory().toString())) {
+                        adapter.add(item.getPath().substring(0,item.getPath().indexOf("/Android")));
+                        break;
+                    }
+                }
 			}
 	    	mLocalMountPointSpinner.setEnabled(true);
 	        for (int i=0;i<adapter.getCount();i++) { 
