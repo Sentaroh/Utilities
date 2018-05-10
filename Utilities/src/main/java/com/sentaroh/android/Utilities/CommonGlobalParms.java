@@ -2,13 +2,17 @@ package com.sentaroh.android.Utilities;
 
 import android.app.Application;
 
+import java.io.PrintWriter;
+
 public class CommonGlobalParms extends Application{
 	private int debug_level=0;
 	private boolean log_enabled=true;
 	private boolean logcat_enabled=true;
 	private String log_dir_name="";
 	private String log_file_name="";
-	
+
+	public PrintWriter logWriter=null;
+
 	public void setDebugLevel(int level) {debug_level=level;}
 	public int getDebugLevel() {return debug_level;}
 
@@ -54,4 +58,8 @@ public class CommonGlobalParms extends Application{
 	public String getLogIntentFlush() {return log_flush;}
 	public String getLogIntentRotate() {return log_rotate;}
 	public String getLogIntentClose() {return log_close;}
+
+	private Class log_receiver_class=null;
+	public void setLogReceiverClass(Class recv) {log_receiver_class=recv;};
+    public Class getLogReceiverClass() {return log_receiver_class;};
 }

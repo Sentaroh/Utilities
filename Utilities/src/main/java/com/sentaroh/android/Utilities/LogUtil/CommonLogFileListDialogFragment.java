@@ -473,7 +473,8 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
 				intent.setDataAndType(Uri.parse("file://"+
 						mGp.getLogDirName()+"/temp_log.txt"),
 						"text/plain");
-				startActivity(intent);
+//				startActivity(intent);
+                startActivity(Intent.createChooser(intent, mGp.getLogDirName()+"/temp_log.txt"));
 			}
 		});
 

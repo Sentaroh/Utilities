@@ -59,7 +59,7 @@ public class CommonLogUtil {
 
 	final public static void closeLog(Context c, CommonGlobalParms mGp) {
 		Intent intent = new Intent(mGp.getLogIntentClose());
-		c.sendOrderedBroadcast(intent,null);
+        sendIntentLogReceiver(mGp, c, intent);
 	};
 
 	final public void resetLogReceiver() {
@@ -68,7 +68,7 @@ public class CommonLogUtil {
 
 	final public static void resetLogReceiver(Context c, CommonGlobalParms mGp) {
 		Intent intent = new Intent(mGp.getLogIntentReset());
-		c.sendOrderedBroadcast(intent,null);
+        sendIntentLogReceiver(mGp, c, intent);
 	};
 
 	final public void flushLog() {
@@ -77,7 +77,7 @@ public class CommonLogUtil {
 
 	final public static void flushLog(Context c, CommonGlobalParms mGp) {
 		Intent intent = new Intent(mGp.getLogIntentFlush());
-		c.sendOrderedBroadcast(intent,null);
+        sendIntentLogReceiver(mGp, c, intent);
 	};
 
 	final public void rotateLogFile() {
@@ -86,13 +86,19 @@ public class CommonLogUtil {
 
 	final public static void rotateLogFile(Context c, CommonGlobalParms mGp) {
 		Intent intent = new Intent(mGp.getLogIntentRotate());
-		c.sendOrderedBroadcast(intent,null);
+        sendIntentLogReceiver(mGp, c, intent);
 	};
 
     final public void deleteLogFile() {
 		Intent intent = new Intent(mGp.getLogIntentDelete());
-		mContext.sendOrderedBroadcast(intent,null);
+        sendIntentLogReceiver(mGp, mContext, intent);
 	};
+
+    private static void sendIntentLogReceiver(CommonGlobalParms mGp, Context c, Intent intent) {
+//        intent.setClass(c, mGp.getLogReceiverClass());
+//        c.sendOrderedBroadcast(intent,null);
+        CommonLogWriter.enqueue(mGp, c, intent);
+    }
 
 	final public void addLogMsg(String cat, String... msg) {
 //		Log.v("","lvl="+mGp.getDebugLevel()+", ena="+mGp.isLogEnabled());
@@ -100,6 +106,7 @@ public class CommonLogUtil {
 			addLogMsg(mGp, mContext, mLogIdent, cat, msg);
 		}
 	};
+
 	final public void addDebugMsg(int lvl, String cat, String... msg) {
 		if (mGp.getDebugLevel()>=lvl ) {
 			addDebugMsg(mGp, mContext, mLogIdent, lvl, cat, msg);
@@ -146,7 +153,7 @@ public class CommonLogUtil {
 			.append(log_id)
 			.append(log_msg.toString());
 			intent.putExtra("LOG", print_msg.toString());
-			context.sendOrderedBroadcast(intent,null);
+            sendIntentLogReceiver(gp, context, intent);
 		}
 		if (gp.isLogcatEnabled()) Log.v(gp.getApplicationTag(),cat+" "+log_id+log_msg.toString());
 	};
@@ -166,7 +173,7 @@ public class CommonLogUtil {
 			.append(log_id)
 			.append(log_msg.toString());
 			intent.putExtra("LOG", print_msg.toString());
-			context.sendOrderedBroadcast(intent,null);
+            sendIntentLogReceiver(gp, context, intent);
 		}
 		if (gp.isLogcatEnabled()) Log.v(gp.getApplicationTag(), cat+" "+log_id+log_msg.toString());
 	};
