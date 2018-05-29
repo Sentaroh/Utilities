@@ -4,7 +4,7 @@ import android.app.Application;
 
 import java.io.PrintWriter;
 
-public class CommonGlobalParms extends Application{
+public class CommonGlobalParms {
 	private int debug_level=0;
 	private boolean log_enabled=true;
 	private boolean logcat_enabled=true;

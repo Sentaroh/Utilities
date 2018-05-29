@@ -336,7 +336,8 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView,
 					boolean isChecked) {
-				if (!mDisableChangeLogEnabled) confirmSettingsLogOption(isChecked);
+				if (!mDisableChangeLogEnabled)
+				    confirmSettingsLogOption(isChecked);
 				mDisableChangeLogEnabled=false;
 			}
     	});

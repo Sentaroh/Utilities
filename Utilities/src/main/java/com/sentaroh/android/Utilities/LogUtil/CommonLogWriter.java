@@ -41,38 +41,40 @@ public class CommonLogWriter {
     private static String threadCtrl="E";
 
     static public void enqueue(final CommonGlobalParms cgp, final Context c, final Intent in) {
-        mGp=cgp;
-        debug_level=cgp.getDebugLevel();
-        log_msg_queue.add(in);
-        synchronized(threadCtrl) {
-            if (log_msg_queue.size()>0 && threadCtrl.equals("E")) {
-//                if (cgp.getDebugLevel()>2) Log.v("SMBSync2","Log dequeue scheduled");
-                Thread th=new Thread(){
-                    @Override
-                    public void run() {
-                        String tid=Thread.currentThread().getName();
-                        int cnt=0;
-                        synchronized(threadCtrl) {
-                            if (threadCtrl.equals("E")) {
-//                                if (cgp.getDebugLevel()>2) Log.v("SMBSync2","Log dequeue started, size="+log_msg_queue.size()+", tid="+tid);
-                                threadCtrl="D";
-                                while(log_msg_queue.size()>0) {
-                                    Intent in=log_msg_queue.poll();
-                                    writeLog(c, in);
-                                    cnt++;
+        if (in!=null) {
+            mGp=cgp;
+            debug_level=cgp.getDebugLevel();
+            log_msg_queue.add(in);
+            synchronized(threadCtrl) {
+                if (log_msg_queue.size()>0 && threadCtrl.equals("E")) {
+//                    if (cgp.getDebugLevel()>=2) Log.v("SMBSync2","Log dequeue scheduled");
+                    Thread th=new Thread(){
+                        @Override
+                        public void run() {
+                            String tid=Thread.currentThread().getName();
+                            int cnt=0;
+                            synchronized(threadCtrl) {
+                                if (threadCtrl.equals("E")) {
+//                                if (cgp.getDebugLevel()>=2) Log.v("SMBSync2","Log dequeue started, size="+log_msg_queue.size()+", tid="+tid);
+                                    threadCtrl="D";
+                                    while(log_msg_queue.size()>0) {
+                                        Intent in=log_msg_queue.poll();
+                                        writeLog(c, in);
+                                        cnt++;
+                                    }
+                                    threadCtrl="E";
+//                                if (cgp.getDebugLevel()>=2) Log.v("SMBSync2","Log dequeue ended"+", processed="+cnt+", tid="+tid);
+                                } else {
+//                                if (cgp.getDebugLevel()>=2) Log.v("SMBSync2","Log dequeue bypassed"+", tid="+tid);
                                 }
-                                threadCtrl="E";
-//                                if (cgp.getDebugLevel()>2) Log.v("SMBSync2","Log dequeue ended"+", processed="+cnt+", tid="+tid);
-                            } else {
-//                                if (cgp.getDebugLevel()>2) Log.v("SMBSync2","Log dequeue bypassed"+", tid="+tid);
                             }
                         }
-                    }
-                };
-                th.setPriority(Thread.MIN_PRIORITY);
-                th.start();
-            } else {
-//                if (cgp.getDebugLevel()>2) Log.v("SMBSync2","Log dequeue not scheduled");
+                    };
+                    th.setPriority(Thread.MIN_PRIORITY);
+                    th.start();
+                } else {
+//                if (cgp.getDebugLevel()>=2) Log.v("SMBSync2","Log dequeue not scheduled");
+                }
             }
         }
     }
@@ -87,10 +89,12 @@ public class CommonLogWriter {
                 putLogMsg(c,"M I "+sdfDateTime.format(System.currentTimeMillis())+" "+log_id+line);
             }
         }
-
+//        if (mGp.getDebugLevel()>=2) Log.v("SMBSync2","Action="+in.getAction());
         if (in.getAction().equals(mGp.getLogIntentSend())) {
-            String line=in.getExtras().getString("LOG");
-            putLogMsg(c,line);
+            if (in.getExtras()!=null) {
+                String line=in.getExtras().getString("LOG");
+                putLogMsg(c,line);
+            }
         } else if (in.getAction().equals(mGp.getLogIntentClose())) {
             if (printWriter!=null) {
                 printWriter.flush();
@@ -132,11 +136,15 @@ public class CommonLogWriter {
             if (printWriter!=null) {
                 synchronized(printWriter) {
                     printWriter.println(msg);
+//                    if (log_msg_queue.size()==0)
+                        printWriter.flush();//debug
                 }
             }
         } else {
             synchronized(printWriter) {
                 printWriter.println(msg);
+//                if (log_msg_queue.size()==0)
+                    printWriter.flush();//debug
             }
         }
     }

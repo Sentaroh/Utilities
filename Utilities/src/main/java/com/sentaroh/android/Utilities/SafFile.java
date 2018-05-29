@@ -1,5 +1,6 @@
 package com.sentaroh.android.Utilities;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import android.annotation.SuppressLint;
 import android.content.ContentProviderClient;
@@ -12,7 +13,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.provider.DocumentsContract;
-import android.provider.DocumentsContract.Document;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -20,14 +20,10 @@ import android.util.Log;
 public class SafFile {
     private Context mContext;
     private Uri mUri;
+    private Uri mParentUri;
     private String mDocName;
 
     private String msg_area="";
-    
-//    DCFile(Context context, Uri uri) {
-//        mContext = context;
-//        mUri = uri;
-//    }
 
     SafFile(Context context, Uri uri) {
         mContext = context;
@@ -41,22 +37,24 @@ public class SafFile {
         mDocName=name;
     }
 
+    public void setParent(Uri parent) {mParentUri=parent;}
+    public Uri getParent() {return mParentUri;}
+
     public static SafFile fromTreeUri(Context context, Uri treeUri) {
-    	return new SafFile(context, prepareTreeUri(treeUri));
+        return new SafFile(context, prepareTreeUri(treeUri));
     }
-    
+
     public static Uri prepareTreeUri(Uri treeUri) {
         return DocumentsContract.buildDocumentUriUsingTree(treeUri,
                 DocumentsContract.getTreeDocumentId(treeUri));
     }
 
     public String getMsgArea() {
-    	return msg_area;
-    };
+        return msg_area;
+    }
+
     public SafFile createFile(String mimeType, String displayName) {
-//        final Uri result = DocumentsContract.createDocument(mContext.getContentResolver(), mUri, mimeType,
-//                displayName);
-    	Uri result=null;
+        Uri result=null;
         final ContentProviderClient client = mContext.getContentResolver().acquireUnstableContentProviderClient(
                 mUri.getAuthority());
         try {
@@ -64,12 +62,12 @@ public class SafFile {
         } catch (Exception e) {
             Log.w("SafFile", "Failed to create file", e);
             msg_area=e.getMessage()+"\n";
-        	StackTraceElement[] st=e.getStackTrace();
-        	for (int i=0;i<st.length;i++) {
-        		msg_area+="\n at "+st[i].getClassName()+"."+
-        				st[i].getMethodName()+"("+st[i].getFileName()+
-        				":"+st[i].getLineNumber()+")";
-        	}
+            StackTraceElement[] st=e.getStackTrace();
+            for (int i=0;i<st.length;i++) {
+                msg_area+="\n at "+st[i].getClassName()+"."+
+                        st[i].getMethodName()+"("+st[i].getFileName()+
+                        ":"+st[i].getLineNumber()+")";
+            }
         } finally {
             client.release();
         }
@@ -77,26 +75,20 @@ public class SafFile {
     }
 
     public SafFile createDirectory(String displayName) {
-//    	Log.v("","uri="+mUri.toString());
-//        final Uri result = DocumentsContract.createDocument(mContext.getContentResolver(), mUri, 
-//        		DocumentsContract.Document.MIME_TYPE_DIR, displayName);
-    	Uri result=null;
+        Uri result=null;
         final ContentProviderClient client = mContext.getContentResolver().acquireUnstableContentProviderClient(
                 mUri.getAuthority());
-//        String n_uri=mUri.toString().replace("/tree/2513-1600%3A/document/2513-1600%3A", "/tree/2513-1600%3A/document");
-//        Log.v("","n_uri="+n_uri);
         try {
             result=createDocument(client, mUri, DocumentsContract.Document.MIME_TYPE_DIR, displayName);
         } catch (Exception e) {
             Log.w("SafFile", "Failed to create directory", e);
-            msg_area=e.getMessage()+"\n";
-        	StackTraceElement[] st=e.getStackTrace();
-        	for (int i=0;i<st.length;i++) {
-        		msg_area+="\n at "+st[i].getClassName()+"."+
-        				st[i].getMethodName()+"("+st[i].getFileName()+
-        				":"+st[i].getLineNumber()+")";
-        	}
-//        	Log.v("","saf error="+msg_area);
+            msg_area+=e.getMessage()+"\n";
+            StackTraceElement[] st=e.getStackTrace();
+            for (int i=0;i<st.length;i++) {
+                msg_area+="\n at "+st[i].getClassName()+"."+
+                        st[i].getMethodName()+"("+st[i].getFileName()+
+                        ":"+st[i].getLineNumber()+")";
+            }
         } finally {
             client.release();
         }
@@ -107,12 +99,11 @@ public class SafFile {
     public static final String EXTRA_URI = "uri";
 
     public static Uri createDocument(ContentProviderClient client, Uri parentDocumentUri,
-            String mimeType, String displayName) throws RemoteException {
-//    	throw new IllegalArgumentException("Invalid URI: " + parentDocumentUri);
+                                     String mimeType, String displayName) throws RemoteException {
         final Bundle in = new Bundle();
         in.putParcelable(EXTRA_URI, parentDocumentUri);
-        in.putString(Document.COLUMN_MIME_TYPE, mimeType);
-        in.putString(Document.COLUMN_DISPLAY_NAME, displayName);
+        in.putString(DocumentsContract.Document.COLUMN_MIME_TYPE, mimeType);
+        in.putString(DocumentsContract.Document.COLUMN_DISPLAY_NAME, displayName);
 
         final Bundle out = client.call(METHOD_CREATE_DOCUMENT, null, in);
         return out.getParcelable(EXTRA_URI);
@@ -123,9 +114,7 @@ public class SafFile {
     }
 
     public String getName() {
-    	return mDocName;
-//    	String result=queryForString(mContext, mUri, DocumentsContract.Document.COLUMN_DISPLAY_NAME, null);
-//        return result;
+        return mDocName;
     }
 
     public String getType() {
@@ -136,11 +125,10 @@ public class SafFile {
             return rawType;
         }
     }
-    
+
     private static String getRawType(Context context, Uri mUri) {
         return queryForString(context, mUri, DocumentsContract.Document.COLUMN_MIME_TYPE, null);
     }
-
 
     public boolean isDirectory() {
         return DocumentsContract.Document.MIME_TYPE_DIR.equals(getRawType(mContext, mUri));
@@ -165,24 +153,21 @@ public class SafFile {
 
     public boolean canRead() {
         // Ignore if grant doesn't allow read
-//    	Log.v("SafUtil","canRead entered");
-    	if (mUri.getEncodedPath().endsWith(".android_secure")) return false;
+        if (mUri.getEncodedPath().endsWith(".android_secure")) return false;
         if (mContext.checkCallingOrSelfUriPermission(mUri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 != PackageManager.PERMISSION_GRANTED) {
             return false;
         }
-//        Log.v("SafUtil","canRead checkCallingOrSelfUriPermission ended");
         // Ignore documents without MIME
         if (TextUtils.isEmpty(getRawType(mContext, mUri))) {
             return false;
         }
-//        Log.v("SafUtil","canRead ended");
         return true;
     }
 
     public boolean canWrite() {
         // Ignore if grant doesn't allow write
-    	if (mUri.getEncodedPath().endsWith(".android_secure")) return false;
+        if (mUri.getEncodedPath().endsWith(".android_secure")) return false;
         if (mContext.checkCallingOrSelfUriPermission(mUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
                 != PackageManager.PERMISSION_GRANTED) {
             return false;
@@ -215,7 +200,11 @@ public class SafFile {
     }
 
     public boolean delete() {
-        return DocumentsContract.deleteDocument(mContext.getContentResolver(), mUri);
+        try {
+            return DocumentsContract.deleteDocument(mContext.getContentResolver(), mUri);
+        } catch (FileNotFoundException e) {
+            return false;
+        }
     }
 
     public boolean exists() {
@@ -235,41 +224,38 @@ public class SafFile {
     }
 
     public SafFile[] listFiles() {
-        final  ArrayList<DCFileListInfo> result = listDocUris(mContext, mUri);
-        
+        final ArrayList<DCFileListInfo> result = listDocUris(mContext, mUri);
         final SafFile[] resultFiles = new SafFile[result.size()];
         for (int i = 0; i < result.size(); i++) {
             resultFiles[i] = new SafFile(mContext, result.get(i).doc_uri, result.get(i).doc_name);
-//            Log.v("SafUtil","name="+nl.get(i));
         }
         return resultFiles;
     }
 
     public SafFile findFile(String name) {
         final ContentResolver resolver = mContext.getContentResolver();
-        final Uri childrenUri = DocumentsContract.buildChildDocumentsUriUsingTree(mUri,
-                DocumentsContract.getDocumentId(mUri));
+        final Uri childrenUri = DocumentsContract.buildChildDocumentsUriUsingTree(mUri, DocumentsContract.getDocumentId(mUri));
 
         SafFile result=null;
-        
+
         Cursor c = null;
         try {
             c = resolver.query(childrenUri, new String[] {
-            		DocumentsContract.Document.COLUMN_DOCUMENT_ID,
-                    DocumentsContract.Document.COLUMN_DISPLAY_NAME
+                            DocumentsContract.Document.COLUMN_DOCUMENT_ID,
+                            DocumentsContract.Document.COLUMN_DISPLAY_NAME
                     },
-                    null,//"_display_name = ?", 
+                    null,//"_display_name = ?",
                     null,//new String[]{name},
                     null);
-            
+
             while (c.moveToNext()) {
-            	String doc_name=c.getString(1);
-            	if (doc_name.equals(name)) {
-                	String doc_id=c.getString(0);
-                	Uri documentUri = DocumentsContract.buildDocumentUriUsingTree(mUri, doc_id);
-                	result=new SafFile(mContext,  documentUri, doc_name);
-                	break;
-            	}
+                String doc_name=c.getString(1);
+                if (doc_name.equals(name)) {
+                    String doc_id=c.getString(0);
+                    Uri documentUri = DocumentsContract.buildDocumentUriUsingTree(mUri, doc_id);
+                    result=new SafFile(mContext,  documentUri, doc_name);
+                    break;
+                }
             }
         } catch (Exception e) {
             Log.w("DCFile", "Failed query: " + e);
@@ -278,19 +264,18 @@ public class SafFile {
         }
         return result;
     }
-    
+
     private static ArrayList<DCFileListInfo> listDocUris(Context context, Uri uri) {
         final ContentResolver resolver = context.getContentResolver();
         final Uri childrenUri = DocumentsContract.buildChildDocumentsUriUsingTree(uri,
                 DocumentsContract.getDocumentId(uri));
         final ArrayList<DCFileListInfo> results = new ArrayList<DCFileListInfo>();
-
         Cursor c = null;
         try {
             c = resolver.query(childrenUri, new String[] {
                     DocumentsContract.Document.COLUMN_DOCUMENT_ID,
                     DocumentsContract.Document.COLUMN_DISPLAY_NAME
-                    }, null, null, null);
+            }, null, null, null);
             while (c.moveToNext()) {
                 final String documentId = c.getString(0);
                 final String documentName = c.getString(1);
@@ -311,17 +296,32 @@ public class SafFile {
     }
 
     public boolean renameTo(String displayName) {
-        final Uri result = DocumentsContract.renameDocument(mContext.getContentResolver(), mUri, displayName);
-        if (result != null) {
-            mUri = result;
+        Uri result=null;
+        try {
+            result = DocumentsContract.renameDocument(mContext.getContentResolver(), mUri, displayName);
             return true;
-        } else {
+        } catch (FileNotFoundException e) {
             return false;
         }
     }
-    
-    private static String queryForString(Context context, Uri self, String column,
-            String defaultValue) {
+
+    public boolean moveTo(SafFile to_file) {
+        Uri move_result=null;
+        try {
+            move_result = DocumentsContract.moveDocument(mContext.getContentResolver(), mUri, getParent(), to_file.getParent());
+            mUri = move_result;
+            Uri rename_result=move_result;
+            if (!getName().equals(to_file.getName())) {
+                if (to_file.exists()) to_file.delete();
+                rename_result=DocumentsContract.renameDocument(mContext.getContentResolver(), mUri, to_file.getName());
+            }
+            return true;
+        } catch (FileNotFoundException e) {
+            return false;
+        }
+    }
+
+    private static String queryForString(Context context, Uri self, String column, String defaultValue) {
         final ContentResolver resolver = context.getContentResolver();
 
         Cursor c = null;
@@ -340,13 +340,11 @@ public class SafFile {
         }
     }
 
-    private static int queryForInt(Context context, Uri self, String column,
-            int defaultValue) {
+    private static int queryForInt(Context context, Uri self, String column, int defaultValue) {
         return (int) queryForLong(context, self, column, defaultValue);
     }
 
-    private static long queryForLong(Context context, Uri self, String column,
-            long defaultValue) {
+    private static long queryForLong(Context context, Uri self, String column, long defaultValue) {
         final ContentResolver resolver = context.getContentResolver();
 
         Cursor c = null;
@@ -376,11 +374,13 @@ public class SafFile {
         }
     }
 
+    static class DCFileListInfo {
+        public Uri doc_uri;
+        public String doc_name, doc_type;
+        public boolean can_read, can_write;
+        public long doc_last_modified;
+        public long doc_length;
+    }
+
 }
-class DCFileListInfo {
-	public Uri doc_uri;
-	public String doc_name, doc_type;
-	public boolean can_read, can_write;
-	public long doc_last_modified;
-	public long doc_length;
-}
+

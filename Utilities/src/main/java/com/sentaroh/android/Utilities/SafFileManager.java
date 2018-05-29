@@ -6,11 +6,13 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.UriPermission;
 import android.net.Uri;
 import android.os.Build;
 import android.os.storage.StorageManager;
@@ -242,13 +244,13 @@ public class SafFileManager {
                     for (String uuid:uuid_array) {
                         SafFileItem rsi=new SafFileItem();
                         rsi.storageUuid=uuid;
-                        rsi.storageRootDirectory=UNKNOWN_SDCARD_DIRECTORY;
+                        sdcardRootDirectory=rsi.storageRootDirectory=UNKNOWN_SDCARD_DIRECTORY;
                         if (uuid!=null && !uuid.equals("")) {
                             for(File fl_item:stor_list) {
                                 if (fl_item.canRead()) {
                                     if (fl_item.getName().equals(uuid)) {
-                                        sdcardRootDirectory=getExternalSdcardPath();
-                                        rsi.storageRootDirectory=sdcard_dir;
+//                                        sdcardRootDirectory=getExternalSdcardPath();
+//                                        rsi.storageRootDirectory=sdcard_dir;
                                         rsi.storageTypeSdcard=true;
                                         rsi.storageIsMounted=true;
                                         break;
@@ -257,7 +259,11 @@ public class SafFileManager {
                             }
                             SafFile sf=SafFile.fromTreeUri(mContext,
                                     Uri.parse("content://com.android.externalstorage.documents/tree/"+rsi.storageUuid+"%3A"));
-                            if (sf!=null && sf.getName()!=null) rsi.storageIsMounted=true;
+                            if (sf!=null && sf.getName()!=null) {
+                                rsi.storageIsMounted=true;
+                                sdcardRootDirectory=getExternalSdcardPath();
+                                rsi.storageRootDirectory=sdcard_dir;
+                            }
                             rsi.storageRootFile=sf;
                             if (mDebugEnabled) Log.v(APPLICATION_TAG,"loadRemovableUuid Uuid="+uuid+
                                     ", mounted="+rsi.storageIsMounted+
@@ -348,20 +354,6 @@ public class SafFileManager {
         return result;
     };
 
-    public boolean isUuidRegistered(String uuid) {
-        boolean result=false;
-        synchronized(removableStorageList) {
-            for(SafFileItem rsi:removableStorageList) {
-//			Log.v("","is uuid="+rsi.storageUuid+", s="+uuid);
-                if (rsi.storageUuid.equals(uuid)) {
-                    result=true;
-                    break;
-                }
-            }
-        }
-        return result;
-    };
-
     @SuppressLint("NewApi")
     public String saveSafFileList() {
         String edit_string="", sep="";
@@ -398,45 +390,52 @@ public class SafFileManager {
         return result;
     };
 
-    public void addSafFileFromUri(Uri uri) {
+    public boolean addSafFileFromUri(Uri uri) {
+        boolean result=true;
         String uuid=getUuidFromUri(uri.toString());
-        if (uuid.length()>0) addSafFile(uuid);
+        if (uuid.length()>0) result=addSafFile(uuid);
+        return result;
     };
 
     @SuppressLint("NewApi")
-    public void addSafFile(String uuid) {
-        if (!isUuidRegistered(uuid)) {
-//			Log.v("","size="+removableStorageList.size());
-            SafFileItem rsi=new SafFileItem();
-            rsi.storageUuid=uuid;
+    public boolean addSafFile(String uuid) {
+        boolean result=true;
+        SafFileItem rsi=new SafFileItem();
+        rsi.storageUuid=uuid;
+        msg_area="addSafFile uuid="+uuid+"\n";
+        List<UriPermission> permissions = mContext.getContentResolver().getPersistedUriPermissions();
+        for(UriPermission item:permissions) msg_area+=item.toString()+"\n";
 
-            synchronized(removableStorageList) {
-                removableStorageList.clear();
-                removableStorageList.add(rsi);
-            }
-            saveSafFileList();
-            try {
-                mContext.getContentResolver().takePersistableUriPermission(
-                        Uri.parse("content://com.android.externalstorage.documents/tree/"+uuid+"%3A"),
-                        Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                loadSafFileList();
-            } catch(Exception e) {
-                e.printStackTrace();
-                if (mDebugEnabled) {
-                    Log.v(APPLICATION_TAG,"addSafFile error, uuid="+uuid);
-                }
-                msg_area="addSafFile error, uuid="+uuid+"\n";
-            }
-        } else {
-            if (mDebugEnabled) Log.v(APPLICATION_TAG,"addUuid already registerd, Uuid="+uuid);
+        synchronized(removableStorageList) {
+            removableStorageList.clear();
+            removableStorageList.add(rsi);
         }
+        saveSafFileList();
+        try {
+            mContext.getContentResolver().takePersistableUriPermission(
+                    Uri.parse("content://com.android.externalstorage.documents/tree/"+uuid+"%3A"),
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            loadSafFileList();
+        } catch(Exception e) {
+            result=false;
+            e.printStackTrace();
+            if (mDebugEnabled) {
+                Log.v(APPLICATION_TAG,"addSafFile error, uuid="+uuid);
+            }
+            msg_area+="addSafFile error, uuid="+uuid+", msg="+e.getMessage()+"\n";
+        }
+        return result;
     };
 
     public SafFile getSafFileBySdcardPath(SafFile rf, String target_path, boolean isDirectory) {
+        Uri parent=null;
         if (mDebugEnabled) {
             Log.v(APPLICATION_TAG,"target_path="+target_path+", sdcard_dir="+sdcardRootDirectory);
         }
         msg_area="target_path="+target_path+", sdcard_dir="+sdcardRootDirectory+"\n";
+        List<UriPermission> permissions = mContext.getContentResolver().getPersistedUriPermissions();
+        for(UriPermission item:permissions) msg_area+=item.toString()+"\n";
+
         long b_time=System.currentTimeMillis();
         SafFile document=rf;
 
@@ -483,7 +482,9 @@ public class SafFileManager {
                             msg_area+="file created name="+parts[i]+", result="+nextDocument+"\n";
                         }
                     }
+                    parent=document.getUri();
                     document = nextDocument;
+                    if (document!=null) document.setParent(parent);
                 }
             }
         }

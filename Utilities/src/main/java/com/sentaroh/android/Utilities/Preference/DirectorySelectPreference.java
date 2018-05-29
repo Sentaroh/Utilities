@@ -53,6 +53,7 @@ import android.os.Handler;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.preference.DialogPreference;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -284,36 +285,21 @@ public class DirectorySelectPreference extends DialogPreference{
 	    mLocalMountPointSpinner.setAdapter(adapter);
 	//    adapter.setTextColor(Color.BLACK);
 	
-	    ArrayList<String>ml=LocalMountPoint.getLocalMountpointList2(context);
 	    mLocalMountPointSpinner.setOnItemSelectedListener(null);
-	    int sel_no=0;
-	    if (ml.size()==0) {
-	    	adapter.add("/mnt/sdcard");
-	    	mLocalMountPointSpinner.setEnabled(false);
-	    } else {
-            mLocalMountPointSpinner.setEnabled(true);
-            int jk=0;
-            for (int i=0;i<ml.size();i++) {
-                boolean dup=false;
-                for(int j=0;j<adapter.getCount();j++) {
-                    if (adapter.getItem(j).equals(ml.get(i))) {
-                        dup=true;
-                        break;
-                    }
-                }
-                if (!dup) {
-                    if (showReadOnlyMountPoint ||
-                            (!showReadOnlyMountPoint &&  LocalMountPoint.isMountPointCanWrite(ml.get(i)))) {
-                        if (mDialogDirName.startsWith(ml.get(i))) sel_no=adapter.getCount();
-                        adapter.add(ml.get(i));
-                    }
+        File[] ext_dirs = ContextCompat.getExternalFilesDirs(context, null);
+        int sel_no=0;
+        if (ext_dirs==null) {
+            adapter.add("/mnt/sdcard");
+            mLocalMountPointSpinner.setEnabled(false);
+        } else {
+            for (File item:ext_dirs) {
+                if (item!=null) {
+                    String path=item.getPath().substring(0, item.getPath().indexOf("/Android/data/"));
+                    adapter.add(path);
                 }
             }
-	    	if (mTreeFilelistArrayList==null) {
-	    		mLocalMountPointSpinnerSelectedPos=sel_no;
-//	    		Log.v("","sel="+sel_no);
-	    	}
-	    }
+        }
+        if (adapter.getCount()==0) adapter.add("/mnt/sdcard");
 	    mLocalMountPointSpinner.setOnItemSelectedListener(null);
 	    mLocalMountPointSpinner.setSelection(mLocalMountPointSpinnerSelectedPos);
         if (showMountpointSelector) mLocalMountPointSpinner.setVisibility(Spinner.VISIBLE);

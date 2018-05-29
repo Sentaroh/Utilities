@@ -787,8 +787,11 @@ public class CommonFileSelector extends DialogFragment {
                         mTreeFilelistAdapter.setDataList(tfl);
                         mTreeFilelistAdapter.notifyDataSetChanged();
                         if (turl.startsWith(mSafFileMgr.getExternalSdcardPath())) {
-                            if (mSafFileMgr.getSdcardSafFile()==null) btnCreate.setEnabled(false);
-                            else btnCreate.setEnabled(true);
+                            if ((mSafFileMgr.getSdcardSafFile()==null) || mSafFileMgr.getSdcardDirectory().equals(SafFileManager.UNKNOWN_SDCARD_DIRECTORY)) {
+                                btnCreate.setEnabled(false);
+                            } else {
+                                btnCreate.setEnabled(true);
+                            }
                         } else btnCreate.setEnabled(true);
                         dir_path.setText(turl+"/");
                         Handler hndl_sel=new Handler();
