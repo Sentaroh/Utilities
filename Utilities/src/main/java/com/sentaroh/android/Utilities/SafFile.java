@@ -2,7 +2,7 @@ package com.sentaroh.android.Utilities;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import android.annotation.SuppressLint;
+
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -16,7 +16,6 @@ import android.provider.DocumentsContract;
 import android.text.TextUtils;
 import android.util.Log;
 
-@SuppressLint("NewApi")
 public class SafFile {
     private Context mContext;
     private Uri mUri;
@@ -49,8 +48,16 @@ public class SafFile {
                 DocumentsContract.getTreeDocumentId(treeUri));
     }
 
-    public String getMsgArea() {
-        return msg_area;
+    public String getMessages() {
+        String result=msg_area;
+        msg_area="";
+        return result;
+    }
+
+    public String toString() {
+        String result="Name="+mDocName+", Uri="+mUri.toString();
+        if (mParentUri!=null) result+=", ParentUri="+mParentUri.toString();
+        return result;
     }
 
     public SafFile createFile(String mimeType, String displayName) {
@@ -61,7 +68,7 @@ public class SafFile {
             result=createDocument(client, mUri, mimeType, displayName);
         } catch (Exception e) {
             Log.w("SafFile", "Failed to create file", e);
-            msg_area=e.getMessage()+"\n";
+            msg_area="Failed to create file, Error="+e.getMessage()+"\n";
             StackTraceElement[] st=e.getStackTrace();
             for (int i=0;i<st.length;i++) {
                 msg_area+="\n at "+st[i].getClassName()+"."+
@@ -82,7 +89,7 @@ public class SafFile {
             result=createDocument(client, mUri, DocumentsContract.Document.MIME_TYPE_DIR, displayName);
         } catch (Exception e) {
             Log.w("SafFile", "Failed to create directory", e);
-            msg_area+=e.getMessage()+"\n";
+            msg_area="Failed to create directory, Error="+e.getMessage()+"\n";
             StackTraceElement[] st=e.getStackTrace();
             for (int i=0;i<st.length;i++) {
                 msg_area+="\n at "+st[i].getClassName()+"."+
@@ -98,7 +105,7 @@ public class SafFile {
     public static final String METHOD_CREATE_DOCUMENT = "android:createDocument";
     public static final String EXTRA_URI = "uri";
 
-    public static Uri createDocument(ContentProviderClient client, Uri parentDocumentUri,
+    public Uri createDocument(ContentProviderClient client, Uri parentDocumentUri,
                                      String mimeType, String displayName) throws RemoteException {
         final Bundle in = new Bundle();
         in.putParcelable(EXTRA_URI, parentDocumentUri);
@@ -126,7 +133,7 @@ public class SafFile {
         }
     }
 
-    private static String getRawType(Context context, Uri mUri) {
+    private String getRawType(Context context, Uri mUri) {
         return queryForString(context, mUri, DocumentsContract.Document.COLUMN_MIME_TYPE, null);
     }
 
@@ -216,7 +223,8 @@ public class SafFile {
                     DocumentsContract.Document.COLUMN_DOCUMENT_ID }, null, null, null);
             return c.getCount() > 0;
         } catch (Exception e) {
-            Log.w("DCFile", "Failed query: " + e);
+            Log.w("SafFile", "SafFile#exists Failed query: " + e);
+            msg_area="SafFile#exists Failed to Query, Error="+e.getMessage()+"\n";
             return false;
         } finally {
             closeQuietly(c);
@@ -224,10 +232,20 @@ public class SafFile {
     }
 
     public SafFile[] listFiles() {
-        final ArrayList<DCFileListInfo> result = listDocUris(mContext, mUri);
+        final ArrayList<SafFileListInfo> result = listDocUris(mContext, mUri);
         final SafFile[] resultFiles = new SafFile[result.size()];
         for (int i = 0; i < result.size(); i++) {
             resultFiles[i] = new SafFile(mContext, result.get(i).doc_uri, result.get(i).doc_name);
+            resultFiles[i].setParent(this.getUri());
+        }
+        return resultFiles;
+    }
+
+    public String[] list() {
+        final ArrayList<SafFileListInfo> result = listDocUris(mContext, mUri);
+        final String[] resultFiles = new String[result.size()];
+        for (int i = 0; i < result.size(); i++) {
+            resultFiles[i] = this.getName()+"/"+result.get(i).doc_name;
         }
         return resultFiles;
     }
@@ -254,22 +272,24 @@ public class SafFile {
                     String doc_id=c.getString(0);
                     Uri documentUri = DocumentsContract.buildDocumentUriUsingTree(mUri, doc_id);
                     result=new SafFile(mContext,  documentUri, doc_name);
+//                    result.setParent(this.getUri());
                     break;
                 }
             }
         } catch (Exception e) {
-            Log.w("DCFile", "Failed query: " + e);
+            Log.w("SafFile", "SafFile#findFile Failed query: " + e);
+            msg_area="SafFile#findFile Failed to Query, Error="+e.getMessage()+"\n";
         } finally {
             closeQuietly(c);
         }
         return result;
     }
 
-    private static ArrayList<DCFileListInfo> listDocUris(Context context, Uri uri) {
+    private ArrayList<SafFileListInfo> listDocUris(Context context, Uri uri) {
         final ContentResolver resolver = context.getContentResolver();
         final Uri childrenUri = DocumentsContract.buildChildDocumentsUriUsingTree(uri,
                 DocumentsContract.getDocumentId(uri));
-        final ArrayList<DCFileListInfo> results = new ArrayList<DCFileListInfo>();
+        final ArrayList<SafFileListInfo> results = new ArrayList<SafFileListInfo>();
         Cursor c = null;
         try {
             c = resolver.query(childrenUri, new String[] {
@@ -281,13 +301,14 @@ public class SafFile {
                 final String documentName = c.getString(1);
                 final Uri documentUri = DocumentsContract.buildDocumentUriUsingTree(uri,
                         documentId);
-                DCFileListInfo info=new DCFileListInfo();
+                SafFileListInfo info=new SafFileListInfo();
                 info.doc_name=documentName;
                 info.doc_uri=documentUri;
                 results.add(info);
             }
         } catch (Exception e) {
-            Log.w("DCFile", "Failed query: " + e);
+            Log.w("SafFile", "SafFile#listDocUris Failed query: " + e);
+            msg_area="SafFile#listDocUris Failed to Query, Error="+e.getMessage()+"\n";
         } finally {
             closeQuietly(c);
         }
@@ -321,7 +342,7 @@ public class SafFile {
         }
     }
 
-    private static String queryForString(Context context, Uri self, String column, String defaultValue) {
+    private String queryForString(Context context, Uri self, String column, String defaultValue) {
         final ContentResolver resolver = context.getContentResolver();
 
         Cursor c = null;
@@ -333,18 +354,19 @@ public class SafFile {
                 return defaultValue;
             }
         } catch (Exception e) {
-            Log.w("DCFile", "Failed query: " + e);
+            Log.w("SafFile", "SafFile#queryForString Failed query: " + e);
+            msg_area="SafFile#queryForString Failed to Query, Error="+e.getMessage()+"\n";
             return defaultValue;
         } finally {
             closeQuietly(c);
         }
     }
 
-    private static int queryForInt(Context context, Uri self, String column, int defaultValue) {
+    private int queryForInt(Context context, Uri self, String column, int defaultValue) {
         return (int) queryForLong(context, self, column, defaultValue);
     }
 
-    private static long queryForLong(Context context, Uri self, String column, long defaultValue) {
+    private long queryForLong(Context context, Uri self, String column, long defaultValue) {
         final ContentResolver resolver = context.getContentResolver();
 
         Cursor c = null;
@@ -356,7 +378,8 @@ public class SafFile {
                 return defaultValue;
             }
         } catch (Exception e) {
-            Log.w("DCFile", "Failed query: " + e);
+            Log.w("SafFile", "SafFile#queryForLong Failed query: " + e);
+            msg_area="SafFile#queryForLong Failed to Query, Error="+e.getMessage()+"\n";
             return defaultValue;
         } finally {
             closeQuietly(c);
@@ -374,7 +397,7 @@ public class SafFile {
         }
     }
 
-    static class DCFileListInfo {
+    static class SafFileListInfo {
         public Uri doc_uri;
         public String doc_name, doc_type;
         public boolean can_read, can_write;

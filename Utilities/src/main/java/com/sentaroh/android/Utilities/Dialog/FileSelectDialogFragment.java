@@ -33,7 +33,7 @@ import com.sentaroh.android.Utilities.MiscUtil;
 import com.sentaroh.android.Utilities.LocalMountPoint;
 import com.sentaroh.android.Utilities.NotifyEvent;
 import com.sentaroh.android.Utilities.SafFile;
-import com.sentaroh.android.Utilities.SafFileManager;
+import com.sentaroh.android.Utilities.SafManager;
 import com.sentaroh.android.Utilities.ThemeUtil;
 import com.sentaroh.android.Utilities.NotifyEvent.NotifyEventListener;
 import com.sentaroh.android.Utilities.ThemeColorList;
@@ -101,7 +101,7 @@ public class FileSelectDialogFragment extends DialogFragment {
 	
 	private NotifyEvent mNotifyEvent=null;
 	
-	SafFileManager mSafFileMgr=null;
+	private SafManager mSafFileMgr=null;
 	private int mRestartStatus=0;
 	
 	public static FileSelectDialogFragment newInstance(boolean debug, 
@@ -284,7 +284,7 @@ public class FileSelectDialogFragment extends DialogFragment {
         
         if (savedInstanceState!=null) mRestartStatus=2;
 
-        mSafFileMgr=new SafFileManager(getActivity().getApplicationContext(), mDebugEnable);
+        mSafFileMgr=new SafManager(getActivity().getApplicationContext(), mDebugEnable);
         
     	mFragment=this;
     	if (!mTerminateRequired) {
@@ -895,8 +895,8 @@ public class FileSelectDialogFragment extends DialogFragment {
 				        	tfl.add(new TreeFilelistItem(context.getString(R.string.msgs_file_select_edit_dir_empty)));
 				        mTreeFilelistAdapter.setDataList(tfl);
 				        mTreeFilelistAdapter.notifyDataSetChanged();
-				        if (turl.startsWith(mSafFileMgr.getExternalSdcardPath())) {
-				            if (mSafFileMgr.getSdcardSafFile()==null) btnCreate.setEnabled(false);
+				        if (turl.startsWith(mSafFileMgr.getSdcardRootPath())) {
+				            if (mSafFileMgr.getSdcardRootSafFile()==null) btnCreate.setEnabled(false);
 				            else btnCreate.setEnabled(true);
 				        } else btnCreate.setEnabled(true);
 						dir_name.setText(turl+"/");
@@ -1121,8 +1121,8 @@ public class FileSelectDialogFragment extends DialogFragment {
 					public void positiveResponse(Context c, Object[] o) {
 						File lf= new File(n_path);
 						boolean rc_create=false;
-						if (c_dir.startsWith(mSafFileMgr.getExternalSdcardPath())) {
-							SafFile sf=mSafFileMgr.getSafFileBySdcardPath(mSafFileMgr.getSdcardSafFile(), n_path, true);
+						if (c_dir.startsWith(mSafFileMgr.getSdcardRootPath())) {
+							SafFile sf=mSafFileMgr.createSdcardItem(n_path, true);
 							rc_create=sf.exists();
 						} else {
 							rc_create=lf.mkdirs();

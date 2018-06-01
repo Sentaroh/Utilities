@@ -31,7 +31,7 @@ import java.util.Locale;
 import com.sentaroh.android.Utilities.MiscUtil;
 import com.sentaroh.android.Utilities.NotifyEvent;
 import com.sentaroh.android.Utilities.SafFile;
-import com.sentaroh.android.Utilities.SafFileManager;
+import com.sentaroh.android.Utilities.SafManager;
 import com.sentaroh.android.Utilities.ThemeUtil;
 import com.sentaroh.android.Utilities.NotifyEvent.NotifyEventListener;
 import com.sentaroh.android.Utilities.ThemeColorList;
@@ -92,7 +92,7 @@ public class SafFileSelectDialogFragment extends DialogFragment {
 	
 	private NotifyEvent mNotifyEvent=null;
 	
-	SafFileManager mSafFileMgr=null;
+	private SafManager mSafFileMgr=null;
 	private int mRestartStatus=0;
 	
 //	public static FileSelectDialogFragment newInstance(
@@ -222,9 +222,9 @@ public class SafFileSelectDialogFragment extends DialogFragment {
         
         if (savedInstanceState!=null) mRestartStatus=2;
 
-        mSafFileMgr=new SafFileManager(getActivity().getApplicationContext(), mDebugEnable);
+        mSafFileMgr=new SafManager(getActivity().getApplicationContext(), mDebugEnable);
 
-    	mDialogSafRoot=mSafFileMgr.getSafFileByUuid(mDialogLocalUuid);
+    	mDialogSafRoot=mSafFileMgr.getSdcardRootSafFile();
         
     	mFragment=this;
     	if (!mTerminateRequired) {
@@ -852,7 +852,7 @@ public class SafFileSelectDialogFragment extends DialogFragment {
 		SafFile[]  ff=null;
 		if (dir.equals("")) ff=mDialogSafRoot.listFiles();
 		else {
-			SafFile lf=mSafFileMgr.getSafFileBySdcardPath(mDialogSafRoot, dir, true);
+			SafFile lf=mSafFileMgr.createSdcardItem(dir, true);
 			if (lf!=null) ff=lf.listFiles();
 		}
 		
@@ -862,7 +862,7 @@ public class SafFileSelectDialogFragment extends DialogFragment {
 				if (ff[i].canRead()) {
 					int dirct=0;
 					if (ff[i].isDirectory()) {
-						SafFile tlf=mSafFileMgr.getSafFileBySdcardPath(mDialogSafRoot, tdir+"/"+ff[i].getName(), true);
+						SafFile tlf=mSafFileMgr.createSdcardItem(tdir+"/"+ff[i].getName(), true);
 						SafFile[] lfl=tlf.listFiles();
 						if (lfl!=null) {
 							for (int j=0;j<lfl.length;j++) {
@@ -956,7 +956,7 @@ public class SafFileSelectDialogFragment extends DialogFragment {
 			public void afterTextChanged(Editable s) {
 				if (s.length()>0) {
 //					SafFile lf=mSafFileMgr.getSafFileBySdcardPath(mDialogSafRoot, c_dir+"/"+s.toString(), true);
-					SafFile lf=mSafFileMgr.getSafFileBySdcardPath(mDialogSafRoot, c_dir, true);
+					SafFile lf=mSafFileMgr.createSdcardItem(c_dir, true);
 					SafFile[] c_fl=lf.listFiles();
 					boolean found=false;
 					for(SafFile item:c_fl) {
@@ -991,10 +991,10 @@ public class SafFileSelectDialogFragment extends DialogFragment {
 						boolean rc_create=false;
 						if (!dlg_type.isChecked()) {
 							Log.v("","n_path="+n_path);
-							SafFile sf=mSafFileMgr.getSafFileBySdcardPath(mSafFileMgr.getSdcardSafFile(), n_path, true);
+							SafFile sf=mSafFileMgr.createSdcardItem(n_path, true);
 							rc_create=sf.exists();
 						} else {
-							SafFile sf=mSafFileMgr.getSafFileBySdcardPath(mSafFileMgr.getSdcardSafFile(), n_path, false);
+							SafFile sf=mSafFileMgr.createSdcardItem(n_path, false);
 							rc_create=sf.exists();
 						}
 						if (!rc_create) {
@@ -1045,7 +1045,7 @@ public class SafFileSelectDialogFragment extends DialogFragment {
 			final String creat_dir,final String r_dir, 
 			final TreeFilelistAdapter tfa, final ListView lv) {
 		Log.v("","p_dir="+p_dir+", create_dir="+creat_dir+", r_dir="+r_dir);
-		SafFile lf=mSafFileMgr.getSafFileBySdcardPath(mDialogSafRoot, r_dir+p_dir+creat_dir, true);
+		SafFile lf=mSafFileMgr.createSdcardItem(r_dir+p_dir+creat_dir, true);
 		if (!p_dir.equals("/")) {//not root
         	for (int i=tfa.getDataItemCount()-1;i>=0;i--) {
         		TreeFilelistItem tfi=tfa.getDataItem(i);

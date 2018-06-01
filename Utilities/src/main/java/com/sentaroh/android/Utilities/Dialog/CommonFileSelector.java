@@ -32,7 +32,7 @@ import com.sentaroh.android.Utilities.MiscUtil;
 import com.sentaroh.android.Utilities.NotifyEvent;
 import com.sentaroh.android.Utilities.R;
 import com.sentaroh.android.Utilities.SafFile;
-import com.sentaroh.android.Utilities.SafFileManager;
+import com.sentaroh.android.Utilities.SafManager;
 import com.sentaroh.android.Utilities.ThemeColorList;
 import com.sentaroh.android.Utilities.ThemeUtil;
 import com.sentaroh.android.Utilities.TreeFilelist.TreeFilelistAdapter;
@@ -77,7 +77,7 @@ public class CommonFileSelector extends DialogFragment {
 
     private NotifyEvent mNotifyEvent=null;
 
-    SafFileManager mSafFileMgr=null;
+    private SafManager mSafFileMgr=null;
     private int mRestartStatus=0;
 
     public static CommonFileSelector newInstance(boolean debug,
@@ -158,7 +158,7 @@ public class CommonFileSelector extends DialogFragment {
 
         if (savedInstanceState!=null) mRestartStatus=2;
 
-        mSafFileMgr=new SafFileManager(getActivity().getApplicationContext(), mDebugEnable);
+        mSafFileMgr=new SafManager(getActivity().getApplicationContext(), mDebugEnable);
 
         mFragment=this;
         if (!mTerminateRequired) {
@@ -786,8 +786,8 @@ public class CommonFileSelector extends DialogFragment {
                             tfl.add(new TreeFilelistItem(context.getString(R.string.msgs_file_select_edit_dir_empty)));
                         mTreeFilelistAdapter.setDataList(tfl);
                         mTreeFilelistAdapter.notifyDataSetChanged();
-                        if (turl.startsWith(mSafFileMgr.getExternalSdcardPath())) {
-                            if ((mSafFileMgr.getSdcardSafFile()==null) || mSafFileMgr.getSdcardDirectory().equals(SafFileManager.UNKNOWN_SDCARD_DIRECTORY)) {
+                        if (turl.startsWith(mSafFileMgr.getSdcardRootPath())) {
+                            if ((mSafFileMgr.getSdcardRootSafFile()==null) || mSafFileMgr.getSdcardRootPath().equals(SafManager.UNKNOWN_SDCARD_DIRECTORY)) {
                                 btnCreate.setEnabled(false);
                             } else {
                                 btnCreate.setEnabled(true);
@@ -976,8 +976,8 @@ public class CommonFileSelector extends DialogFragment {
                     public void positiveResponse(Context c, Object[] o) {
                         File lf= new File(n_path);
                         boolean rc_create=false;
-                        if (c_dir.startsWith(mSafFileMgr.getExternalSdcardPath())) {
-                            SafFile sf=mSafFileMgr.getSafFileBySdcardPath(mSafFileMgr.getSdcardSafFile(), n_path, true);
+                        if (c_dir.startsWith(mSafFileMgr.getSdcardRootPath())) {
+                            SafFile sf=mSafFileMgr.createSdcardItem(n_path, true);
                             rc_create=sf.exists();
                         } else {
                             rc_create=lf.mkdirs();

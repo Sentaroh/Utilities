@@ -70,6 +70,7 @@ public class CommonLogWriter {
                             }
                         }
                     };
+                    th.setName("CommonLogWriter");
                     th.setPriority(Thread.MIN_PRIORITY);
                     th.start();
                 } else {
@@ -136,14 +137,14 @@ public class CommonLogWriter {
             if (printWriter!=null) {
                 synchronized(printWriter) {
                     printWriter.println(msg);
-//                    if (log_msg_queue.size()==0)
+                    if (log_msg_queue.size()==0)
                         printWriter.flush();//debug
                 }
             }
         } else {
             synchronized(printWriter) {
                 printWriter.println(msg);
-//                if (log_msg_queue.size()==0)
+                if (log_msg_queue.size()==0)
                     printWriter.flush();//debug
             }
         }

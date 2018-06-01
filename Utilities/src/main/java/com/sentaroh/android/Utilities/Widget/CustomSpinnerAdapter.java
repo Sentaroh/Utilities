@@ -75,11 +75,11 @@ public class CustomSpinnerAdapter extends ArrayAdapter<String> {
         if (Build.VERSION.SDK_INT>=11) {
 //    		text.setCompoundDrawablePadding(10);
 //    		text.setCompoundDrawablesWithIntrinsicBounds(
-//          		mContext.getResources().getDrawable(android.R.drawable.btn_radio), 
+//          		mContext.getResources().getDrawable(android.R.drawable.btn_radio),
 //          		null, null, null);
-    		//2014-09-24 ボタンを右側に変更
+//    		//2014-09-24 ボタンを右側に変更
     		text.setCompoundDrawablesWithIntrinsicBounds(null,null,
-              		mContext.getResources().getDrawable(android.R.drawable.btn_radio), 
+              		mContext.getResources().getDrawable(android.R.drawable.btn_radio),
               		null );
 //    		text.setEllipsize(TruncateAt.START);
     		text.post(new Runnable(){
