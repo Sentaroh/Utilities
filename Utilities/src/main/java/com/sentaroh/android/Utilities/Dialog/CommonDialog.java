@@ -24,10 +24,14 @@ OTHER DEALINGS IN THE SOFTWARE.
 */ 
 
 import com.sentaroh.android.Utilities.NotifyEvent;
+import com.sentaroh.android.Utilities.R;
+
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.support.v4.app.FragmentManager;
 import android.view.ViewGroup.LayoutParams;
+import android.view.Window;
 
 public class CommonDialog {
 	private FragmentManager mFragMgr =null;
@@ -43,8 +47,17 @@ public class CommonDialog {
         		negative, type, title, msgtext);
         cdf.showDialog(mFragMgr,cdf,ntfy);
 	};
-	
-	@SuppressWarnings("deprecation")
+
+    static public Dialog showProgressSpinIndicator(Activity a) {
+        final Dialog dialog=new Dialog(a, android.R.style.Theme_Translucent);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.progress_spin_indicator_dlg);
+        dialog.setCancelable(true);
+        dialog.setCanceledOnTouchOutside(false);
+        return dialog;
+    }
+
+    @SuppressWarnings("deprecation")
 	static public void setDlgBoxSizeCompact(Dialog dlg) {
 		if (dlg==null) return;
 		int w=dlg.getWindow().getWindowManager().getDefaultDisplay().getWidth();

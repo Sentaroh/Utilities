@@ -47,7 +47,7 @@ dependencies {
 //    implementation 'com.android.support:support-fragment:26.1.1'
 
 //    implementation 'com.android.support:appcompat-v7:22.2.1'
-    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support:appcompat-v7:27.1.0'
     implementation files('libs/ImageViewTouch-1.0.1-Mod.jar')
 //    implementation files('libs/jcifs-1.3.17_patch.jar')
     implementation files('libs/juniversalchardet-1.0.3.jar')

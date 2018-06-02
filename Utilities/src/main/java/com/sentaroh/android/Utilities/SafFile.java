@@ -329,14 +329,22 @@ public class SafFile {
     public boolean moveTo(SafFile to_file) {
         Uri move_result=null;
         try {
+            msg_area="moveTo mUri="+mUri+", to_file="+to_file+"\n";
             move_result = DocumentsContract.moveDocument(mContext.getContentResolver(), mUri, getParent(), to_file.getParent());
             mUri = move_result;
-            Uri rename_result=move_result;
-            if (!getName().equals(to_file.getName())) {
-                if (to_file.exists()) to_file.delete();
-                rename_result=DocumentsContract.renameDocument(mContext.getContentResolver(), mUri, to_file.getName());
+            if (mUri!=null) {
+                msg_area+="moveTo result="+mUri+"\n";
+                Uri rename_result=move_result;
+                if (!getName().equals(to_file.getName())) {
+                    if (to_file.exists()) to_file.delete();
+                    rename_result=DocumentsContract.renameDocument(mContext.getContentResolver(), mUri, to_file.getName());
+                    msg_area+="moveTo rename result="+rename_result+"\n";
+                }
+                return true;
+            } else {
+                msg_area+="moveTo failed"+"\n";
+                return false;
             }
-            return true;
         } catch (FileNotFoundException e) {
             return false;
         }

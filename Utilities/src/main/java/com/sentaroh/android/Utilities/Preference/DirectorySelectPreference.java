@@ -277,9 +277,9 @@ public class DirectorySelectPreference extends DialogPreference{
 		setSpinnerBackground(context, mLocalMountPointSpinner, tcl.theme_is_light);
 		mLocalMountPointSpinner.setVisibility(Spinner.VISIBLE);
 		//	Root directory spinner
-	    CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(context, R.layout.custom_simple_spinner_item);
+	    CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(context, android.R.layout.simple_spinner_item);
 	//    CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(context, R.layout.custom_simple_spinner_item);
-	    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+	    adapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
 	    mLocalMountPointSpinner.setPrompt(
 	    		context.getString(R.string.msgs_file_select_edit_local_mount_point));
 	    mLocalMountPointSpinner.setAdapter(adapter);

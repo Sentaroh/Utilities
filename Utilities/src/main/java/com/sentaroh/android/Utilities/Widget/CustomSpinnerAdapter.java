@@ -67,32 +67,32 @@ public class CustomSpinnerAdapter extends ArrayAdapter<String> {
 
         return view;
 	}
-	@SuppressWarnings("deprecation")
-	@Override
-	public View getDropDownView(int position, View convertView, ViewGroup parent) {
-        final TextView text=(TextView)super.getDropDownView(position, convertView, parent);
-//        text.setBackgroundColor(Color.LTGRAY);
-        if (Build.VERSION.SDK_INT>=11) {
-//    		text.setCompoundDrawablePadding(10);
-//    		text.setCompoundDrawablesWithIntrinsicBounds(
-//          		mContext.getResources().getDrawable(android.R.drawable.btn_radio),
-//          		null, null, null);
-//    		//2014-09-24 ボタンを右側に変更
-    		text.setCompoundDrawablesWithIntrinsicBounds(null,null,
-              		mContext.getResources().getDrawable(android.R.drawable.btn_radio),
-              		null );
-//    		text.setEllipsize(TruncateAt.START);
-    		text.post(new Runnable(){
-				@Override
-				public void run() {
-					text.setSingleLine(false);
-				}
-    		});
-        }
-//        if (text_color!=0) text.setTextColor(text_color);
-//        if (text_size!=0) text.setTextSize(text_size);
-        
-        return text;
-	}
+//	@SuppressWarnings("deprecation")
+//	@Override
+//	public View getDropDownView(int position, View convertView, ViewGroup parent) {
+//        final TextView text=(TextView)super.getDropDownView(position, convertView, parent);
+////        text.setBackgroundColor(Color.LTGRAY);
+//        if (Build.VERSION.SDK_INT>=11) {
+////    		text.setCompoundDrawablePadding(10);
+////    		text.setCompoundDrawablesWithIntrinsicBounds(
+////          		mContext.getResources().getDrawable(android.R.drawable.btn_radio),
+////          		null, null, null);
+////    		//2014-09-24 ボタンを右側に変更
+//    		text.setCompoundDrawablesWithIntrinsicBounds(null,null,
+//              		mContext.getResources().getDrawable(android.R.drawable.btn_radio),
+//              		null );
+////    		text.setEllipsize(TruncateAt.START);
+//    		text.post(new Runnable(){
+//				@Override
+//				public void run() {
+//					text.setSingleLine(false);
+//				}
+//    		});
+//        }
+////        if (text_color!=0) text.setTextColor(text_color);
+////        if (text_size!=0) text.setTextSize(text_size);
+//
+//        return text;
+//	}
 	
 }
