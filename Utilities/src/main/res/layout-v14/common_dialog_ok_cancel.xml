@@ -4,23 +4,35 @@
     android:id="@+id/common_dialog_btn_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     tools:ignore="ButtonStyle" >
 
     <Button
-        android:id="@+id/common_dialog_btn_cancel"
-        android:layout_width="0dp"
+        android:id="@+id/common_dialog_extra_button"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/msgs_common_dialog_cancel" />
+        android:visibility="gone"
+        android:text="Extra Button" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
 
-    <Button
-        android:id="@+id/common_dialog_btn_ok"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/msgs_common_dialog_ok" />
+        <Button
+            android:id="@+id/common_dialog_btn_cancel"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/msgs_common_dialog_cancel" />
+        <Button
+            android:id="@+id/common_dialog_btn_ok"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/msgs_common_dialog_ok" />
+
+    </LinearLayout>
 
 </LinearLayout>
