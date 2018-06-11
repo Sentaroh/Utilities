@@ -313,7 +313,7 @@ public class SafManager {
                 String label=(String) getLabel.invoke(volume);
 //                String path = (String) getPath.invoke(volume);
                 msg_area+="getSdcardUuidFromStorageManager uuid found="+uuid+", Label="+label+"\n";
-                if (uuid!=null && (label.contains("SD") || label.toLowerCase().contains("sdcard1"))) {
+                if (uuid!=null && (label.contains("SD") || label.toLowerCase().contains("sdcard1") || label.equals("forZenPad"))) {
                     uuids.add(uuid);
                     msg_area+="getSdcardUuidFromStorageManager added="+uuid+"\n";
                 }
