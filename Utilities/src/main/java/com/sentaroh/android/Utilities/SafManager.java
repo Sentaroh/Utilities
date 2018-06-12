@@ -282,10 +282,14 @@ public class SafManager {
 //            boolean read=usb.canRead();
 //            if ((exists && !read) || (!exists)) result=true;
 //            else result=false;
-            result=true;
-            ArrayList<String> sdcard_uuids=getSdcardUuidFromStorageManager(mContext, true);
-            if (sdcard_uuids.size()>0) {
-                if (sdcard_uuids.contains(uuid)) result=false;
+            result=false;
+//            ArrayList<String> sdcard_uuids=getSdcardUuidFromStorageManager(mContext, true);
+//            if (sdcard_uuids.size()>0) {
+//                if (sdcard_uuids.contains(uuid)) result=false;
+//            }
+            ArrayList<String> usb_uuids=getUsbUuidFromStorageManager(mContext, true);
+            if (usb_uuids.size()>0) {
+                if (usb_uuids.contains(uuid)) result=true;
             }
             msg_area+="isUsbUuid uuid="+uuid+", result="+result+"\n";
             return result;
@@ -317,6 +321,40 @@ public class SafManager {
                         label.contains("Speicherkarte") )) {
                     uuids.add(uuid);
                     msg_area+="getSdcardUuidFromStorageManager added="+uuid+"\n";
+                }
+            }
+        } catch (ClassCastException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return uuids;
+    }
+
+    private ArrayList<String> getUsbUuidFromStorageManager(Context context, boolean debug) {
+        ArrayList<String> uuids = new ArrayList<String>();
+        try {
+            StorageManager sm = (StorageManager) context.getSystemService(Context.STORAGE_SERVICE);
+            Method getVolumeList = sm.getClass().getDeclaredMethod("getVolumeList");
+            Object[] volumeList = (Object[]) getVolumeList.invoke(sm);
+            for (Object volume : volumeList) {
+//                Method getPath = volume.getClass().getDeclaredMethod("getPath");
+//	            Method isRemovable = volume.getClass().getDeclaredMethod("isRemovable");
+                Method getUuid = volume.getClass().getDeclaredMethod("getUuid");
+                Method toString = volume.getClass().getDeclaredMethod("toString");
+                String desc=(String)toString.invoke(volume);
+                Method getLabel = volume.getClass().getDeclaredMethod("getUserLabel");
+                String uuid=(String) getUuid.invoke(volume);
+                String label=(String) getLabel.invoke(volume);
+//                String path = (String) getPath.invoke(volume);
+                msg_area+="getUsbUuidFromStorageManager uuid found="+uuid+", Label="+label+"\n";
+                if (uuid!=null && ( label.toLowerCase().contains("usb") )) {
+                    uuids.add(uuid);
+                    msg_area+="getUsbUuidFromStorageManager added="+uuid+"\n";
                 }
             }
         } catch (ClassCastException e) {
