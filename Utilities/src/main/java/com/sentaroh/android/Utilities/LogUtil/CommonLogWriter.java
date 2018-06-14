@@ -40,11 +40,17 @@ public class CommonLogWriter {
 
     private static String threadCtrl="E";
 
+    private static int queueHighWaterMark=0;
+
     static public void enqueue(final CommonGlobalParms cgp, final Context c, final Intent in) {
         if (in!=null) {
             mGp=cgp;
             debug_level=cgp.getDebugLevel();
             log_msg_queue.add(in);
+//            if (queueHighWaterMark<log_msg_queue.size()) {
+//                queueHighWaterMark=log_msg_queue.size();
+//                Log.v("CommonLogWriter","Log queue high water mark="+queueHighWaterMark);
+//            }
             synchronized(threadCtrl) {
                 if (log_msg_queue.size()>0 && threadCtrl.equals("E")) {
 //                    if (cgp.getDebugLevel()>=2) Log.v("SMBSync2","Log dequeue scheduled");
