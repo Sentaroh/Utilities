@@ -574,9 +574,11 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
 		    	hndl.postDelayed(new Runnable(){
 					@Override
 					public void run() {
+					    int prev_count=mLogFileManagementAdapter.getCount();
 						mLogFileList=CommonLogUtil.createLogFileList(mGp);
 						mLogFileManagementAdapter.replaceDataList(mLogFileList);
 						mLogFileManagementAdapter.notifyDataSetChanged();
+						if (mLogFileManagementAdapter.getCount()!=0) setContextButtonNormalMode(mLogFileManagementAdapter);
 					}
 		    	}, 200);
 			}

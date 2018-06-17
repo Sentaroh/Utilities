@@ -23,18 +23,17 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 
 import com.sentaroh.android.Utilities.CommonGlobalParms;
 import com.sentaroh.android.Utilities.MiscUtil;
 import com.sentaroh.android.Utilities.StringUtil;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class CommonLogUtil {
 	private Context mContext=null;
@@ -58,8 +57,7 @@ public class CommonLogUtil {
 	};
 
 	final public static void closeLog(Context c, CommonGlobalParms mGp) {
-		Intent intent = new Intent(mGp.getLogIntentClose());
-        sendIntentLogReceiver(mGp, c, intent);
+        CommonLogWriter.enqueue(mGp, c, mGp.getLogIntentClose(), "", true);
 	};
 
 	final public void resetLogReceiver() {
@@ -67,8 +65,7 @@ public class CommonLogUtil {
 	};
 
 	final public static void resetLogReceiver(Context c, CommonGlobalParms mGp) {
-		Intent intent = new Intent(mGp.getLogIntentReset());
-        sendIntentLogReceiver(mGp, c, intent);
+        CommonLogWriter.enqueue(mGp, c, mGp.getLogIntentReset(), "",  true);
 	};
 
 	final public void flushLog() {
@@ -76,8 +73,7 @@ public class CommonLogUtil {
 	};
 
 	final public static void flushLog(Context c, CommonGlobalParms mGp) {
-		Intent intent = new Intent(mGp.getLogIntentFlush());
-        sendIntentLogReceiver(mGp, c, intent);
+        CommonLogWriter.enqueue(mGp, c, mGp.getLogIntentFlush(), "", true);
 	};
 
 	final public void rotateLogFile() {
@@ -85,20 +81,12 @@ public class CommonLogUtil {
 	};
 
 	final public static void rotateLogFile(Context c, CommonGlobalParms mGp) {
-		Intent intent = new Intent(mGp.getLogIntentRotate());
-        sendIntentLogReceiver(mGp, c, intent);
+        CommonLogWriter.enqueue(mGp, c, mGp.getLogIntentRotate(), "", true);
 	};
 
     final public void deleteLogFile() {
-		Intent intent = new Intent(mGp.getLogIntentDelete());
-        sendIntentLogReceiver(mGp, mContext, intent);
+        CommonLogWriter.enqueue(mGp, mContext, mGp.getLogIntentDelete(), "", true);
 	};
-
-    private static void sendIntentLogReceiver(CommonGlobalParms mGp, Context c, Intent intent) {
-//        intent.setClass(c, mGp.getLogReceiverClass());
-//        c.sendOrderedBroadcast(intent,null);
-        CommonLogWriter.enqueue(mGp, c, intent);
-    }
 
 	final public void addLogMsg(String cat, String... msg) {
 //		Log.v("","lvl="+mGp.getDebugLevel()+", ena="+mGp.isLogEnabled());
@@ -142,7 +130,6 @@ public class CommonLogUtil {
 		StringBuilder log_msg=new StringBuilder(512);
 		for (int i=0;i<msg.length;i++) log_msg.append(msg[i]);
 		if (gp.isLogEnabled()) {
-			Intent intent = new Intent(gp.getLogIntentSend());
 			StringBuilder print_msg=new StringBuilder(512);
 			print_msg
 			.append("M ")
@@ -152,8 +139,7 @@ public class CommonLogUtil {
 			.append(" ")
 			.append(log_id)
 			.append(log_msg.toString());
-			intent.putExtra("LOG", print_msg.toString());
-            sendIntentLogReceiver(gp, context, intent);
+            CommonLogWriter.enqueue(gp, context, gp.getLogIntentSend(), print_msg.toString(), false);
 		}
 		if (gp.isLogcatEnabled()) Log.v(gp.getApplicationTag(),cat+" "+log_id+log_msg.toString());
 	};
@@ -166,14 +152,12 @@ public class CommonLogUtil {
 		StringBuilder log_msg=new StringBuilder(512);
 		for (int i=0;i<msg.length;i++) log_msg.append(msg[i]);
 		if (gp.isLogEnabled()) {
-			Intent intent = new Intent(gp.getLogIntentSend());
 			print_msg.append(" ")
 			.append(StringUtil.convDateTimeTo_YearMonthDayHourMinSecMili(System.currentTimeMillis()))
 			.append(" ")
 			.append(log_id)
 			.append(log_msg.toString());
-			intent.putExtra("LOG", print_msg.toString());
-            sendIntentLogReceiver(gp, context, intent);
+            CommonLogWriter.enqueue(gp, context, gp.getLogIntentSend(), print_msg.toString(), false);
 		}
 		if (gp.isLogcatEnabled()) Log.v(gp.getApplicationTag(), cat+" "+log_id+log_msg.toString());
 	};

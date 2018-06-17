@@ -1,7 +1,6 @@
 package com.sentaroh.android.Utilities.LogUtil;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 
 import com.sentaroh.android.Utilities.CommonGlobalParms;
@@ -32,154 +31,144 @@ public class CommonLogWriter {
 
 //    private static final SimpleDateFormat sdfDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault());
 
-    private static CommonGlobalParms mGp=null;
-
+    private static CommonGlobalParms mCgp=null;
     private static String log_id="";
-
-    private static ArrayBlockingQueue<Intent> log_msg_queue=new ArrayBlockingQueue<Intent>(1000);
-
+    private static ArrayBlockingQueue<String[]> mLogMessageQueue =new ArrayBlockingQueue<String[]>(5000);
 //    private static String threadCtrl="E";
 
     private static int queueHighWaterMark=0;
-
     private static Thread logThread=null;
     private static ThreadCtrl threadCtrl =new ThreadCtrl();
+    private static boolean mLogWriterStopped =false;
+    private static Context mContext=null;
+    private static long mLastWriteTime =0L;
+//    private static ReentrantReadWriteLock mThreadLock=new ReentrantReadWriteLock();
+    private static boolean mThreadIsActive=false;
 
-    static public void enqueue(final CommonGlobalParms cgp, final Context c, final Intent in) {
-        if (in!=null) {
-            if (logThread==null) {
-                logThread=new Thread(){
-                    @Override
-                    public void run() {
-                        long last_write=0L;
-                        while(logThread!=null) {
-                            if (log_msg_queue.size()==0) {
-                                synchronized(threadCtrl) {
-                                    try {
-//                                        Log.v("SMBSync2","wait entered");
-                                        threadCtrl.wait(10000);
-//                                        Log.v("SMBSync2","wait exited");
-                                    } catch (InterruptedException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            }
-                            if (log_msg_queue.size()!=0) {
-                                synchronized(threadCtrl) {
-//                                    Log.v("SMBSync2","log process start, size="+log_msg_queue.size());
-                                    while(log_msg_queue.size()>0) {
-                                        Intent in=log_msg_queue.poll();
-                                        writeLog(c, in);
-                                        last_write=System.currentTimeMillis();
-                                    }
-                                }
+    static public void enqueue(final CommonGlobalParms cgp, final Context c, final String action, String msg, boolean force_notify) {
+        mCgp=cgp;
+        debug_level=cgp.getDebugLevel();
+        mContext=c;
+        if (action!=null) {
+            if (!mLogWriterStopped) {
+                if (logThread==null) {
+                    logThread=new Thread(){
+                        @Override
+                        public void run() {
+                            if (!mThreadIsActive) {
+                                mThreadIsActive=true;
+                                writeLogDirect("CommonLogWriter thread was created. TID="+Thread.currentThread().getId());
+                                processMessageQueue();
                             } else {
-                                if ((System.currentTimeMillis()-last_write)>30*1000 && log_msg_queue.size()==0) {
-//                                    Log.v("SMBSync2","Thread will be exited");
-                                    logThread=null;
-                                } else {
-//                                    Log.v("SMBSync2","Thread not time over");
-                                }
+                                writeLogDirect("CommonLogWriter thread was terminated, because already active.");
                             }
                         }
-//                        Log.v("SMBSync2","Thread exited");
+                    };
+                    logThread.setName("CommonLogWriter");
+                    logThread.setPriority(Thread.MIN_PRIORITY);
+                    logThread.start();
+                }
+                String[] msg_item=new String[]{action,msg};
+                try {
+                    mLogMessageQueue.put(msg_item);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                if (mLogMessageQueue.size()>500 || force_notify)
+                    synchronized(threadCtrl) {
+                        threadCtrl.notify();
                     }
-                };
-                logThread.setName("CommonLogWriter");
-                logThread.setPriority(Thread.MIN_PRIORITY);
-                logThread.start();
-            }
-            mGp=cgp;
-            debug_level=cgp.getDebugLevel();
-            log_msg_queue.add(in);
-            synchronized(threadCtrl) {
-                threadCtrl.notify();
+            } else {
+                mLogMessageQueue.clear();
             }
         }
     }
 
-//    static public void enqueuex(final CommonGlobalParms cgp, final Context c, final Intent in) {
-//        if (in!=null) {
-//            mGp=cgp;
-//            debug_level=cgp.getDebugLevel();
-//            log_msg_queue.add(in);
-//            synchronized(threadCtrl) {
-//                if (log_msg_queue.size()>0 && threadCtrl.equals("E")) {
-////                    if (cgp.getDebugLevel()>=2) Log.v("SMBSync2","Log dequeue scheduled");
-//                    Thread th=new Thread(){
-//                        @Override
-//                        public void run() {
-//                            String tid=Thread.currentThread().getName();
-//                            int cnt=0;
-//                            synchronized(threadCtrl) {
-//                                if (threadCtrl.equals("E")) {
-////                                if (cgp.getDebugLevel()>=2) Log.v("SMBSync2","Log dequeue started, size="+log_msg_queue.size()+", tid="+tid);
-//                                    threadCtrl="D";
-//                                    while(log_msg_queue.size()>0) {
-//                                        Intent in=log_msg_queue.poll();
-//                                        writeLog(c, in);
-//                                        cnt++;
-//                                    }
-//                                    threadCtrl="E";
-////                                if (cgp.getDebugLevel()>=2) Log.v("SMBSync2","Log dequeue ended"+", processed="+cnt+", tid="+tid);
-//                                } else {
-////                                if (cgp.getDebugLevel()>=2) Log.v("SMBSync2","Log dequeue bypassed"+", tid="+tid);
-//                                }
-//                            }
-//                        }
-//                    };
-//                    th.setName("CommonLogWriter");
-//                    th.setPriority(Thread.MIN_PRIORITY);
-//                    th.start();
-//                } else {
-////                if (cgp.getDebugLevel()>=2) Log.v("SMBSync2","Log dequeue not scheduled");
-//                }
-//            }
-//        }
-//    }
+    static private void processMessageQueue() {
+        while(logThread!=null) {
+            if (mLogMessageQueue.size()==0) {
+                synchronized(threadCtrl) {//Wait until notified or after 10 sec
+                    try {
+                        threadCtrl.wait(1000);
+                        if (mLogMessageQueue.size()==0) {
+                            if (printWriter!=null) printWriter.flush();
+                            if ((System.currentTimeMillis()- mLastWriteTime)>30*1000) {
+                                if (printWriter!=null) printWriter.flush();
+                                writeLogDirect("CommonLogWriter Thread was ended by idle timer. TID="+Thread.currentThread().getId()+", HWM="+queueHighWaterMark);
+                                queueHighWaterMark=0;
+                                mThreadIsActive=false;
+                                logThread=null;
+                            }
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        writeLogDirect("CommonLogWriter Wait error. error="+e.getMessage());
+                        mLogWriterStopped =true;
+                        logThread=null;
+                    }
+                }
+            } else {
+                if (queueHighWaterMark< mLogMessageQueue.size()) queueHighWaterMark= mLogMessageQueue.size();
+                while(mLogMessageQueue.size()>0) {
+                    String[] msg_item= mLogMessageQueue.poll();
+                    writeLog(mContext, msg_item);
+                }
+                mLastWriteTime =System.currentTimeMillis();
+            }
+        }
+    }
 
-    static public void writeLog(Context c, Intent in) {
+    static private void writeLogDirect(String line) {
+        if (debug_level>0 && mCgp.isLogEnabled()) {
+            if (mCgp.isLogcatEnabled()) Log.v(mCgp.getApplicationTag(),"I "+log_id+line);
+            writeLog(mContext, new String[]{mCgp.getLogIntentSend(),
+                    "D I "+ StringUtil.convDateTimeTo_YearMonthDayHourMinSecMili(System.currentTimeMillis())+" "+log_id+line});
+        }
+    }
+
+    static public void writeLog(Context c, String[] msg_item) {
         if (log_dir==null) {
             setLogId("LogReceiver");
             initParms(c);
             if (debug_level>0) {
                 String line="initialized dir="+log_dir+", debug="+debug_level+", logEnabled="+log_enabled;
-                Log.v(mGp.getApplicationTag(),"I "+log_id+line);
+                Log.v(mCgp.getApplicationTag(),"I "+log_id+line);
                 putLogMsg(c,"M I "+ StringUtil.convDateTimeTo_YearMonthDayHourMinSecMili(System.currentTimeMillis())+" "+log_id+line);
             }
         }
-//        if (mGp.getDebugLevel()>=2) Log.v("SMBSync2","Action="+in.getAction());
-        if (in.getAction().equals(mGp.getLogIntentSend())) {
-            if (in.getExtras()!=null) {
-                String line=in.getExtras().getString("LOG");
-                putLogMsg(c,line);
+        String msg_action=msg_item[0];
+        String msg_data=msg_item[1];
+//        if (mCgp.getDebugLevel()>=2) Log.v("SMBSync2","Action="+in.getAction());
+        if (msg_action.equals(mCgp.getLogIntentSend())) {
+            if (msg_data!=null) {
+                putLogMsg(c,msg_data);
             }
-        } else if (in.getAction().equals(mGp.getLogIntentClose())) {
+        } else if (msg_action.equals(mCgp.getLogIntentClose())) {
             if (printWriter!=null) {
                 printWriter.flush();
                 closeLogFile();
             }
-        } else if (in.getAction().equals(mGp.getLogIntentReset())) {
+        } else if (msg_action.equals(mCgp.getLogIntentReset())) {
             initParms(c);
             closeLogFile();
             if (log_enabled) {
                 openLogFile(c);
                 if (debug_level>0) {
                     String line="re-initialized dir="+log_dir+", debug="+debug_level+", log_enabled="+log_enabled;
-                    Log.v(mGp.getApplicationTag(),"I "+log_id+line);
+                    Log.v(mCgp.getApplicationTag(),"I "+log_id+line);
                     putLogMsg(c,"M I "+StringUtil.convDateTimeTo_YearMonthDayHourMinSecMili(System.currentTimeMillis())+" "+log_id+line);
                 }
             }else {
                 rotateLogFileForce(c);
             }
-        } else if (in.getAction().equals(mGp.getLogIntentDelete())) {
+        } else if (msg_action.equals(mCgp.getLogIntentDelete())) {
             if (printWriter!=null) {
                 closeLogFile();
                 logFile.delete();
             }
-        } else if (in.getAction().equals(mGp.getLogIntentRotate())) {
+        } else if (msg_action.equals(mCgp.getLogIntentRotate())) {
             rotateLogFileForce(c);
-        } else if (in.getAction().equals(mGp.getLogIntentFlush())) {
+        } else if (msg_action.equals(mCgp.getLogIntentFlush())) {
             if (printWriter!=null) printWriter.flush();
         }
     };
@@ -195,28 +184,28 @@ public class CommonLogWriter {
             if (printWriter!=null) {
                 synchronized(printWriter) {
                     printWriter.println(msg);
-                    if (log_msg_queue.size()==0)
-                        printWriter.flush();//debug
+//                    if (mLogMessageQueue.size()==0)
+//                        printWriter.flush();//debug
                 }
             }
         } else {
             synchronized(printWriter) {
                 printWriter.println(msg);
-                if (log_msg_queue.size()==0)
-                    printWriter.flush();//debug
+//                if (mLogMessageQueue.size()==0)
+//                    printWriter.flush();//debug
             }
         }
     }
 
     static private void initParms(Context context) {
-        log_dir=mGp.getLogDirName()+"/";
-        debug_level=mGp.getDebugLevel();
-        log_enabled=mGp.isLogEnabled();
-        logFile=new File(log_dir+mGp.getLogFileName()+".txt");
+        log_dir=mCgp.getLogDirName()+"/";
+        debug_level=mCgp.getDebugLevel();
+        log_enabled=mCgp.isLogEnabled();
+        logFile=new File(log_dir+mCgp.getLogFileName()+".txt");
     }
 
     static private void rotateLogFileConditional(Context c) {
-        if (printWriter!=null && logFile.length()>=mGp.getLogLimitSize()) {
+        if (printWriter!=null && logFile.length()>=mCgp.getLogLimitSize()) {
             rotateLogFileForce(c);
         }
     }
@@ -226,20 +215,20 @@ public class CommonLogWriter {
             printWriter.flush();
             closeLogFile();
             SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss-SSS");
-            File lf=new File(log_dir+mGp.getLogFileName()+"_"+sdf.format(System.currentTimeMillis())+".txt");
+            File lf=new File(log_dir+mCgp.getLogFileName()+"_"+sdf.format(System.currentTimeMillis())+".txt");
             logFile.renameTo(lf);
             openLogFile(c);
-            logFile=new File(log_dir+mGp.getLogFileName()+".txt");
+            logFile=new File(log_dir+mCgp.getLogFileName()+".txt");
             if (debug_level>0) {
-                String line="Logfile was rotated "+log_dir+mGp.getLogFileName()+"_"+sdf.format(System.currentTimeMillis())+".txt";
-                Log.v(mGp.getApplicationTag(),"I "+log_id+line);
+                String line="Logfile was rotated "+log_dir+mCgp.getLogFileName()+"_"+sdf.format(System.currentTimeMillis())+".txt";
+                Log.v(mCgp.getApplicationTag(),"I "+log_id+line);
                 putLogMsg(c,"M I "+StringUtil.convDateTimeTo_YearMonthDayHourMinSecMili(System.currentTimeMillis())+" "+log_id+line);
             }
         } else if (printWriter==null) {
-            File tlf=new File(log_dir+mGp.getLogFileName()+".txt");
+            File tlf=new File(log_dir+mCgp.getLogFileName()+".txt");
             if (tlf.exists()) {
                 SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss-SSS");
-                File lf=new File(log_dir+mGp.getLogFileName()+"_"+sdf.format(System.currentTimeMillis())+".txt");
+                File lf=new File(log_dir+mCgp.getLogFileName()+"_"+sdf.format(System.currentTimeMillis())+".txt");
                 tlf.renameTo(lf);
             }
         }
@@ -265,7 +254,7 @@ public class CommonLogWriter {
             try {
                 File lf=new File(log_dir);
                 if (!lf.exists()) lf.mkdirs();
-                fileWriter=new FileWriter(log_dir+mGp.getLogFileName()+".txt",true);
+                fileWriter=new FileWriter(log_dir+mCgp.getLogFileName()+".txt",true);
                 bw=new BufferedWriter(fileWriter,LOG_FILE_BUFFER_SIZE);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -280,7 +269,7 @@ public class CommonLogWriter {
     }
 
     static private void houseKeepLogFile(Context c) {
-        ArrayList<CommonLogFileListItem> lfml=CommonLogUtil.createLogFileList(mGp);
+        ArrayList<CommonLogFileListItem> lfml=CommonLogUtil.createLogFileList(mCgp);
         Collections.sort(lfml,new Comparator<CommonLogFileListItem>(){
             @Override
             public int compare(CommonLogFileListItem arg0, CommonLogFileListItem arg1) {
@@ -293,11 +282,11 @@ public class CommonLogWriter {
             }
         });
 
-        int l_epos=lfml.size()-(mGp.getLogMaxFileCount()+1);
+        int l_epos=lfml.size()-(mCgp.getLogMaxFileCount()+1);
         if (l_epos>0) {
             for (int i=0;i<l_epos;i++) {
                 String line="Logfile was deleted "+lfml.get(0).log_file_path;
-                Log.v(mGp.getApplicationTag(),"I "+log_id+line);
+                Log.v(mCgp.getApplicationTag(),"I "+log_id+line);
                 putLogMsg(c,"M I "+StringUtil.convDateTimeTo_YearMonthDayHourMinSecMili(System.currentTimeMillis())+" "+log_id+line);
                 File lf=new File(lfml.get(0).log_file_path);
                 lf.delete();
