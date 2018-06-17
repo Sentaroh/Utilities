@@ -19,9 +19,10 @@ import android.util.Log;
 public class SafFile {
     private Context mContext;
     private Uri mUri;
-    private Uri mParentUri;
     private String mPath="";
     private String mDocName;
+
+    private SafFile mParentFile=null;
 
     private String msg_area="";
 
@@ -39,8 +40,8 @@ public class SafFile {
         mPath="/"+uri.getPath().substring(uri.getPath().lastIndexOf(":")+1);
     }
 
-    public void setParent(Uri parent) {mParentUri=parent;}
-    public Uri getParent() {return mParentUri;}
+    void setParentFile(SafFile parent) {mParentFile=parent;}
+    public SafFile getParentFile() {return mParentFile;}
 
     public String getPath() { return mPath;}
 
@@ -61,7 +62,7 @@ public class SafFile {
 
     public String toString() {
         String result="Name="+mDocName+", Uri="+mUri.toString();
-        if (mParentUri!=null) result+=", ParentUri="+mParentUri.toString();
+        if (mParentFile!=null) result+=", ParentUri="+mParentFile.getUri().toString();
         return result;
     }
 
@@ -241,7 +242,7 @@ public class SafFile {
         final SafFile[] resultFiles = new SafFile[result.size()];
         for (int i = 0; i < result.size(); i++) {
             resultFiles[i] = new SafFile(mContext, result.get(i).doc_uri, result.get(i).doc_name);
-            resultFiles[i].setParent(this.getUri());
+            resultFiles[i].setParentFile(this);
         }
         return resultFiles;
     }
@@ -335,7 +336,7 @@ public class SafFile {
         Uri move_result=null;
         try {
             msg_area="moveTo mUri="+mUri+", to_file="+to_file+"\n";
-            move_result = DocumentsContract.moveDocument(mContext.getContentResolver(), mUri, getParent(), to_file.getParent());
+            move_result = DocumentsContract.moveDocument(mContext.getContentResolver(), mUri, getParentFile().getUri(), to_file.getParentFile().getUri());
             mUri = move_result;
             if (mUri!=null) {
                 msg_area+="moveTo result="+mUri+"\n";

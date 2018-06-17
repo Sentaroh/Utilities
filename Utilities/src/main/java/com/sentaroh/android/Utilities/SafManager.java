@@ -477,7 +477,7 @@ public class SafManager {
     }
 
     private SafFile createItem(SafFile rf, String target_path, boolean isDirectory) {
-        Uri parent=null;
+        SafFile parent=null;
         clearMessages();
         msg_area+="createItem target_path="+target_path+", root name="+rf.getName()+", isDirectory="+isDirectory+"\n";
         List<UriPermission> permissions = mContext.getContentResolver().getPersistedUriPermissions();
@@ -517,9 +517,11 @@ public class SafManager {
                             msg_area+=document.getMessages();
                         }
                     }
-                    parent=document.getUri();
+                    parent=document;
                     document = nextDocument;
-                    if (document!=null) document.setParent(parent);
+                    if (document!=null) {
+                        document.setParentFile(parent);
+                    }
                 }
             }
         }
@@ -536,7 +538,7 @@ public class SafManager {
     }
 
     private SafFile findItem(SafFile rf, String target_path) {
-        Uri parent=null;
+        SafFile parent=null;
         clearMessages();
         msg_area+="findItem target_path="+target_path+", root name="+rf.getName()+"\n";
         List<UriPermission> permissions = mContext.getContentResolver().getPersistedUriPermissions();
@@ -564,9 +566,11 @@ public class SafManager {
                     SafFile nextDocument = document.findFile(parts[i]);
                     msg_area+="findFile="+parts[i]+", result="+nextDocument+"\n";
                     if (nextDocument != null) {
-                        parent=document.getUri();
+                        parent=document;
                         document = nextDocument;
-                        if (document!=null) document.setParent(parent);
+                        if (document!=null) {
+                            document.setParentFile(parent);
+                        }
                     } else {
                         document = null;
                         break;
