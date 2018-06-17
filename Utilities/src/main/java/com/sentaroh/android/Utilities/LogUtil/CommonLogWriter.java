@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.sentaroh.android.Utilities.CommonGlobalParms;
+import com.sentaroh.android.Utilities.StringUtil;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -30,7 +31,7 @@ public class CommonLogWriter {
     private static File logFile=null;
     private static boolean log_enabled=true;
 
-    private static final SimpleDateFormat sdfDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault());
+//    private static final SimpleDateFormat sdfDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault());
 
     private static CommonGlobalParms mGp=null;
 
@@ -93,7 +94,7 @@ public class CommonLogWriter {
             if (debug_level>0) {
                 String line="initialized dir="+log_dir+", debug="+debug_level+", logEnabled="+log_enabled;
                 Log.v(mGp.getApplicationTag(),"I "+log_id+line);
-                putLogMsg(c,"M I "+sdfDateTime.format(System.currentTimeMillis())+" "+log_id+line);
+                putLogMsg(c,"M I "+ StringUtil.convDateTimeTo_YearMonthDayHourMinSecMili(System.currentTimeMillis())+" "+log_id+line);
             }
         }
 //        if (mGp.getDebugLevel()>=2) Log.v("SMBSync2","Action="+in.getAction());
@@ -115,7 +116,7 @@ public class CommonLogWriter {
                 if (debug_level>0) {
                     String line="re-initialized dir="+log_dir+", debug="+debug_level+", log_enabled="+log_enabled;
                     Log.v(mGp.getApplicationTag(),"I "+log_id+line);
-                    putLogMsg(c,"M I "+sdfDateTime.format(System.currentTimeMillis())+" "+log_id+line);
+                    putLogMsg(c,"M I "+StringUtil.convDateTimeTo_YearMonthDayHourMinSecMili(System.currentTimeMillis())+" "+log_id+line);
                 }
             }else {
                 rotateLogFileForce(c);
@@ -181,7 +182,7 @@ public class CommonLogWriter {
             if (debug_level>0) {
                 String line="Logfile was rotated "+log_dir+mGp.getLogFileName()+"_"+sdf.format(System.currentTimeMillis())+".txt";
                 Log.v(mGp.getApplicationTag(),"I "+log_id+line);
-                putLogMsg(c,"M I "+sdfDateTime.format(System.currentTimeMillis())+" "+log_id+line);
+                putLogMsg(c,"M I "+StringUtil.convDateTimeTo_YearMonthDayHourMinSecMili(System.currentTimeMillis())+" "+log_id+line);
             }
         } else if (printWriter==null) {
             File tlf=new File(log_dir+mGp.getLogFileName()+".txt");
@@ -246,7 +247,7 @@ public class CommonLogWriter {
             for (int i=0;i<l_epos;i++) {
                 String line="Logfile was deleted "+lfml.get(0).log_file_path;
                 Log.v(mGp.getApplicationTag(),"I "+log_id+line);
-                putLogMsg(c,"M I "+sdfDateTime.format(System.currentTimeMillis())+" "+log_id+line);
+                putLogMsg(c,"M I "+StringUtil.convDateTimeTo_YearMonthDayHourMinSecMili(System.currentTimeMillis())+" "+log_id+line);
                 File lf=new File(lfml.get(0).log_file_path);
                 lf.delete();
                 lfml.remove(0);

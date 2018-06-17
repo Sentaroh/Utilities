@@ -43,15 +43,15 @@ public class CommonGlobalParms {
 	public void setApplicationTag(String p) {appl_tag=p;}
 	public String getApplicationTag() {return appl_tag;}
 
-	private String log_reset="", log_delete="", log_flush="", log_rotate="", log_send="", log_close="";
-	public void setLogIntent(String reset, String delete, String flush, String rotate, String send, String close) {
-		log_reset=reset;
-		log_delete=delete;
-		log_send=send;
-		log_flush=flush;
-		log_rotate=rotate;
-		log_close=close;
-	};
+	private String log_reset="RESET", log_delete="DELETE", log_flush="FLUSH", log_rotate="ROTATE", log_send="SEND", log_close="CLOSE";
+//	public void setLogIntent(String reset, String delete, String flush, String rotate, String send, String close) {
+//		log_reset=reset;
+//		log_delete=delete;
+//		log_send=send;
+//		log_flush=flush;
+//		log_rotate=rotate;
+//		log_close=close;
+//	};
 	public String getLogIntentReset() {return log_reset;}
 	public String getLogIntentDelete() {return log_delete;}
 	public String getLogIntentSend() {return log_send;}
@@ -59,7 +59,7 @@ public class CommonGlobalParms {
 	public String getLogIntentRotate() {return log_rotate;}
 	public String getLogIntentClose() {return log_close;}
 
-	private Class log_receiver_class=null;
-	public void setLogReceiverClass(Class recv) {log_receiver_class=recv;};
-    public Class getLogReceiverClass() {return log_receiver_class;};
+//	private Class log_receiver_class=null;
+//	public void setLogReceiverClass(Class recv) {log_receiver_class=recv;};
+//    public Class getLogReceiverClass() {return log_receiver_class;};
 }
