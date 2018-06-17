@@ -1,12 +1,12 @@
 package com.sentaroh.android.Utilities.LogUtil;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
 import com.sentaroh.android.Utilities.CommonGlobalParms;
 import com.sentaroh.android.Utilities.StringUtil;
+import com.sentaroh.android.Utilities.ThreadCtrl;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -17,7 +17,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Locale;
 import java.util.concurrent.ArrayBlockingQueue;
 
 import static com.sentaroh.android.Utilities.LogUtil.CommonLogConstants.LOG_FILE_BUFFER_SIZE;
@@ -39,53 +38,105 @@ public class CommonLogWriter {
 
     private static ArrayBlockingQueue<Intent> log_msg_queue=new ArrayBlockingQueue<Intent>(1000);
 
-    private static String threadCtrl="E";
+//    private static String threadCtrl="E";
 
     private static int queueHighWaterMark=0;
 
+    private static Thread logThread=null;
+    private static ThreadCtrl threadCtrl =new ThreadCtrl();
+
     static public void enqueue(final CommonGlobalParms cgp, final Context c, final Intent in) {
         if (in!=null) {
-            mGp=cgp;
-            debug_level=cgp.getDebugLevel();
-            log_msg_queue.add(in);
-//            if (queueHighWaterMark<log_msg_queue.size()) {
-//                queueHighWaterMark=log_msg_queue.size();
-//                Log.v("CommonLogWriter","Log queue high water mark="+queueHighWaterMark);
-//            }
-            synchronized(threadCtrl) {
-                if (log_msg_queue.size()>0 && threadCtrl.equals("E")) {
-//                    if (cgp.getDebugLevel()>=2) Log.v("SMBSync2","Log dequeue scheduled");
-                    Thread th=new Thread(){
-                        @Override
-                        public void run() {
-                            String tid=Thread.currentThread().getName();
-                            int cnt=0;
-                            synchronized(threadCtrl) {
-                                if (threadCtrl.equals("E")) {
-//                                if (cgp.getDebugLevel()>=2) Log.v("SMBSync2","Log dequeue started, size="+log_msg_queue.size()+", tid="+tid);
-                                    threadCtrl="D";
+            if (logThread==null) {
+                logThread=new Thread(){
+                    @Override
+                    public void run() {
+                        long last_write=0L;
+                        while(logThread!=null) {
+                            if (log_msg_queue.size()==0) {
+                                synchronized(threadCtrl) {
+                                    try {
+//                                        Log.v("SMBSync2","wait entered");
+                                        threadCtrl.wait(10000);
+//                                        Log.v("SMBSync2","wait exited");
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                            if (log_msg_queue.size()!=0) {
+                                synchronized(threadCtrl) {
+//                                    Log.v("SMBSync2","log process start, size="+log_msg_queue.size());
                                     while(log_msg_queue.size()>0) {
                                         Intent in=log_msg_queue.poll();
                                         writeLog(c, in);
-                                        cnt++;
+                                        last_write=System.currentTimeMillis();
                                     }
-                                    threadCtrl="E";
-//                                if (cgp.getDebugLevel()>=2) Log.v("SMBSync2","Log dequeue ended"+", processed="+cnt+", tid="+tid);
+                                }
+                            } else {
+                                if ((System.currentTimeMillis()-last_write)>30*1000 && log_msg_queue.size()==0) {
+//                                    Log.v("SMBSync2","Thread will be exited");
+                                    logThread=null;
                                 } else {
-//                                if (cgp.getDebugLevel()>=2) Log.v("SMBSync2","Log dequeue bypassed"+", tid="+tid);
+//                                    Log.v("SMBSync2","Thread not time over");
                                 }
                             }
                         }
-                    };
-                    th.setName("CommonLogWriter");
-                    th.setPriority(Thread.MIN_PRIORITY);
-                    th.start();
-                } else {
-//                if (cgp.getDebugLevel()>=2) Log.v("SMBSync2","Log dequeue not scheduled");
-                }
+//                        Log.v("SMBSync2","Thread exited");
+                    }
+                };
+                logThread.setName("CommonLogWriter");
+                logThread.setPriority(Thread.MIN_PRIORITY);
+                logThread.start();
+            }
+            mGp=cgp;
+            debug_level=cgp.getDebugLevel();
+            log_msg_queue.add(in);
+            synchronized(threadCtrl) {
+                threadCtrl.notify();
             }
         }
     }
+
+//    static public void enqueuex(final CommonGlobalParms cgp, final Context c, final Intent in) {
+//        if (in!=null) {
+//            mGp=cgp;
+//            debug_level=cgp.getDebugLevel();
+//            log_msg_queue.add(in);
+//            synchronized(threadCtrl) {
+//                if (log_msg_queue.size()>0 && threadCtrl.equals("E")) {
+////                    if (cgp.getDebugLevel()>=2) Log.v("SMBSync2","Log dequeue scheduled");
+//                    Thread th=new Thread(){
+//                        @Override
+//                        public void run() {
+//                            String tid=Thread.currentThread().getName();
+//                            int cnt=0;
+//                            synchronized(threadCtrl) {
+//                                if (threadCtrl.equals("E")) {
+////                                if (cgp.getDebugLevel()>=2) Log.v("SMBSync2","Log dequeue started, size="+log_msg_queue.size()+", tid="+tid);
+//                                    threadCtrl="D";
+//                                    while(log_msg_queue.size()>0) {
+//                                        Intent in=log_msg_queue.poll();
+//                                        writeLog(c, in);
+//                                        cnt++;
+//                                    }
+//                                    threadCtrl="E";
+////                                if (cgp.getDebugLevel()>=2) Log.v("SMBSync2","Log dequeue ended"+", processed="+cnt+", tid="+tid);
+//                                } else {
+////                                if (cgp.getDebugLevel()>=2) Log.v("SMBSync2","Log dequeue bypassed"+", tid="+tid);
+//                                }
+//                            }
+//                        }
+//                    };
+//                    th.setName("CommonLogWriter");
+//                    th.setPriority(Thread.MIN_PRIORITY);
+//                    th.start();
+//                } else {
+////                if (cgp.getDebugLevel()>=2) Log.v("SMBSync2","Log dequeue not scheduled");
+//                }
+//            }
+//        }
+//    }
 
     static public void writeLog(Context c, Intent in) {
         if (log_dir==null) {
