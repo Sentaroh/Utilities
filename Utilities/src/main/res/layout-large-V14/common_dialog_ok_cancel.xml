@@ -15,20 +15,20 @@
         <Button
             android:id="@+id/common_dialog_btn_cancel"
             android:layout_weight="1"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/msgs_common_dialog_cancel" />
         <Button
             android:id="@+id/common_dialog_btn_ok"
             android:layout_weight="1"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/msgs_common_dialog_ok" />
         <Button
             android:id="@+id/common_dialog_extra_button"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:visibility="gone"

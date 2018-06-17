@@ -20,6 +20,7 @@ public class SafFile {
     private Context mContext;
     private Uri mUri;
     private Uri mParentUri;
+    private String mPath="";
     private String mDocName;
 
     private String msg_area="";
@@ -28,16 +29,20 @@ public class SafFile {
         mContext = context;
         mUri = uri;
         mDocName=queryForString(mContext, mUri, DocumentsContract.Document.COLUMN_DISPLAY_NAME, null);
+        mPath="/"+uri.getPath().substring(uri.getPath().lastIndexOf(":")+1);
     }
 
     SafFile(Context context, Uri uri, String name) {
         mContext = context;
         mUri = uri;
         mDocName=name;
+        mPath="/"+uri.getPath().substring(uri.getPath().lastIndexOf(":")+1);
     }
 
     public void setParent(Uri parent) {mParentUri=parent;}
     public Uri getParent() {return mParentUri;}
+
+    public String getPath() { return mPath;}
 
     public static SafFile fromTreeUri(Context context, Uri treeUri) {
         return new SafFile(context, prepareTreeUri(treeUri));
