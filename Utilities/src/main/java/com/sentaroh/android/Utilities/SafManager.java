@@ -1,11 +1,5 @@
 package com.sentaroh.android.Utilities;
 
-import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,6 +9,12 @@ import android.os.Build;
 import android.os.storage.StorageManager;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
+
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SafManager {
     public static final String SDCARD_UUID_KEY ="removable_tree_uuid_key";
@@ -144,22 +144,24 @@ public class SafManager {
         if (!uuid_list.equals("")) {
             String[] uuid_array=uuid_list.split(",");
             for(String uuid:uuid_array) {
-                SafFile sf= SafFile.fromTreeUri(mContext, Uri.parse("content://com.android.externalstorage.documents/tree/"+uuid+"%3A"));
-                if (sf!=null && sf.getName()!=null) {
-                    sdcardRootUuid=uuid;
-                    String esd="";
-                    if (Build.VERSION.SDK_INT>=23) {//for Huawei mediapad
-                        esd="/storage/"+uuid;
-                    } else {
-                        esd=getExternalSdcardPath();
-                    }
-                    if (esd!=null && !esd.equals("")) {
-                        File mp=new File(esd);
-                        if (mp.exists()) {
-                            sdcardRootSafFile=sf;
-                            sdcardRootDirectory=esd;
+                if (!isUsbUuid(uuid)) {
+                    SafFile sf= SafFile.fromTreeUri(mContext, Uri.parse("content://com.android.externalstorage.documents/tree/"+uuid+"%3A"));
+                    if (sf!=null && sf.getName()!=null) {
+                        sdcardRootUuid=uuid;
+                        String esd="";
+                        if (Build.VERSION.SDK_INT>=23) {//for Huawei mediapad
+                            esd="/storage/"+uuid;
+                        } else {
+                            esd=getExternalSdcardPath();
+                        }
+                        if (esd!=null && !esd.equals("")) {
+                            File mp=new File(esd);
+                            if (mp.exists()) {
+                                sdcardRootSafFile=sf;
+                                sdcardRootDirectory=esd;
 //                            msg_area+="locadSafFile SDCARD uuid found, uuid="+uuid+"\n";
-                            break;
+                                break;
+                            }
                         }
                     }
                 }
@@ -172,13 +174,15 @@ public class SafManager {
         if (!uuid_list.equals("")) {
             String[] uuid_array=uuid_list.split(",");
             for(String uuid:uuid_array) {
-                SafFile sf= SafFile.fromTreeUri(mContext, Uri.parse("content://com.android.externalstorage.documents/tree/"+uuid+"%3A"));
-                if (sf!=null && sf.getName()!=null) {
-                    usbRootDirectory="/usb/"+uuid;
-                    usbRootSafFile=sf;
-                    usbRootUuid=uuid;
+                if (isUsbUuid(uuid)) {
+                    SafFile sf= SafFile.fromTreeUri(mContext, Uri.parse("content://com.android.externalstorage.documents/tree/"+uuid+"%3A"));
+                    if (sf!=null && sf.getName()!=null) {
+                        usbRootDirectory="/usb/"+uuid;
+                        usbRootSafFile=sf;
+                        usbRootUuid=uuid;
 //                    msg_area+="locadSafFile USB uuid found, uuid="+uuid+"\n";
-                    break;
+                        break;
+                    }
                 }
             }
         }
