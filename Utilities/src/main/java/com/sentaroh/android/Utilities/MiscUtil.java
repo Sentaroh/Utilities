@@ -84,19 +84,19 @@ public class MiscUtil{
 		    BigDecimal dfs2 = new BigDecimal(1024*1024*1024);
 		    BigDecimal dfs3 = new BigDecimal("0.00");
 		    dfs3=dfs1.divide(dfs2,1, BigDecimal.ROUND_HALF_UP);
-			tfs=dfs3+" GB";
+			tfs=dfs3+" GiB";
 		} else if (fs>(1024*1024)) {//MB
 		    BigDecimal dfs1 = new BigDecimal(fs*1.00);
 		    BigDecimal dfs2 = new BigDecimal(1024*1024*1.00);
 		    BigDecimal dfs3 = new BigDecimal("0.00");
 		    dfs3=dfs1.divide(dfs2,1, BigDecimal.ROUND_HALF_UP);
-			tfs=dfs3+" MB";
+			tfs=dfs3+" MiB";
 		} else if (fs>(1024)) {//KB
 		    BigDecimal dfs1 = new BigDecimal(fs);
 		    BigDecimal dfs2 = new BigDecimal(1024);
 		    BigDecimal dfs3 = new BigDecimal("0.00");
 		    dfs3=dfs1.divide(dfs2,1, BigDecimal.ROUND_HALF_UP);
-			tfs=dfs3+" KB";
+			tfs=dfs3+" KiB";
 		} else tfs=""+fs+" B";
 		
 		return tfs;
