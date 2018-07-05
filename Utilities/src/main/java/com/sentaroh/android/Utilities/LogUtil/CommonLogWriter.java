@@ -49,6 +49,7 @@ public class CommonLogWriter {
         mCgp=cgp;
         debug_level=cgp.getDebugLevel();
         mContext=c;
+        if (log_id.equals("")) setLogId("LogReceiver");
         if (action!=null) {
             if (!mLogWriterStopped) {
                 if (logThread==null) {
