@@ -668,6 +668,16 @@ public class CommonFileSelector extends DialogFragment {
             }
         });
 
+        mTreeFileListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener(){
+            public boolean onItemLongClick(AdapterView<?> items, View view, int idx, long id) {
+                final int pos=mTreeFilelistAdapter.getItem(idx);
+                final TreeFilelistItem tfi=mTreeFilelistAdapter.getDataItem(pos);
+                tfi.setChecked(true);
+                mTreeFilelistAdapter.notifyDataSetChanged();
+                return true;
+            }
+        });
+
         btnTop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
