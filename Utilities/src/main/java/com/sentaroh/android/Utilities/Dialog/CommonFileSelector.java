@@ -988,6 +988,12 @@ public class CommonFileSelector extends DialogFragment {
                         boolean rc_create=false;
                         if (c_dir.startsWith(mSafFileMgr.getSdcardRootPath())) {
                             SafFile sf=mSafFileMgr.createSdcardItem(n_path, true);
+                            if (sf==null) {
+                                CommonDialog cd=new CommonDialog(context, getFragmentManager());
+                                cd.showCommonDialog(false, "W", "SafFile cretae error", mSafFileMgr.getMessages(), null);
+                                dlg_msg.setText("SafFile create Error");
+                                return;
+                            }
                             rc_create=sf.exists();
                         } else {
                             rc_create=lf.mkdirs();
