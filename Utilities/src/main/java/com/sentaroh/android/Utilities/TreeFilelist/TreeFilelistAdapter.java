@@ -21,16 +21,7 @@ LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRA
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 
-*/ 
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import com.sentaroh.android.Utilities.NotifyEvent;
-import com.sentaroh.android.Utilities.R;
-import com.sentaroh.android.Utilities.ThemeColorList;
-import com.sentaroh.android.Utilities.ThemeUtil;
+*/
 
 import android.content.Context;
 import android.util.Log;
@@ -46,6 +37,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
+
+import com.sentaroh.android.Utilities.NotifyEvent;
+import com.sentaroh.android.Utilities.R;
+import com.sentaroh.android.Utilities.ThemeColorList;
+import com.sentaroh.android.Utilities.ThemeUtil;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class TreeFilelistAdapter extends BaseAdapter {
 	private Context mContext;
@@ -507,7 +507,8 @@ public class TreeFilelistAdapter extends BaseAdapter {
          	   holder= (ViewHolder)v.getTag();
             }
             v.setEnabled(true);
-            final TreeFilelistItem o = mDataItems.get(mShowItems.get(position));
+            final int data_item_pos=mShowItems.get(position);
+            final TreeFilelistItem o = mDataItems.get(data_item_pos);
 //            Log.v("","data_items pos="+show_items.get(position)+", pos="+position);
             if (o != null) {
             	if (o.isEnableItem()) {
@@ -666,19 +667,19 @@ public class TreeFilelistAdapter extends BaseAdapter {
 
            		holder.cb_cb1.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 					public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-						setButton(o,p,isChecked);
+						setButton(o, data_item_pos, isChecked);
 						notifyDataSetChanged();
   					}
    				});
            		holder.rb_rb1.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 					public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-						setButton(o,p,isChecked);
+						setButton(o, data_item_pos,isChecked);
 						notifyDataSetChanged();
   					}
    				});
            		if (mSingleSelectMode) {
            			if (o.isChecked()) {
-               			int data_item_pos=mShowItems.get(p);
+//               			int data_item_pos=mShowItems.get(p);
     					TreeFilelistItem fi;
     					for (int i=0;i<mDataItems.size();i++) {
     						fi=mDataItems.get(i);
@@ -694,8 +695,7 @@ public class TreeFilelistAdapter extends BaseAdapter {
             return v;
     };
 
-    private void setButton(TreeFilelistItem o,int p, boolean isChecked) {
-		int data_item_pos=mShowItems.get(p);
+    private void setButton(TreeFilelistItem o, int data_item_pos, boolean isChecked) {
 		if (enableListener) {
 			enableListener=false;
 				if (mSingleSelectMode) {
