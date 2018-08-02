@@ -797,11 +797,18 @@ public class CommonFileSelector extends DialogFragment {
                         mTreeFilelistAdapter.setDataList(tfl);
                         mTreeFilelistAdapter.notifyDataSetChanged();
                         if (turl.startsWith(mSafFileMgr.getSdcardRootPath())) {
-                            if ((mSafFileMgr.getSdcardRootSafFile()==null) || mSafFileMgr.getSdcardRootPath().equals(SafManager.UNKNOWN_SDCARD_DIRECTORY)) {
+                            if ((mSafFileMgr.getSdcardRootSafFile() == null) || mSafFileMgr.getSdcardRootPath().equals(SafManager.UNKNOWN_SDCARD_DIRECTORY)) {
                                 btnCreate.setEnabled(false);
                             } else {
                                 btnCreate.setEnabled(true);
                             }
+                        } else if (turl.startsWith(mSafFileMgr.getUsbRootPath())) {
+                            if ((mSafFileMgr.getUsbRootSafFile()==null) || mSafFileMgr.getUsbRootPath().equals(SafManager.UNKNOWN_USB_DIRECTORY)) {
+                                btnCreate.setEnabled(false);
+                            } else {
+                                btnCreate.setEnabled(true);
+                            }
+
                         } else btnCreate.setEnabled(true);
                         dir_path.setText(turl+"/");
                         Handler hndl_sel=new Handler();
@@ -988,6 +995,15 @@ public class CommonFileSelector extends DialogFragment {
                         boolean rc_create=false;
                         if (c_dir.startsWith(mSafFileMgr.getSdcardRootPath())) {
                             SafFile sf=mSafFileMgr.createSdcardItem(n_path, true);
+                            if (sf==null) {
+                                CommonDialog cd=new CommonDialog(context, getFragmentManager());
+                                cd.showCommonDialog(false, "W", "SafFile cretae error", mSafFileMgr.getMessages(), null);
+                                dlg_msg.setText("SafFile create Error");
+                                return;
+                            }
+                            rc_create=sf.exists();
+                        } else if (c_dir.startsWith(mSafFileMgr.getUsbRootPath())) {
+                            SafFile sf=mSafFileMgr.createUsbItem(n_path, true);
                             if (sf==null) {
                                 CommonDialog cd=new CommonDialog(context, getFragmentManager());
                                 cd.showCommonDialog(false, "W", "SafFile cretae error", mSafFileMgr.getMessages(), null);

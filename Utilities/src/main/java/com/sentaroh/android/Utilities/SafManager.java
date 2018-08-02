@@ -177,10 +177,16 @@ public class SafManager {
                 if (isUsbUuid(uuid)) {
                     SafFile sf= SafFile.fromTreeUri(mContext, Uri.parse("content://com.android.externalstorage.documents/tree/"+uuid+"%3A"));
                     if (sf!=null && sf.getName()!=null) {
-                        usbRootDirectory="/usb/"+uuid;
-                        usbRootSafFile=sf;
-                        usbRootUuid=uuid;
-//                    msg_area+="locadSafFile USB uuid found, uuid="+uuid+"\n";
+                        File ufp=new File("/storage/"+uuid);
+                        if (ufp.exists()) {
+                            usbRootDirectory="/storage/"+uuid;
+                            usbRootSafFile=sf;
+                            usbRootUuid=uuid;
+                            msg_area+="locadSafFile USB uuid found, uuid="+uuid+"\n";
+                        } else {
+                            msg_area+="locadSafFile USB uuid found but mount point does not exists, uuid="+uuid+"\n";
+                        }
+
                         break;
                     }
                 }
@@ -439,12 +445,15 @@ public class SafManager {
         return result;
     }
 
-    public void addUsbUuid(Uri uri) {
+    public boolean addUsbUuid(Uri uri) {
+        boolean result=true;
         String uuid=getUuidFromUri(uri.toString());
-        if (uuid.length()>0) addUsbUuid(uuid);
+        if (uuid.length()>0) result=addUsbUuid(uuid);
+        return result;
     }
 
-    public void addUsbUuid(final String uuid) {
+    public boolean addUsbUuid(final String uuid) {
+        boolean result=true;
         msg_area="addUsbUuid uuif="+uuid+"\n";
         List<UriPermission> permissions = mContext.getContentResolver().getPersistedUriPermissions();
         for(UriPermission item:permissions) msg_area+=item.toString()+"\n";
@@ -457,7 +466,9 @@ public class SafManager {
             loadSafFile();
         } catch(Exception e) {
             msg_area="addUsbUuid error, uuid="+uuid+", Error="+e.getMessage()+"\n";
+            result=false;
         }
+        return result;
     }
 
     public SafFile createUsbItem(String target_path, boolean isDirectory) {
