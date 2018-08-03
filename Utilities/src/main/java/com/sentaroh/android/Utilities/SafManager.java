@@ -78,7 +78,7 @@ public class SafManager {
         return result;
     }
 
-    private String getExternalSdcardPath() {
+    private String getExternalSdcardMountPoint() {
         File[] fl= ContextCompat.getExternalFilesDirs(mContext, null);
         String ld= LocalMountPoint.getExternalStorageDir();
         String esd=UNKNOWN_SDCARD_DIRECTORY;
@@ -97,7 +97,7 @@ public class SafManager {
             else if (isFilePathExists("/mnt/extSdCard", true)) esd="/mnt/extSdCard";
             else if (isFilePathExists("/storage/extSdCard", true)) esd="/storage/extSdCard";
         }
-//        msg_area+="getExternalSdcardPath path="+esd+"\n";
+//        msg_area+="getExternalSdcardMountPoint path="+esd+"\n";
         return esd;
     }
 
@@ -152,7 +152,7 @@ public class SafManager {
                         if (Build.VERSION.SDK_INT>=23) {//for Huawei mediapad
                             esd="/storage/"+uuid;
                         } else {
-                            esd=getExternalSdcardPath();
+                            esd= getExternalSdcardMountPoint();
                         }
                         if (esd!=null && !esd.equals("")) {
                             File mp=new File(esd);
@@ -210,6 +210,21 @@ public class SafManager {
         return usbRootDirectory;
     }
 
+    public boolean isSdcardFilePath(String file_path) {
+        if (file_path.startsWith(getSdcardRootPath())) return true;
+        else {
+            if (file_path.equals(getSdcardRootPath())) return  true;
+        }
+        return false;
+    }
+
+    public boolean isUsbFilePath(String file_path) {
+        if (file_path.startsWith(getUsbRootPath())) return true;
+        else {
+            if (file_path.equals(getUsbRootPath())) return  true;
+        }
+        return false;
+    }
 
     public void saveSdcardUuidList(String uuid) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
