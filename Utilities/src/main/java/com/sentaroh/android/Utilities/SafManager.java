@@ -96,6 +96,7 @@ public class SafManager {
             else if (isFilePathExists("/sdcard1", true)) esd="/sdcard1";
             else if (isFilePathExists("/mnt/extSdCard", true)) esd="/mnt/extSdCard";
             else if (isFilePathExists("/storage/extSdCard", true)) esd="/storage/extSdCard";
+            else if (isFilePathExists("/mnt/SD1", true)) esd="/mnt/SD1";
         }
 //        msg_area+="getExternalSdcardMountPoint path="+esd+"\n";
         return esd;
