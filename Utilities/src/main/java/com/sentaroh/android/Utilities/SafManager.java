@@ -514,6 +514,10 @@ public class SafManager {
         List<UriPermission> permissions = mContext.getContentResolver().getPersistedUriPermissions();
         for(UriPermission item:permissions) msg_area+=item.toString()+"\n";
 
+        if (rf==null) {
+            return null;
+        }
+
         long b_time=System.currentTimeMillis();
         SafFile document=rf;
 
