@@ -509,8 +509,8 @@ public class SafManager {
 
     private SafFile createItem(SafFile rf, String target_path, boolean isDirectory) {
         SafFile parent=null;
-        clearMessages();
-        msg_area+="createItem target_path="+target_path+", root name="+rf.getName()+", isDirectory="+isDirectory+"\n";
+//        clearMessages();
+        msg_area+="createItem target_path="+target_path+", isDirectory="+isDirectory+"\n";
         List<UriPermission> permissions = mContext.getContentResolver().getPersistedUriPermissions();
         for(UriPermission item:permissions) msg_area+=item.toString()+"\n";
 
