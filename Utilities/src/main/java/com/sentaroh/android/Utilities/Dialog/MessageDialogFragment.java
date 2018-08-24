@@ -23,11 +23,6 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-import com.sentaroh.android.Utilities.NotifyEvent;
-import com.sentaroh.android.Utilities.R;
-import com.sentaroh.android.Utilities.ThemeColorList;
-import com.sentaroh.android.Utilities.ThemeUtil;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -49,6 +44,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import com.sentaroh.android.Utilities.NotifyEvent;
+import com.sentaroh.android.Utilities.R;
+import com.sentaroh.android.Utilities.ThemeColorList;
+import com.sentaroh.android.Utilities.ThemeUtil;
 
 public class MessageDialogFragment extends DialogFragment {
 	private final static boolean DEBUG_ENABLE=false;
@@ -269,16 +269,16 @@ public class MessageDialogFragment extends DialogFragment {
 		btnOk.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 //				mDialog.dismiss();
-				mFragment.dismiss();
-				if (mNotifyEvent!=null) mNotifyEvent.notifyToListener(true,null);
+                mFragment.dismissAllowingStateLoss();//.dismiss();
+                if (mNotifyEvent!=null) mNotifyEvent.notifyToListener(true,null);
 			}
 		});
 		// CANCELボタンの指定
 		btnCancel.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 //				mDialog.dismiss();
-				mFragment.dismiss();
-				if (mNotifyEvent!=null) mNotifyEvent.notifyToListener(false,null);
+                mFragment.dismissAllowingStateLoss();//.dismiss();
+                if (mNotifyEvent!=null) mNotifyEvent.notifyToListener(false,null);
 			}
 		});
     }
