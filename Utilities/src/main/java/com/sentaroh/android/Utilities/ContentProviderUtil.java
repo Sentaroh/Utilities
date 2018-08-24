@@ -1,19 +1,17 @@
 package com.sentaroh.android.Utilities;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.util.Log;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class ContentProviderUtil {
 	@SuppressLint("NewApi")
@@ -38,8 +36,13 @@ public class ContentProviderUtil {
 			//Download
             final String id = getIdFromUri(content_uri);
 
+            long uri_id=-1;
+            try {
+                uri_id=Long.valueOf(id);
+            } catch(Exception e) {}
+            if (uri_id==-1) return null;
             final Uri contentUri = ContentUris.withAppendedId(
-	                    Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+	                    Uri.parse("content://downloads/public_downloads"), uri_id);
 			
 			String sel = MediaStore.Images.Media._ID + "=?";
 			Cursor cursor = c.getContentResolver().query(contentUri, 
@@ -53,6 +56,12 @@ public class ContentProviderUtil {
         } else if (content_uri.toString().startsWith("content://downloads/all_downloads")) {
             //Download
             final String id = getIdFromUri(content_uri);
+            long uri_id=-1;
+            try {
+                uri_id=Long.valueOf(id);
+            } catch(Exception e) {}
+            if (uri_id==-1) return null;
+
             final Uri contentUri = ContentUris.withAppendedId(
                     Uri.parse("content://downloads/all_downloads"), Long.valueOf(id));
 
@@ -70,10 +79,11 @@ public class ContentProviderUtil {
             if (cursor.moveToFirst()) {
 //				long id=cursor.getLong(cursor.getColumnIndex(MediaStore.MediaColumns._ID));
 //    			Uri image_uri = ContentUris.withAppendedId(content_uri, Long.valueOf(id));
-                String file_name = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME));
+                String t_file_name = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME));
 //				String file_path = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DATA));
 //				Log.v("","data="+file_path);
                 clearCacheFile(cd);
+                String file_name=t_file_name==null?"attachedFile":t_file_name;
                 tlf=new File(cd+file_name);
                 try {
                     InputStream is=c.getContentResolver().openInputStream(content_uri);//image_uri);
