@@ -74,9 +74,9 @@ public class SystemInfo {
             String packageName = c.getPackageName();
             PowerManager pm = (PowerManager) c.getSystemService(Context.POWER_SERVICE);
             if (pm.isIgnoringBatteryOptimizations(packageName)) {
-                out.add("Battery optimization=false");
+                out.add("isIgnoringBatteryOptimizations()=true");
             } else {
-                out.add("Battery optimization=true");
+                out.add("isIgnoringBatteryOptimizations()=false");
             }
         } else {
             out.add("Battery optimization=false");
