@@ -76,31 +76,33 @@ public class ContentProviderUtil {
             cursor.close();
         } else if (content_uri.toString().startsWith("content://")) {
             Cursor cursor = c.getContentResolver().query(content_uri, column, null, null, null);
-            if (cursor.moveToFirst()) {
+            if (cursor!=null) {
+                if (cursor.moveToFirst()) {
 //				long id=cursor.getLong(cursor.getColumnIndex(MediaStore.MediaColumns._ID));
 //    			Uri image_uri = ContentUris.withAppendedId(content_uri, Long.valueOf(id));
-                String t_file_name = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME));
+                    String t_file_name = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME));
 //				String file_path = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DATA));
 //				Log.v("","data="+file_path);
-                clearCacheFile(cd);
-                String file_name=t_file_name==null?"attachedFile":t_file_name;
-                tlf=new File(cd+file_name);
-                try {
-                    InputStream is=c.getContentResolver().openInputStream(content_uri);//image_uri);
-                    FileOutputStream fos=new FileOutputStream(tlf);
-                    byte[] buff=new byte[1024*1024];
-                    int rc=is.read(buff);
-                    while(rc>0) {
-                        fos.write(buff, 0, rc);
-                        rc=is.read(buff);
+                    clearCacheFile(cd);
+                    String file_name=t_file_name==null?"attachedFile":t_file_name;
+                    tlf=new File(cd+file_name);
+                    try {
+                        InputStream is=c.getContentResolver().openInputStream(content_uri);//image_uri);
+                        FileOutputStream fos=new FileOutputStream(tlf);
+                        byte[] buff=new byte[1024*1024];
+                        int rc=is.read(buff);
+                        while(rc>0) {
+                            fos.write(buff, 0, rc);
+                            rc=is.read(buff);
+                        }
+                        fos.flush();
+                        fos.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                    fos.flush();
-                    fos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
+                cursor.close();
             }
-            cursor.close();
 //        } else if (content_uri.toString().startsWith("content://com.fsck.k9.attachmentprovider") ||
 //                content_uri.toString().startsWith("content://com.fsck.k9.tempfileprovider") ) {
 //			Cursor cursor = c.getContentResolver().query(content_uri, column, null, null, null);
