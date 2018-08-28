@@ -53,6 +53,8 @@ public class SystemInfo {
 
         out.add("getSdcardRootPath=" + safMgr.getSdcardRootPath());
 
+        out.add("getExternalStorageDirectory="+LocalMountPoint.getExternalStorageDir());
+
         File[] fl = ContextCompat.getExternalFilesDirs(c, null);
         out.add("ExternalFilesDirs :");
         if (fl != null) {
@@ -154,7 +156,7 @@ public class SystemInfo {
         if (fl != null) {
             for (File item : fl) {
                 if (item.isDirectory())
-                    out.add("   /" + item.getName() + ", read=" + item.canRead());
+                    out.add("   /" + item.getName() + ", read=" + item.canRead()+", write="+item.canWrite());
             }
         }
 
@@ -163,7 +165,7 @@ public class SystemInfo {
         if (fl != null) {
             for (File item : fl) {
                 if (item.isDirectory())
-                    out.add("   /mnt/" + item.getName() + ", read=" + item.canRead());
+                    out.add("   /mnt/" + item.getName() + ", read=" + item.canRead()+", write="+item.canWrite());
             }
         }
 
@@ -172,7 +174,7 @@ public class SystemInfo {
         if (fl != null) {
             for (File item : fl) {
                 if (item.isDirectory())
-                    out.add("   /storage/" + item.getName() + ", read=" + item.canRead());
+                    out.add("   /storage/" + item.getName() + ", read=" + item.canRead()+", write="+item.canWrite());
             }
         }
 
@@ -181,7 +183,7 @@ public class SystemInfo {
         if (fl != null) {
             for (File item : fl) {
                 if (item.isDirectory())
-                    out.add("   /storage/emulated/" + item.getName() + ", read=" + item.canRead());
+                    out.add("   /storage/emulated/" + item.getName() + ", read=" + item.canRead()+", write="+item.canWrite());
             }
         }
 
@@ -190,7 +192,7 @@ public class SystemInfo {
         if (fl != null) {
             for (File item : fl) {
                 if (item.isDirectory())
-                    out.add("   /storage/self/" + item.getName() + ", read=" + item.canRead());
+                    out.add("   /storage/self/" + item.getName() + ", read=" + item.canRead()+", write="+item.canWrite());
             }
         }
 
@@ -199,7 +201,7 @@ public class SystemInfo {
         if (fl != null) {
             for (File item : fl) {
                 if (item.isDirectory())
-                    out.add("   /Removable/" + item.getName() + ", read=" + item.canRead());
+                    out.add("   /Removable/" + item.getName() + ", read=" + item.canRead()+", write="+item.canWrite());
             }
         }
         return out;

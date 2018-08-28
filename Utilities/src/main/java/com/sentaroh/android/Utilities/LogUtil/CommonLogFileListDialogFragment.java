@@ -23,13 +23,6 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
@@ -66,18 +59,25 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.sentaroh.android.Utilities.CommonGlobalParms;
-import com.sentaroh.android.Utilities.LocalMountPoint;
-import com.sentaroh.android.Utilities.R;
-import com.sentaroh.android.Utilities.ThemeColorList;
-import com.sentaroh.android.Utilities.ThemeUtil;
-import com.sentaroh.android.Utilities.ZipUtil;
-import com.sentaroh.android.Utilities.NotifyEvent;
-import com.sentaroh.android.Utilities.NotifyEvent.NotifyEventListener;
-import com.sentaroh.android.Utilities.ThreadCtrl;
+import com.sentaroh.android.Utilities.ContextButton.ContextButtonUtil;
 import com.sentaroh.android.Utilities.Dialog.CommonDialog;
 import com.sentaroh.android.Utilities.Dialog.MessageDialogFragment;
 import com.sentaroh.android.Utilities.Dialog.ProgressBarDialogFragment;
-import com.sentaroh.android.Utilities.ContextButton.ContextButtonUtil;
+import com.sentaroh.android.Utilities.LocalMountPoint;
+import com.sentaroh.android.Utilities.NotifyEvent;
+import com.sentaroh.android.Utilities.NotifyEvent.NotifyEventListener;
+import com.sentaroh.android.Utilities.R;
+import com.sentaroh.android.Utilities.ThemeColorList;
+import com.sentaroh.android.Utilities.ThemeUtil;
+import com.sentaroh.android.Utilities.ThreadCtrl;
+import com.sentaroh.android.Utilities.ZipUtil;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class CommonLogFileListDialogFragment extends DialogFragment{
 	private final static boolean DEBUG_ENABLE=false;
@@ -551,7 +551,7 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
 //		    intent.putExtra(Intent.EXTRA_CC, new String[]{"cc@example.com"});  
 //		    intent.putExtra(Intent.EXTRA_BCC, new String[]{"bcc@example.com"});  
 	    intent.putExtra(Intent.EXTRA_SUBJECT, "Log file");  
-	    intent.putExtra(Intent.EXTRA_TEXT, "Any comment");
+	    intent.putExtra(Intent.EXTRA_TEXT, "Please fill in the details of the problem.");
 	    intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(lf)); 
 	    mContext.startActivity(intent);
 	};
