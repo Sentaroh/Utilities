@@ -285,7 +285,7 @@ public class CommonFileSelector extends DialogFragment {
         mSavedViewContentsValue.mainDialogFilenameTextSelEnd=file_name.getSelectionEnd();
 
         final CustomTextView dir_name = (CustomTextView) mDialog.findViewById(R.id.common_file_selector_filepath);
-        mSavedViewContentsValue.mainDialogDirName=dir_name.getText();
+        mSavedViewContentsValue.mainDialogDirName=dir_name.getText().toString();
 
         mSavedViewContentsValue.mainDailogListViewPos[0]=mTreeFileListView.getFirstVisiblePosition();
         if (mTreeFileListView.getChildAt(0)!=null)
@@ -699,7 +699,7 @@ public class CommonFileSelector extends DialogFragment {
         btnUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String c_dir=dir_path.getText().substring(0,dir_path.getText().length()-1);
+                String c_dir=dir_path.getText().toString().substring(0,dir_path.getText().length()-1);
                 String new_dir=c_dir.substring(0,c_dir.lastIndexOf("/"));
                 mDialogLocalDir=new_dir.replace(mDialogLocalMP,"") ;
                 if (mDialogLocalDir.equals("")) {
@@ -736,7 +736,7 @@ public class CommonFileSelector extends DialogFragment {
 
                 });
                 fileSelectEditDialogCreateBtn(activity, context,
-                        dir_path.getText().substring(0,dir_path.getText().length()-1),"",
+                        dir_path.getText().toString().substring(0,dir_path.getText().length()-1),"",
                         mLocalMountPointSpinner.getSelectedItem().toString(),
                         mTreeFilelistAdapter, ntfy,mTreeFileListView);
 

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE layout>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:ctv="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -70,7 +69,6 @@
                 android:gravity="center_vertical"
                 android:minHeight="48dp"
                 android:visibility="gone"
-                ctv:textSize="15dp"
                 android:textAppearance="?android:attr/textAppearanceMedium"/>
 
         </LinearLayout>

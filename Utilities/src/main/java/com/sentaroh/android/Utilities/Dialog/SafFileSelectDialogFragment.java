@@ -23,23 +23,6 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Locale;
-
-import com.sentaroh.android.Utilities.MiscUtil;
-import com.sentaroh.android.Utilities.NotifyEvent;
-import com.sentaroh.android.Utilities.SafFile;
-import com.sentaroh.android.Utilities.SafManager;
-import com.sentaroh.android.Utilities.ThemeUtil;
-import com.sentaroh.android.Utilities.NotifyEvent.NotifyEventListener;
-import com.sentaroh.android.Utilities.ThemeColorList;
-import com.sentaroh.android.Utilities.TreeFilelist.TreeFilelistAdapter;
-import com.sentaroh.android.Utilities.TreeFilelist.TreeFilelistItem;
-import com.sentaroh.android.Utilities.Widget.CustomTextView;
-import com.sentaroh.android.Utilities.R;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -57,11 +40,12 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
 import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.CheckedTextView;
@@ -70,7 +54,23 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
+
+import com.sentaroh.android.Utilities.MiscUtil;
+import com.sentaroh.android.Utilities.NotifyEvent;
+import com.sentaroh.android.Utilities.NotifyEvent.NotifyEventListener;
+import com.sentaroh.android.Utilities.R;
+import com.sentaroh.android.Utilities.SafFile;
+import com.sentaroh.android.Utilities.SafManager;
+import com.sentaroh.android.Utilities.ThemeColorList;
+import com.sentaroh.android.Utilities.ThemeUtil;
+import com.sentaroh.android.Utilities.TreeFilelist.TreeFilelistAdapter;
+import com.sentaroh.android.Utilities.TreeFilelist.TreeFilelistItem;
+import com.sentaroh.android.Utilities.Widget.CustomTextView;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Locale;
 
 public class SafFileSelectDialogFragment extends DialogFragment {
 
@@ -707,7 +707,7 @@ public class SafFileSelectDialogFragment extends DialogFragment {
 //					}
 //				}
 				fileSelectEditDialogCreateBtn(activity, context, 
-						dir_name.getText().substring(0,dir_name.getText().length()-1),"", mTreeFilelistAdapter, ntfy,mTreeFileListView);
+						dir_name.getText().toString().substring(0,dir_name.getText().length()-1),"", mTreeFilelistAdapter, ntfy,mTreeFileListView);
 				
 			}
 		});

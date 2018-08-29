@@ -2,7 +2,6 @@
 <!DOCTYPE layout>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:ctv="http://schemas.android.com/apk/res-auto"
     android:id="@+id/file_select_edit_dlg_view"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -111,7 +110,6 @@
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
                 android:text="@string/msgs_file_select_edit_dlg_dir_name"
-                ctv:textSize="15dp"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
         </LinearLayout>
             
