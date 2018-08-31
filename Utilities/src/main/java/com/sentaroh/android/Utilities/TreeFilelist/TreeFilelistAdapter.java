@@ -25,6 +25,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 import android.content.Context;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -547,7 +548,7 @@ public class TreeFilelistAdapter extends BaseAdapter {
             		holder.iv_image1.setVisibility(ImageView.GONE);
             		holder.tv_name.setText(o.getName());
             	} else {
-                	holder.tv_spacer.setWidth(o.getListLevel()*30);
+                	holder.tv_spacer.setWidth((int)toPixel(o.getListLevel()*15));
                 	holder.tv_name.setText(o.getName());
                 	if (mShowLastModified) {
     		            if (!o.getCap().equals("") && !o.getCap().equals(" ")) {
@@ -728,11 +729,11 @@ public class TreeFilelistAdapter extends BaseAdapter {
 
     };
     
-//	private float toPixel(int dip) {
-//		float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-//				dip, resources.getDisplayMetrics());
-//		return px;
-//	};
+	private float toPixel(int dip) {
+		float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+				dip, mContext.getResources().getDisplayMetrics());
+		return px;
+	};
     
     @SuppressWarnings("unused")
 	private void processParentEntry(TreeFilelistItem cfi, int cp, boolean isChecked) {
