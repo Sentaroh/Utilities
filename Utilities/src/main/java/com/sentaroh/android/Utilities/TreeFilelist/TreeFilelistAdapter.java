@@ -722,7 +722,7 @@ public class TreeFilelistAdapter extends BaseAdapter {
 		}
 		boolean c_chk=o.isChecked();
 		o.setChecked(isChecked);
-		mDataItems.set(data_item_pos,o);
+//		mDataItems.set(data_item_pos,o);
 		
 		if (cb_ntfy!=null) cb_ntfy.notifyToListener(isChecked, new Object[]{data_item_pos, c_chk});
 

@@ -1,16 +1,7 @@
 package com.sentaroh.android.Utilities;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import android.annotation.SuppressLint;
+import android.util.Log;
 
 import net.lingala.zip4j.core.HeaderReader;
 import net.lingala.zip4j.core.HeaderWriter;
@@ -27,8 +18,18 @@ import net.lingala.zip4j.util.CRCUtil;
 import net.lingala.zip4j.util.InternalZipConstants;
 import net.lingala.zip4j.util.Zip4jConstants;
 import net.lingala.zip4j.util.Zip4jUtil;
-import android.annotation.SuppressLint;
-import android.util.Log;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class BufferedZipFile {
 
@@ -152,7 +153,7 @@ public class BufferedZipFile {
 			} catch (FileNotFoundException e) {
 			}
 			add_fos=new ZipOutputStream(splitOutputStream, add_zip_model);
-			new BufferedOutputStream(add_fos, IO_AREA_SIZE*4);
+//			new BufferedOutputStream(add_fos, IO_AREA_SIZE*4);
 
 		}
 //		String file_name = Zip4jUtil.getRelativeFileName(input.getAbsolutePath(), 
