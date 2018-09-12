@@ -9,12 +9,11 @@ import android.text.Layout;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextPaint;
-import android.widget.TextView;
 
 public class CustomTextViewFilter implements InputFilter {
-    private final TextView view;
+    private final CustomTextView view;
 
-    public CustomTextViewFilter(TextView view) {
+    public CustomTextViewFilter(CustomTextView view) {
         this.view = view;
     }
 
@@ -28,8 +27,8 @@ public class CustomTextViewFilter implements InputFilter {
 //        Log.v("","source="+source);
 //        Log.v("","start="+start+", end="+end+", width="+width+", w="+w+", wpl="+wpl+", wpr="+wpr);
 
+        if (width<=0) return source;//Modified by F.Hoshino 2018/08/29
         SpannableStringBuilder result = new SpannableStringBuilder();
-        if (width==0) return source;//Modified by F.Hoshino 2018/08/29
         for (int index = start; index < end; index++) {
             float rts=Layout.getDesiredWidth(source, start, index + 1, paint);
             if (rts > width) {
@@ -47,6 +46,7 @@ public class CustomTextViewFilter implements InputFilter {
         if (start < end) {
             result.append(source.subSequence(start, end));
         }
+//        Log.v("","result="+ StringUtil.getDumpFormatHexString(result.toString().getBytes(), 0,result.toString().getBytes().length));
         return result;
     }
 }

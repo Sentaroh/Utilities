@@ -12,25 +12,39 @@ public class CustomTextView extends TextView {
 
     private CharSequence mOrgText = "";
     private BufferType mOrgBufferType = BufferType.NORMAL;
+    private boolean mWordWrapMode =false;
 
     public CustomTextView(Context context) {
         super(context);
-        setFilters(new InputFilter[] { new CustomTextViewFilter(this) });
+        setWrapFilter();
     }
 
     public CustomTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setFilters(new InputFilter[] { new CustomTextViewFilter(this) });
+        setWrapFilter();
     }
 
     public CustomTextView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        setFilters(new InputFilter[] { new CustomTextViewFilter(this) });
+        setWrapFilter();
+    }
+
+    private void setWrapFilter() {
+        if (isWordWrapMode()) setFilters(new InputFilter[] {});
+        else setFilters(new InputFilter[] { new CustomTextViewFilter(this) });
+    }
+
+    public void setWordWrapMode(boolean word_wrap_mode) {
+        mWordWrapMode =word_wrap_mode;
+        setWrapFilter();
+    }
+
+    public boolean isWordWrapMode() {
+        return mWordWrapMode;
     }
 
     @Override
-    protected void onLayout(boolean changed, int left, int top, int right,
-                            int bottom) {
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         setText(mOrgText, mOrgBufferType);
     }
 
