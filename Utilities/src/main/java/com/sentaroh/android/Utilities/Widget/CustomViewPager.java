@@ -2,10 +2,14 @@ package com.sentaroh.android.Utilities.Widget;
 
 import android.content.Context;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebView;
+import android.widget.Scroller;
+
+import java.lang.reflect.Field;
 
 public class CustomViewPager extends ViewPager{
 	private boolean mSwipeEnabled=true;
@@ -21,6 +25,7 @@ public class CustomViewPager extends ViewPager{
 	}
 	
 	private void init() {
+        setMyScroller();
 //		setPageTransformer(false, new ViewPager.PageTransformer() {
 //		    @Override
 //		    public void transformPage(View page, float position) {
@@ -31,8 +36,46 @@ public class CustomViewPager extends ViewPager{
 //		    } 
 //		});
 	}
-	
-	@Override
+
+    private void setMyScroller() {
+        try {
+            Class<?> viewpager = ViewPager.class;
+            Field scroller = viewpager.getDeclaredField("mScroller");
+//            if (mOriginalScroller==null) mOriginalScroller=scroller.get(this);
+            scroller.setAccessible(true);
+            scroller.set(this, new MyScroller(getContext()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean mUseFastScroll=false;
+    public void setUseFastScroll(boolean use) {
+        mUseFastScroll=use;
+    }
+
+    public boolean isUseFastScroll() {
+        return mUseFastScroll;
+    }
+
+    private class MyScroller extends Scroller {
+        private MyScroller(Context context) {
+            super(context, new FastOutSlowInInterpolator());
+        }
+
+        @Override
+        public void startScroll(int startX, int startY, int dx, int dy, int duration) {
+//            Log.v("","duraton="+duration);
+            int new_duration=duration;
+            if (isUseFastScroll()) {
+                new_duration=0;
+            }
+            super.startScroll(startX, startY, dx, dy, new_duration);
+        }
+    }
+
+
+    @Override
 	protected boolean canScroll(View v, boolean checkV, int dx, int x, int y) {
 		if (v instanceof WebView) {
 			return false;//((WebView) v).canScrollHor(-dx);
