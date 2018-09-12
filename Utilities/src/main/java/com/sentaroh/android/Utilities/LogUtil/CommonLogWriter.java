@@ -58,10 +58,10 @@ public class CommonLogWriter {
                         public void run() {
                             if (!mThreadIsActive) {
                                 mThreadIsActive=true;
-                                writeLogDirect("CommonLogWriter thread was created. TID="+Thread.currentThread().getId());
+                                if (debug_level>=2) writeLogDirect("CommonLogWriter thread was created. TID="+Thread.currentThread().getId());
                                 processMessageQueue();
                             } else {
-                                writeLogDirect("CommonLogWriter thread was terminated, because already active.");
+                                if (debug_level>=2) writeLogDirect("CommonLogWriter thread was terminated, because already active.");
                             }
                         }
                     };
@@ -95,7 +95,7 @@ public class CommonLogWriter {
                             if (printWriter!=null) printWriter.flush();
                             if ((System.currentTimeMillis()- mLastWriteTime)>30*1000) {
                                 if (printWriter!=null) printWriter.flush();
-                                writeLogDirect("CommonLogWriter Thread was ended by idle timer. TID="+Thread.currentThread().getId()+", HWM="+queueHighWaterMark);
+                                if (debug_level>=2) writeLogDirect("CommonLogWriter Thread was ended by idle timer. TID="+Thread.currentThread().getId()+", HWM="+queueHighWaterMark);
                                 queueHighWaterMark=0;
                                 mThreadIsActive=false;
                                 logThread=null;
