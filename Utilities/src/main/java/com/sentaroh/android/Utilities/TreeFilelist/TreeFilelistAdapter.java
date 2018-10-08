@@ -682,16 +682,21 @@ public class TreeFilelistAdapter extends BaseAdapter {
            			if (o.isChecked()) {
 //               			int data_item_pos=mShowItems.get(p);
     					TreeFilelistItem fi;
-    					for (int i=0;i<mDataItems.size();i++) {
-    						fi=mDataItems.get(i);
-    						if (fi.isChecked()&&data_item_pos!=i) {
-    							fi.setChecked(false);
-    						}
-    					}
+//    					for (int i=0;i<mDataItems.size();i++) {
+//    						fi=mDataItems.get(i);
+//    						if (fi.isChecked()&&data_item_pos!=i) {
+//    							fi.setChecked(false);
+//    						}
+//    					}
+                        for (int i=0;i<mDataItems.size();i++) {
+                            fi=mDataItems.get(i);
+                            fi.setChecked(false);
+                        }
+    					o.setChecked(true);
            			}
-           			holder.rb_rb1.setChecked(mDataItems.get(mShowItems.get(position)).isChecked()); 
+//           			holder.rb_rb1.setChecked(mDataItems.get(mShowItems.get(position)).isChecked());
+                    holder.rb_rb1.setChecked(o.isChecked());
            		} else holder.cb_cb1.setChecked(mDataItems.get(mShowItems.get(position)).isChecked());
-       			
             }
             return v;
     };

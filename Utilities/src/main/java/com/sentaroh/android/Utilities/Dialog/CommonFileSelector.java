@@ -523,7 +523,7 @@ public class CommonFileSelector extends DialogFragment {
 
         if (!mDialogSingleSelect) btnOk.setEnabled(false);
 
-        NotifyEvent cb_ntfy=new NotifyEvent(context);
+        final NotifyEvent cb_ntfy=new NotifyEvent(context);
         // set file list thread response listener
         cb_ntfy.setListener(new NotifyEvent.NotifyEventListener() {
             @Override
@@ -672,8 +672,10 @@ public class CommonFileSelector extends DialogFragment {
             public boolean onItemLongClick(AdapterView<?> items, View view, int idx, long id) {
                 final int pos=mTreeFilelistAdapter.getItem(idx);
                 final TreeFilelistItem tfi=mTreeFilelistAdapter.getDataItem(pos);
+                mTreeFilelistAdapter.setAllItemUnchecked();
                 tfi.setChecked(true);
                 mTreeFilelistAdapter.notifyDataSetChanged();
+                cb_ntfy.notifyToListener(tfi.isChecked(), new Object[]{pos, !tfi.isChecked()});
                 return true;
             }
         });
