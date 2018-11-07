@@ -1,8 +1,5 @@
 package com.sentaroh.android.Utilities;
 
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -15,6 +12,9 @@ import android.os.RemoteException;
 import android.provider.DocumentsContract;
 import android.text.TextUtils;
 import android.util.Log;
+
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
 public class SafFile {
     private Context mContext;
@@ -335,20 +335,20 @@ public class SafFile {
     public boolean moveTo(SafFile to_file) {
         Uri move_result=null;
         try {
-            msg_area="moveTo mUri="+mUri+", to_file="+to_file+"\n";
+            msg_area="moveTo mUri="+mUri.getPath()+", to_file="+to_file.getUri().getPath()+"\n";
             move_result = DocumentsContract.moveDocument(mContext.getContentResolver(), mUri, getParentFile().getUri(), to_file.getParentFile().getUri());
             mUri = move_result;
             if (mUri!=null) {
-                msg_area+="moveTo result="+mUri+"\n";
+                msg_area+="moveTo result="+mUri.getPath()+"\n";
                 Uri rename_result=move_result;
                 if (!getName().equals(to_file.getName())) {
                     if (to_file.exists()) to_file.delete();
                     rename_result=DocumentsContract.renameDocument(mContext.getContentResolver(), mUri, to_file.getName());
-                    msg_area+="moveTo rename result="+rename_result+"\n";
+                    msg_area+="moveTo rename result="+rename_result.getPath()+"\n";
                 }
                 return true;
             } else {
-                msg_area+="moveTo failed"+"\n";
+                msg_area+="moveTo move failed"+"\n";
                 return false;
             }
         } catch (FileNotFoundException e) {

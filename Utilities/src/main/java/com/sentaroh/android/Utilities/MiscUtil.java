@@ -23,6 +23,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 */ 
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.math.BigDecimal;
 
 public class MiscUtil{
@@ -101,4 +103,14 @@ public class MiscUtil{
 		
 		return tfs;
 	};
+
+	final static public String getStackTraceString(Exception e) {
+        final StringWriter sw = new StringWriter();
+        final PrintWriter pw = new PrintWriter(sw);
+        e.printStackTrace(pw);
+        pw.flush();
+        pw.close();
+        return sw.toString();
+    }
+
 }
