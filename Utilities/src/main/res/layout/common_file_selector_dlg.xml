@@ -165,7 +165,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:text="@string/msgs_common_file_selector_create_btn" />
+                android:text="@string/msgs_common_file_selector_create_btn"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
 
             <Button
                 android:id="@+id/common_file_selector_refresh_btn"
@@ -173,7 +174,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:text="@string/msgs_common_file_selector_refresh_btn" />
+                android:text="@string/msgs_common_file_selector_refresh_btn"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
 
 
         </LinearLayout>

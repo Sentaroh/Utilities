@@ -5,8 +5,10 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -35,12 +37,14 @@ import com.sentaroh.android.Utilities.SafFile;
 import com.sentaroh.android.Utilities.SafManager;
 import com.sentaroh.android.Utilities.ThemeColorList;
 import com.sentaroh.android.Utilities.ThemeUtil;
+import com.sentaroh.android.Utilities.ThreadCtrl;
 import com.sentaroh.android.Utilities.TreeFilelist.TreeFilelistAdapter;
 import com.sentaroh.android.Utilities.TreeFilelist.TreeFilelistItem;
 import com.sentaroh.android.Utilities.Widget.CustomSpinnerAdapter;
 import com.sentaroh.android.Utilities.Widget.CustomTextView;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -80,9 +84,12 @@ public class CommonFileSelector extends DialogFragment {
     private SafManager mSafFileMgr=null;
     private int mRestartStatus=0;
 
+    private Handler mUiHandler=null;
+
     public static CommonFileSelector newInstance(boolean debug,
                                                  boolean enableCreate, boolean hideMp, int selectCat,
-                                                 boolean singleSelect, boolean include_mp, String lmp, String ldir, String file_name, String title) {
+                                                 boolean singleSelect, boolean include_mp,
+                                                 String lmp, String ldir, String file_name, String title) {
         if (debug) Log.v(APPLICATION_TAG,"newInstance"+
                 " debug="+debug+", enableCreate="+enableCreate+
                 ", title="+title+", lmp="+lmp+", ldir="+ldir+", filename="+file_name+", singleSelect="+singleSelect+", include_mp="+include_mp);
@@ -139,6 +146,7 @@ public class CommonFileSelector extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mUiHandler=new Handler();
         Bundle bd=getArguments();
         mDebugEnable=bd.getBoolean("debug");
         mDialogTitle=bd.getString("title");
@@ -419,7 +427,25 @@ public class CommonFileSelector extends DialogFragment {
         mLocalMountPointSpinner.setAdapter(adapter);
 
         int a_no=0;
-        ArrayList<String> ml= LocalMountPoint.getLocalMountpointList2(context);
+        ArrayList<String> ml= new ArrayList<String>();
+//        ArrayList<String> ml= LocalMountPoint.getLocalMountpointList2(context);
+        SafManager sm=new SafManager(getActivity().getApplicationContext(), false);
+        File[] fl=getActivity().getApplicationContext().getExternalFilesDirs(null);
+        if (fl!=null && fl.length>=1) {
+            for (int i=0;i<fl.length;i++) {
+                String fp=fl[i].getPath();
+                if (fp.indexOf("/Android/")>0) {
+                    String mp=fp.substring(0,fp.indexOf("/Android/"));
+                    if (mp.startsWith("/storage/emulated")) {
+                        ml.add(mp);
+                    } else {
+                        if (mp.equals(sm.getSdcardRootPath()) || mp.equals(sm.getUsbRootPath()))ml.add(mp);
+                    }
+                } else {
+                    ml.add(fp);
+                }
+            }
+        }
         mLocalMountPointSpinner.setOnItemSelectedListener(null);
         if (ml.size()==0 || mDialogHideMp) {
             adapter.add(mDialogLocalMP);
@@ -436,7 +462,6 @@ public class CommonFileSelector extends DialogFragment {
                     }
                 }
                 if (!dup) {
-                    if (mDialogLocalMP.startsWith(ml.get(i))) a_no=adapter.getCount();
                     adapter.add(ml.get(i));
                 }
             }
@@ -479,6 +504,7 @@ public class CommonFileSelector extends DialogFragment {
 
         mTreeFilelistAdapter= new TreeFilelistAdapter(activity, mDialogSingleSelect, true);
         mTreeFilelistAdapter.setDirectorySelectable(!(mDialogSelectCat==DIALOG_SELECT_CATEGORY_FILE));
+        mTreeFilelistAdapter.setSelectable(false);
         mTreeFileListView.setAdapter(mTreeFilelistAdapter);
 
 
@@ -496,8 +522,6 @@ public class CommonFileSelector extends DialogFragment {
         mTreeFileListView.setScrollbarFadingEnabled(false);
 
         setTopUpButtonEnabled(false);
-//        if (mDialogLocalDir.equals("/")) setTopUpButtonEnabled(false);
-//        else setTopUpButtonEnabled(true);
 
         if (mSavedViewContentsValue!=null && mSavedViewContentsValue.mainDialogFilename!=null) {
             et_file_name.setText(mSavedViewContentsValue.mainDialogFilename);
@@ -506,18 +530,14 @@ public class CommonFileSelector extends DialogFragment {
                     mSavedViewContentsValue.mainDialogFilenameTextSelEnd);
             dir_path.setText(mSavedViewContentsValue.mainDialogDirName);
         } else {
-//            String d_name=mDialogLocalDir.equals("/")? mDialogLocalMP +"/": mDialogLocalMP +mDialogLocalDir+"/";
             dir_path.setText(mDialogLocalMP+"/");
             if (mDialogSelectCat==DIALOG_SELECT_CATEGORY_FILE) {
-                et_file_name.setText(mDialogLocalDir+"/"+mDialogFileName);
+                et_file_name.setText(mDialogFileName);
             } else {
-                et_file_name.setText(mDialogLocalDir);
-//                if (mDialogLocalDir.startsWith("/")) {
-//                    if (mDialogLocalDir.equals("/")) et_file_name.setText("");
-//                    else et_file_name.setText(mDialogLocalDir.substring(1));
-//                } else {
-//                    et_file_name.setText(mDialogLocalDir);
-//                }
+                et_file_name.setVisibility(EditText.GONE);
+                mTreeFilelistAdapter.setDirectorySelectable(false);
+//                if (mDialogLocalDir.length()>1) et_file_name.setText(mDialogLocalDir.substring(1));
+//                else et_file_name.setText("");
             }
         }
 
@@ -535,18 +555,7 @@ public class CommonFileSelector extends DialogFragment {
                     if (mTreeFilelistAdapter.getDataItem(p).isChecked() && !p_chk) {
                         if (p!=-1) {
                             if (mTreeFilelistAdapter.getDataItem(p).isChecked()) {
-                                if (mTreeFilelistAdapter.getDataItem(p).isDir()) {
-                                    et_file_name.setText((mTreeFilelistAdapter.getDataItem(p).getPath()+
-                                            mTreeFilelistAdapter.getDataItem(p).getName()));//.substring(1));
-                                } else {
-//                                    dir_path.setText(turl+mTreeFilelistAdapter.getDataItem(p).getPath());
-                                    String t_dir=(dir_path.getText().toString()+mTreeFilelistAdapter.getDataItem(p).getName()).replace(turl,"");
-                                    et_file_name.setText(t_dir);
-//                                    if  (mDialogIncludeMp) et_file_name.setText(t_dir); //
-//                                    else et_file_name.setText(mTreeFilelistAdapter.getDataItem(p).getPath()+mTreeFilelistAdapter.getDataItem(p).getName());
-//                                    et_file_name.setText(mTreeFilelistAdapter.getDataItem(p).getPath()+mTreeFilelistAdapter.getDataItem(p).getName());
-//                                    et_file_name.setText(mTreeFilelistAdapter.getDataItem(p).getName());
-                                }
+                                et_file_name.setText((mTreeFilelistAdapter.getDataItem(p).getName()));
                             }
                         }
                     }
@@ -638,27 +647,50 @@ public class CommonFileSelector extends DialogFragment {
             public void onItemClick(AdapterView<?> items, View view, int idx, long id) {
                 final int pos=mTreeFilelistAdapter.getItem(idx);
                 final TreeFilelistItem tfi=mTreeFilelistAdapter.getDataItem(pos);
-                String turl=(String) mLocalMountPointSpinner.getSelectedItem();
+                final String turl=(String) mLocalMountPointSpinner.getSelectedItem();
                 if (tfi.isDir()) {
-                    if (tfi.getSubDirItemCount()>0) {
+                    if (tfi.getSubDirItemCount()>=0) {
+//                        mDialogLocalDir=tfi.getPath()+tfi.getName();
+//                        ArrayList<TreeFilelistItem> tfl = createLocalFilelist(mDialogSelectCat==DIALOG_SELECT_CATEGORY_FILE, turl,mDialogLocalDir );
+//                        dir_path.setText((turl+mDialogLocalDir+"/").replaceAll("//","/"));
+//                        if (tfl.size()==0) {
+//                            tv_empty.setVisibility(TextView.VISIBLE);
+//                            mTreeFileListView.setVisibility(TextView.GONE);
+//                        } else {
+//                            tv_empty.setVisibility(TextView.GONE);
+//                            mTreeFileListView.setVisibility(TextView.VISIBLE);
+//                            mTreeFilelistAdapter.setDataList(tfl);
+//                        }
+//                        setTopUpButtonEnabled(true);
+                        NotifyEvent ntfy=new NotifyEvent(context);
+                        ntfy.setListener(new NotifyEvent.NotifyEventListener() {
+                            @Override
+                            public void positiveResponse(Context c, Object[] o) {
+                                ArrayList<TreeFilelistItem> tfl =(ArrayList<TreeFilelistItem>)o[0];
+                                dir_path.setText((turl+mDialogLocalDir+"/").replaceAll("//","/"));
+                                if (tfl.size()==0) {
+                                    tv_empty.setVisibility(TextView.VISIBLE);
+                                    mTreeFileListView.setVisibility(TextView.GONE);
+                                } else {
+                                    tv_empty.setVisibility(TextView.GONE);
+                                    mTreeFileListView.setVisibility(TextView.VISIBLE);
+                                    mTreeFilelistAdapter.setDataList(tfl);
+                                }
+                                setTopUpButtonEnabled(true);
+                            }
+
+                            @Override
+                            public void negativeResponse(Context c, Object[] o) {
+                            }
+                        });
                         mDialogLocalDir=tfi.getPath()+tfi.getName();
-                        ArrayList<TreeFilelistItem> tfl = createLocalFilelist(mDialogSelectCat==DIALOG_SELECT_CATEGORY_FILE, turl,mDialogLocalDir );
-                        dir_path.setText((turl+mDialogLocalDir+"/").replaceAll("//","/"));
-                        if (tfl.size()==0) {
-                            tv_empty.setVisibility(TextView.VISIBLE);
-                            mTreeFileListView.setVisibility(TextView.GONE);
-                        } else {
-                            tv_empty.setVisibility(TextView.GONE);
-                            mTreeFileListView.setVisibility(TextView.VISIBLE);
-                            mTreeFilelistAdapter.setDataList(tfl);
-                        }
-                        setTopUpButtonEnabled(true);
+                        createLocalFilelist(mDialogSelectCat==DIALOG_SELECT_CATEGORY_FILE, turl,mDialogLocalDir, ntfy);
                     }
                 } else {
                     mTreeFilelistAdapter.setDataItemIsSelected(pos);
 //                    dir_name.setText((turl+mTreeFilelistAdapter.getDataItem(pos).getPath()));
-                    String t_dir=(dir_path.getText().toString()+mTreeFilelistAdapter.getDataItem(pos).getName()).replace(turl,"");
-                    et_file_name.setText(t_dir);
+//                    String t_dir=(dir_path.getText().toString()+mTreeFilelistAdapter.getDataItem(pos).getName()).replace(turl,"");
+                    et_file_name.setText(mTreeFilelistAdapter.getDataItem(pos).getName());
 //
 //                    if  (mDialogIncludeMp) et_file_name.setText(dir_path.getText().toString()+mTreeFilelistAdapter.getDataItem(pos).getName()); //
 //                    else et_file_name.setText(mTreeFilelistAdapter.getDataItem(pos).getName());
@@ -670,12 +702,14 @@ public class CommonFileSelector extends DialogFragment {
 
         mTreeFileListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener(){
             public boolean onItemLongClick(AdapterView<?> items, View view, int idx, long id) {
-                final int pos=mTreeFilelistAdapter.getItem(idx);
-                final TreeFilelistItem tfi=mTreeFilelistAdapter.getDataItem(pos);
-                mTreeFilelistAdapter.setAllItemUnchecked();
-                tfi.setChecked(true);
-                mTreeFilelistAdapter.notifyDataSetChanged();
-                cb_ntfy.notifyToListener(tfi.isChecked(), new Object[]{pos, !tfi.isChecked()});
+                if (mTreeFilelistAdapter.isDirectorySelectable()) {
+                    final int pos=mTreeFilelistAdapter.getItem(idx);
+                    final TreeFilelistItem tfi=mTreeFilelistAdapter.getDataItem(pos);
+                    mTreeFilelistAdapter.setAllItemUnchecked();
+                    tfi.setChecked(true);
+                    mTreeFilelistAdapter.notifyDataSetChanged();
+                    cb_ntfy.notifyToListener(tfi.isChecked(), new Object[]{pos, !tfi.isChecked()});
+                }
                 return true;
             }
         });
@@ -765,9 +799,11 @@ public class CommonFileSelector extends DialogFragment {
             public void onClick(View v) {
                 String mp=mLocalMountPointSpinner.getSelectedItem().toString();
                 if (mDialogSingleSelect) {
-                    String[] sl_array=new String[2];
+                    String[] sl_array=new String[3];
                     sl_array[0]=mp; //
-                    sl_array[1]=et_file_name.getText().toString(); //
+                    sl_array[1]=mDialogLocalDir; //
+                    if (mDialogSelectCat==DIALOG_SELECT_CATEGORY_DIRECTORY) sl_array[2]="";
+                    else sl_array[2]=et_file_name.getText().toString(); //
                     if (mNotifyEvent!=null) mNotifyEvent.notifyToListener(true, sl_array);
                 } else {
                 }
@@ -862,8 +898,27 @@ public class CommonFileSelector extends DialogFragment {
         ft.commitAllowingStateLoss();
     };
 
-    private ArrayList<TreeFilelistItem>  createLocalFilelist(boolean fileOnly,
-                                                             String url, String dir) {
+    private void  createLocalFilelist(final boolean fileOnly, final String url, final String dir, final NotifyEvent ntfy) {
+        final Dialog pd=CommonDialog.showProgressSpinIndicator(getActivity());
+        pd.show();
+        Thread th=new Thread(){
+            @Override
+            public void run() {
+//                SystemClock.sleep(1000*10);
+                final ArrayList<TreeFilelistItem> tfl=createLocalFilelist(fileOnly, url, dir);
+                mUiHandler.post(new Runnable(){
+                    @Override
+                    public void run() {
+                        ntfy.notifyToListener(true, new Object[]{tfl});
+                        pd.dismiss();
+                    }
+                });
+            }
+        };
+        th.start();
+    }
+
+    private ArrayList<TreeFilelistItem>  createLocalFilelist(boolean fileOnly, String url, String dir) {
 //		Log.v("","url="+url+", dir="+dir);
         ArrayList<TreeFilelistItem> tfl = new ArrayList<TreeFilelistItem>(); ;
         String tdir,fp;

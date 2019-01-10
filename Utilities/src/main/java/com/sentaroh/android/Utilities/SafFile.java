@@ -1,5 +1,6 @@
 package com.sentaroh.android.Utilities;
 
+import android.content.ContentProvider;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -7,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.provider.DocumentsContract;
@@ -68,8 +70,7 @@ public class SafFile {
 
     public SafFile createFile(String mimeType, String displayName) {
         Uri result=null;
-        final ContentProviderClient client = mContext.getContentResolver().acquireUnstableContentProviderClient(
-                mUri.getAuthority());
+        final ContentProviderClient client = mContext.getContentResolver().acquireUnstableContentProviderClient(mUri.getAuthority());
         try {
             result=createDocument(client, mUri, mimeType, displayName);
         } catch (Exception e) {
@@ -89,21 +90,35 @@ public class SafFile {
 
     public SafFile createDirectory(String displayName) {
         Uri result=null;
-        final ContentProviderClient client = mContext.getContentResolver().acquireUnstableContentProviderClient(
-                mUri.getAuthority());
-        try {
-            result=createDocument(client, mUri, DocumentsContract.Document.MIME_TYPE_DIR, displayName);
-        } catch (Exception e) {
-            Log.w("SafFile", "Failed to create directory", e);
-            msg_area="Failed to create directory, Error="+e.getMessage()+"\n";
-            StackTraceElement[] st=e.getStackTrace();
-            for (int i=0;i<st.length;i++) {
-                msg_area+="\n at "+st[i].getClassName()+"."+
-                        st[i].getMethodName()+"("+st[i].getFileName()+
-                        ":"+st[i].getLineNumber()+")";
+        if (Build.VERSION.SDK_INT>=28) {
+            try {
+                result=DocumentsContract.createDocument(mContext.getContentResolver(), mUri, DocumentsContract.Document.MIME_TYPE_DIR, displayName);
+            } catch (Exception e) {
+                Log.w("SafFile", "Failed to create directory", e);
+                msg_area="Failed to create directory, Error="+e.getMessage()+"\n";
+                StackTraceElement[] st=e.getStackTrace();
+                for (int i=0;i<st.length;i++) {
+                    msg_area+="\n at "+st[i].getClassName()+"."+
+                            st[i].getMethodName()+"("+st[i].getFileName()+
+                            ":"+st[i].getLineNumber()+")";
+                }
             }
-        } finally {
-            client.release();
+        } else {
+            ContentProviderClient client = mContext.getContentResolver().acquireUnstableContentProviderClient(mUri.getAuthority());
+            try {
+                result=createDocument(client, mUri, DocumentsContract.Document.MIME_TYPE_DIR, displayName);
+            } catch (Exception e) {
+                Log.w("SafFile", "Failed to create directory", e);
+                msg_area="Failed to create directory, Error="+e.getMessage()+"\n";
+                StackTraceElement[] st=e.getStackTrace();
+                for (int i=0;i<st.length;i++) {
+                    msg_area+="\n at "+st[i].getClassName()+"."+
+                            st[i].getMethodName()+"("+st[i].getFileName()+
+                            ":"+st[i].getLineNumber()+")";
+                }
+            } finally {
+                client.release();
+            }
         }
         return (result != null) ? new SafFile(mContext, result) : null;
     }
@@ -121,6 +136,11 @@ public class SafFile {
         final Bundle out = client.call(METHOD_CREATE_DOCUMENT, null, in);
         return out.getParcelable(EXTRA_URI);
     }
+
+//    public Uri createDocument(ContentResolver cr, Uri parentDocumentUri,
+//                              String mimeType, String displayName) throws RemoteException, FileNotFoundException {
+//        return DocumentsContract.createDocument(cr, parentDocumentUri, mimeType, displayName);
+//    }
 
     public Uri getUri() {
         return mUri;

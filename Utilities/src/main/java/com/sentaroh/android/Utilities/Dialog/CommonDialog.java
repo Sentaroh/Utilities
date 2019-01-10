@@ -154,8 +154,15 @@ public class CommonDialog {
 		fsdf.showDialog(mFragMgr, fsdf, ntfy);
 	}
 
+    public void fileSelectorFileOnly(Boolean inc_mp, String mount_point, String dir_name, String file_name, String title, NotifyEvent ntfy) {
+        boolean include_root=false;
+        CommonFileSelector fsdf=
+                CommonFileSelector.newInstance(false, false, false, CommonFileSelector.DIALOG_SELECT_CATEGORY_FILE,
+                        true, inc_mp, mount_point, dir_name, file_name, title);
+        fsdf.showDialog(mFragMgr, fsdf, ntfy);
+    };
 
-    public void fileSelectorFileOnlySelectWithCreate(Boolean inc_mp, String mount_point, String dir_name, String file_name, String title, NotifyEvent ntfy) {
+    public void fileSelectorFileOnlyWithCreate(Boolean inc_mp, String mount_point, String dir_name, String file_name, String title, NotifyEvent ntfy) {
         boolean include_root=false;
         CommonFileSelector fsdf=
                 CommonFileSelector.newInstance(false, true, false, CommonFileSelector.DIALOG_SELECT_CATEGORY_FILE,
@@ -163,21 +170,42 @@ public class CommonDialog {
         fsdf.showDialog(mFragMgr, fsdf, ntfy);
     };
 
-    public void fileSelectorDirOnlySelectWithCreate(Boolean inc_mp, String mount_point, String dir_name, String title, NotifyEvent ntfy) {
+    public void fileSelectorDirOnly(Boolean inc_mp, String mount_point, String dir_name, String title, NotifyEvent ntfy) {
+        CommonFileSelector fsdf=
+                CommonFileSelector.newInstance(false, false, false, CommonFileSelector.DIALOG_SELECT_CATEGORY_DIRECTORY,
+                        true, inc_mp, mount_point, dir_name, "", title);
+        fsdf.showDialog(mFragMgr, fsdf, ntfy);
+    };
+
+    public void fileSelectorDirOnlyWithCreate(Boolean inc_mp, String mount_point, String dir_name, String title, NotifyEvent ntfy) {
         CommonFileSelector fsdf=
                 CommonFileSelector.newInstance(false, true, false, CommonFileSelector.DIALOG_SELECT_CATEGORY_DIRECTORY,
                         true, inc_mp, mount_point, dir_name, "", title);
         fsdf.showDialog(mFragMgr, fsdf, ntfy);
     };
 
-    public void fileSelectorFileOnlySelectWithCreateHideMP(Boolean inc_mp, String mount_point, String dir_name, String file_name, String title, NotifyEvent ntfy) {
+    public void fileSelectorFileOnlyHideMP(Boolean inc_mp, String mount_point, String dir_name, String file_name, String title, NotifyEvent ntfy) {
+        CommonFileSelector fsdf=
+                CommonFileSelector.newInstance(false, false, true, CommonFileSelector.DIALOG_SELECT_CATEGORY_FILE,
+                        true, inc_mp, mount_point, dir_name, file_name, title);
+        fsdf.showDialog(mFragMgr, fsdf, ntfy);
+    };
+
+    public void fileSelectorFileOnlyWithCreateHideMP(Boolean inc_mp, String mount_point, String dir_name, String file_name, String title, NotifyEvent ntfy) {
         CommonFileSelector fsdf=
                 CommonFileSelector.newInstance(false, true, true, CommonFileSelector.DIALOG_SELECT_CATEGORY_FILE,
                         true, inc_mp, mount_point, dir_name, file_name, title);
         fsdf.showDialog(mFragMgr, fsdf, ntfy);
     };
 
-    public void fileSelectorDirOnlySelectWithCreateHideMP(Boolean inc_mp, String mount_point, String dir_name, String title, NotifyEvent ntfy) {
+    public void fileSelectorDirOnlyHideMP(Boolean inc_mp, String mount_point, String dir_name, String title, NotifyEvent ntfy) {
+        CommonFileSelector fsdf=
+                CommonFileSelector.newInstance(false, false, true, CommonFileSelector.DIALOG_SELECT_CATEGORY_DIRECTORY,
+                        true, inc_mp, mount_point, dir_name, "", title);
+        fsdf.showDialog(mFragMgr, fsdf, ntfy);
+    };
+
+    public void fileSelectorDirOnlyWithCreateHideMP(Boolean inc_mp, String mount_point, String dir_name, String title, NotifyEvent ntfy) {
         CommonFileSelector fsdf=
                 CommonFileSelector.newInstance(false, true, true, CommonFileSelector.DIALOG_SELECT_CATEGORY_DIRECTORY,
                         true, inc_mp, mount_point, dir_name, "", title);

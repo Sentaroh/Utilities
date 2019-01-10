@@ -78,6 +78,14 @@ public class DirectorySelectPreference extends DialogPreference{
         return showMountpointSelector;
     }
 
+    private boolean showMountpointWritable=false;
+    public void setShowMountpointWritable(boolean show) {
+        showMountpointWritable=show;
+    }
+    public boolean isShowMountpointWritable() {
+        return showMountpointWritable;
+    }
+
     private boolean showRootDirectory=false;
     public void setShowRootDirectory(boolean show) {
         showRootDirectory=show;
@@ -295,7 +303,19 @@ public class DirectorySelectPreference extends DialogPreference{
             for (File item:ext_dirs) {
                 if (item!=null) {
                     String path=item.getPath().substring(0, item.getPath().indexOf("/Android/data/"));
-                    adapter.add(path);
+                    if (showMountpointWritable) {
+                        File lf=new File(path+"/work_temp.tmp");
+                        try {
+                            lf.createNewFile();
+                            if (lf.exists()) adapter.add(path);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } finally {
+                            lf.delete();
+                        }
+                    } else {
+                        adapter.add(path);
+                    }
                 }
             }
         }
