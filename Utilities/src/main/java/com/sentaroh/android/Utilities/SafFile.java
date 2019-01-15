@@ -1,6 +1,5 @@
 package com.sentaroh.android.Utilities;
 
-import android.content.ContentProvider;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -13,7 +12,9 @@ import android.os.Bundle;
 import android.os.RemoteException;
 import android.provider.DocumentsContract;
 import android.text.TextUtils;
-import android.util.Log;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -26,7 +27,25 @@ public class SafFile {
 
     private SafFile mParentFile=null;
 
-    private String msg_area="";
+    private ArrayList<String> msg_array =new ArrayList<String>();
+
+    private static Logger slf4jLog = LoggerFactory.getLogger(SafFile.class);
+
+    private void putDebugMessage(String msg) {
+        slf4jLog.info(msg);
+    }
+
+    private String mLastErrorMessage="";
+    private void putErrorMessage(String msg) {
+        mLastErrorMessage=msg;
+        slf4jLog.error(msg);
+    }
+
+    public String getLastErrorMessage() {
+        String em=mLastErrorMessage;
+        mLastErrorMessage="";
+        return em;
+    }
 
     SafFile(Context context, Uri uri) {
         mContext = context;
@@ -56,12 +75,6 @@ public class SafFile {
                 DocumentsContract.getTreeDocumentId(treeUri));
     }
 
-    public String getMessages() {
-        String result=msg_area;
-        msg_area="";
-        return result;
-    }
-
     public String toString() {
         String result="Name="+mDocName+", Uri="+mUri.toString();
         if (mParentFile!=null) result+=", ParentUri="+mParentFile.getUri().toString();
@@ -70,22 +83,21 @@ public class SafFile {
 
     public SafFile createFile(String mimeType, String displayName) {
         Uri result=null;
-        final ContentProviderClient client = mContext.getContentResolver().acquireUnstableContentProviderClient(mUri.getAuthority());
         try {
-            result=createDocument(client, mUri, mimeType, displayName);
+            result=DocumentsContract.createDocument(mContext.getContentResolver(), mUri, mimeType, displayName);
+            putDebugMessage("SafFile#createFile result="+result);
         } catch (Exception e) {
-            Log.w("SafFile", "Failed to create file", e);
-            msg_area="Failed to create file, Error="+e.getMessage()+"\n";
             StackTraceElement[] st=e.getStackTrace();
+            String stm="";
             for (int i=0;i<st.length;i++) {
-                msg_area+="\n at "+st[i].getClassName()+"."+
-                        st[i].getMethodName()+"("+st[i].getFileName()+
-                        ":"+st[i].getLineNumber()+")";
+                stm+="\n at "+st[i].getClassName()+"."+ st[i].getMethodName()+"("+st[i].getFileName()+ ":"+st[i].getLineNumber()+")";
             }
-        } finally {
-            client.release();
+            putErrorMessage("SafFile#createFile Failed to create file, Error="+e.getMessage()+stm);
         }
-        return (result != null) ? new SafFile(mContext, result) : null;
+        SafFile saf=null;
+        if (result != null) saf=new SafFile(mContext, result);
+        putDebugMessage("SafFile#createFile SafFile="+saf);
+        return saf;
     }
 
     public SafFile createDirectory(String displayName) {
@@ -94,28 +106,26 @@ public class SafFile {
             try {
                 result=DocumentsContract.createDocument(mContext.getContentResolver(), mUri, DocumentsContract.Document.MIME_TYPE_DIR, displayName);
             } catch (Exception e) {
-                Log.w("SafFile", "Failed to create directory", e);
-                msg_area="Failed to create directory, Error="+e.getMessage()+"\n";
+//                Log.w("SafFile", "Failed to create directory", e);
                 StackTraceElement[] st=e.getStackTrace();
+                String stm="";
                 for (int i=0;i<st.length;i++) {
-                    msg_area+="\n at "+st[i].getClassName()+"."+
-                            st[i].getMethodName()+"("+st[i].getFileName()+
-                            ":"+st[i].getLineNumber()+")";
+                    stm+="\n at "+st[i].getClassName()+"."+ st[i].getMethodName()+"("+st[i].getFileName()+ ":"+st[i].getLineNumber()+")";
                 }
+                putErrorMessage("SafFile#createDirectory Failed to create directory, Error="+e.getMessage()+stm);
             }
         } else {
             ContentProviderClient client = mContext.getContentResolver().acquireUnstableContentProviderClient(mUri.getAuthority());
             try {
                 result=createDocument(client, mUri, DocumentsContract.Document.MIME_TYPE_DIR, displayName);
             } catch (Exception e) {
-                Log.w("SafFile", "Failed to create directory", e);
-                msg_area="Failed to create directory, Error="+e.getMessage()+"\n";
+//                Log.w("SafFile", "Failed to create directory", e);
                 StackTraceElement[] st=e.getStackTrace();
+                String stm="";
                 for (int i=0;i<st.length;i++) {
-                    msg_area+="\n at "+st[i].getClassName()+"."+
-                            st[i].getMethodName()+"("+st[i].getFileName()+
-                            ":"+st[i].getLineNumber()+")";
+                    stm+="\n at "+st[i].getClassName()+"."+ st[i].getMethodName()+"("+st[i].getFileName()+ ":"+st[i].getLineNumber()+")";
                 }
+                putErrorMessage("SafFile#createDirectory Failed to create directory, Error="+e.getMessage()+stm);
             } finally {
                 client.release();
             }
@@ -249,8 +259,13 @@ public class SafFile {
                     DocumentsContract.Document.COLUMN_DOCUMENT_ID }, null, null, null);
             return c.getCount() > 0;
         } catch (Exception e) {
-            Log.w("SafFile", "SafFile#exists Failed query: " + e);
-            msg_area="SafFile#exists Failed to Query, Error="+e.getMessage()+"\n";
+//            Log.w("SafFile", "SafFile#exists Failed query: " + e);
+            StackTraceElement[] st=e.getStackTrace();
+            String stm="";
+            for (int i=0;i<st.length;i++) {
+                stm+="\n at "+st[i].getClassName()+"."+ st[i].getMethodName()+"("+st[i].getFileName()+ ":"+st[i].getLineNumber()+")";
+            }
+            putErrorMessage("SafFile#exists Failed to Query, Error="+e.getMessage()+stm);
             return false;
         } finally {
             closeQuietly(c);
@@ -303,8 +318,13 @@ public class SafFile {
                 }
             }
         } catch (Exception e) {
-            Log.w("SafFile", "SafFile#findFile Failed query: " + e);
-            msg_area="SafFile#findFile Failed to Query, Error="+e.getMessage()+"\n";
+//            Log.w("SafFile", "SafFile#findFile Failed query: " + e);
+            StackTraceElement[] st=e.getStackTrace();
+            String stm="";
+            for (int i=0;i<st.length;i++) {
+                stm+="\n at "+st[i].getClassName()+"."+ st[i].getMethodName()+"("+st[i].getFileName()+ ":"+st[i].getLineNumber()+")";
+            }
+            putErrorMessage("SafFile#findFile Failed to Query, Error="+e.getMessage()+stm);
         } finally {
             closeQuietly(c);
         }
@@ -333,8 +353,13 @@ public class SafFile {
                 results.add(info);
             }
         } catch (Exception e) {
-            Log.w("SafFile", "SafFile#listDocUris Failed query: " + e);
-            msg_area="SafFile#listDocUris Failed to Query, Error="+e.getMessage()+"\n";
+//            Log.w("SafFile", "SafFile#listDocUris Failed query: " + e);
+            StackTraceElement[] st=e.getStackTrace();
+            String stm="";
+            for (int i=0;i<st.length;i++) {
+                stm+="\n at "+st[i].getClassName()+"."+ st[i].getMethodName()+"("+st[i].getFileName()+ ":"+st[i].getLineNumber()+")";
+            }
+            putErrorMessage("SafFile#listDocUris Failed to Query, Error="+e.getMessage()+stm);
         } finally {
             closeQuietly(c);
         }
@@ -348,6 +373,7 @@ public class SafFile {
             result = DocumentsContract.renameDocument(mContext.getContentResolver(), mUri, displayName);
             return true;
         } catch (FileNotFoundException e) {
+            putErrorMessage("renameTo rename failed, msg="+e.getMessage());
             return false;
         }
     }
@@ -355,23 +381,24 @@ public class SafFile {
     public boolean moveTo(SafFile to_file) {
         Uri move_result=null;
         try {
-            msg_area="moveTo mUri="+mUri.getPath()+", to_file="+to_file.getUri().getPath()+"\n";
+            putDebugMessage("moveTo mUri="+mUri.getPath()+", to_file="+to_file.getUri().getPath());
             move_result = DocumentsContract.moveDocument(mContext.getContentResolver(), mUri, getParentFile().getUri(), to_file.getParentFile().getUri());
             mUri = move_result;
             if (mUri!=null) {
-                msg_area+="moveTo result="+mUri.getPath()+"\n";
+                putDebugMessage("moveTo result="+mUri.getPath());
                 Uri rename_result=move_result;
                 if (!getName().equals(to_file.getName())) {
                     if (to_file.exists()) to_file.delete();
                     rename_result=DocumentsContract.renameDocument(mContext.getContentResolver(), mUri, to_file.getName());
-                    msg_area+="moveTo rename result="+rename_result.getPath()+"\n";
+                    putDebugMessage("moveTo rename result="+rename_result.getPath());
                 }
                 return true;
             } else {
-                msg_area+="moveTo move failed"+"\n";
+                putErrorMessage("moveTo move failed");
                 return false;
             }
         } catch (FileNotFoundException e) {
+            putErrorMessage("moveTo move failed, msg="+e.getMessage());
             return false;
         }
     }
@@ -388,8 +415,12 @@ public class SafFile {
                 return defaultValue;
             }
         } catch (Exception e) {
-            Log.w("SafFile", "SafFile#queryForString Failed query: " + e);
-            msg_area="SafFile#queryForString Failed to Query, Error="+e.getMessage()+"\n";
+//            StackTraceElement[] st=e.getStackTrace();
+//            String stm="";
+//            for (int i=0;i<st.length;i++) {
+//                stm+="\n at "+st[i].getClassName()+"."+ st[i].getMethodName()+"("+st[i].getFileName()+ ":"+st[i].getLineNumber()+")";
+//            }
+            putErrorMessage("SafFile#queryForString Failed to Query, Error="+e.getMessage());
             return defaultValue;
         } finally {
             closeQuietly(c);
@@ -412,8 +443,13 @@ public class SafFile {
                 return defaultValue;
             }
         } catch (Exception e) {
-            Log.w("SafFile", "SafFile#queryForLong Failed query: " + e);
-            msg_area="SafFile#queryForLong Failed to Query, Error="+e.getMessage()+"\n";
+//            Log.w("SafFile", "SafFile#queryForLong Failed query: " + e);
+//            StackTraceElement[] st=e.getStackTrace();
+//            String stm="";
+//            for (int i=0;i<st.length;i++) {
+//                stm+="\n at "+st[i].getClassName()+"."+ st[i].getMethodName()+"("+st[i].getFileName()+ ":"+st[i].getLineNumber()+")";
+//            }
+            putErrorMessage("SafFile#queryForLong Failed to Query, Error="+e.getMessage());
             return defaultValue;
         } finally {
             closeQuietly(c);

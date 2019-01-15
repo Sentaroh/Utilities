@@ -433,16 +433,18 @@ public class CommonFileSelector extends DialogFragment {
         File[] fl=getActivity().getApplicationContext().getExternalFilesDirs(null);
         if (fl!=null && fl.length>=1) {
             for (int i=0;i<fl.length;i++) {
-                String fp=fl[i].getPath();
-                if (fp.indexOf("/Android/")>0) {
-                    String mp=fp.substring(0,fp.indexOf("/Android/"));
-                    if (mp.startsWith("/storage/emulated")) {
-                        ml.add(mp);
+                if (fl[i]!=null) {
+                    String fp=fl[i].getPath();
+                    if (fp.indexOf("/Android/")>0) {
+                        String mp=fp.substring(0,fp.indexOf("/Android/"));
+                        if (mp.startsWith("/storage/emulated")) {
+                            ml.add(mp);
+                        } else {
+                            if (mp.equals(sm.getSdcardRootPath()) || mp.equals(sm.getUsbRootPath()))ml.add(mp);
+                        }
                     } else {
-                        if (mp.equals(sm.getSdcardRootPath()) || mp.equals(sm.getUsbRootPath()))ml.add(mp);
+                        ml.add(fp);
                     }
-                } else {
-                    ml.add(fp);
                 }
             }
         }
@@ -1054,7 +1056,7 @@ public class CommonFileSelector extends DialogFragment {
                             SafFile sf=mSafFileMgr.createSdcardItem(n_path, true);
                             if (sf==null) {
                                 CommonDialog cd=new CommonDialog(context, getFragmentManager());
-                                cd.showCommonDialog(false, "W", "SafFile cretae error", mSafFileMgr.getMessages(), null);
+                                cd.showCommonDialog(false, "W", "SafFile cretae error", mSafFileMgr.getLastErrorMessage(), null);
                                 dlg_msg.setText("SafFile create Error");
                                 return;
                             }
@@ -1063,7 +1065,7 @@ public class CommonFileSelector extends DialogFragment {
                             SafFile sf=mSafFileMgr.createUsbItem(n_path, true);
                             if (sf==null) {
                                 CommonDialog cd=new CommonDialog(context, getFragmentManager());
-                                cd.showCommonDialog(false, "W", "SafFile cretae error", mSafFileMgr.getMessages(), null);
+                                cd.showCommonDialog(false, "W", "SafFile cretae error", mSafFileMgr.getLastErrorMessage(), null);
                                 dlg_msg.setText("SafFile create Error");
                                 return;
                             }
