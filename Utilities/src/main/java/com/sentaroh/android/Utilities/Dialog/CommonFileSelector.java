@@ -511,17 +511,36 @@ public class CommonFileSelector extends DialogFragment {
 
 
         if (mDialogLocalMP.equals("")) mDialogLocalMP =ml.get(0);
-        ArrayList<TreeFilelistItem> tfl = createLocalFilelist(mDialogSelectCat==DIALOG_SELECT_CATEGORY_FILE, mDialogLocalMP, "");
-        if (tfl.size()==0) {
-            tv_empty.setVisibility(TextView.VISIBLE);
-            mTreeFileListView.setVisibility(TextView.GONE);
-        } else {
-            tv_empty.setVisibility(TextView.GONE);
-            mTreeFileListView.setVisibility(TextView.VISIBLE);
-            mTreeFilelistAdapter.setDataList(tfl);
-        }
-        mTreeFileListView.setScrollingCacheEnabled(false);
-        mTreeFileListView.setScrollbarFadingEnabled(false);
+
+        NotifyEvent ntfy_file_list=new NotifyEvent(context);
+        ntfy_file_list.setListener(new NotifyEvent.NotifyEventListener() {
+            @Override
+            public void positiveResponse(Context c, Object[] o) {
+                ArrayList<TreeFilelistItem> tfl =(ArrayList<TreeFilelistItem>)o[0];
+                if (tfl.size()==0) {
+                    tv_empty.setVisibility(TextView.VISIBLE);
+                    mTreeFileListView.setVisibility(TextView.GONE);
+                } else {
+                    tv_empty.setVisibility(TextView.GONE);
+                    mTreeFileListView.setVisibility(TextView.VISIBLE);
+                    mTreeFilelistAdapter.setDataList(tfl);
+                }
+                mTreeFileListView.setScrollingCacheEnabled(false);
+                mTreeFileListView.setScrollbarFadingEnabled(false);
+            }
+
+            @Override
+            public void negativeResponse(Context c, Object[] o) {
+                tv_empty.setVisibility(TextView.VISIBLE);
+                mTreeFileListView.setVisibility(TextView.GONE);
+
+                mTreeFileListView.setScrollingCacheEnabled(false);
+                mTreeFileListView.setScrollbarFadingEnabled(false);
+            }
+        });
+        createLocalFilelist(mDialogSelectCat==DIALOG_SELECT_CATEGORY_FILE, mDialogLocalMP, "", ntfy_file_list);
+        mTreeFileListView.setVisibility(TextView.INVISIBLE);
+        tv_empty.setVisibility(TextView.GONE);
 
         setTopUpButtonEnabled(false);
 
@@ -920,7 +939,7 @@ public class CommonFileSelector extends DialogFragment {
         th.start();
     }
 
-    private ArrayList<TreeFilelistItem>  createLocalFilelist(boolean fileOnly, String url, String dir) {
+    private ArrayList<TreeFilelistItem>  createLocalFilelist(final boolean fileOnly, final String url, final String dir) {
 //		Log.v("","url="+url+", dir="+dir);
         ArrayList<TreeFilelistItem> tfl = new ArrayList<TreeFilelistItem>(); ;
         String tdir,fp;
@@ -932,14 +951,13 @@ public class CommonFileSelector extends DialogFragment {
         }
         File lf = new File(url+tdir);
         final File[]  ff = lf.listFiles();
-        TreeFilelistItem tfi=null;
         if (ff!=null) {
             for (int i=0;i<ff.length;i++){
                 if (!ff[i].isHidden() || (ff[i].isHidden() && !mDialogHideHiddenDirsFiles)) {
                     if (ff[i].canRead()) {
                         int dirct=0;
                         if (ff[i].isDirectory()) {
-                            File tlf=new File(url+tdir+"/"+ff[i].getName());
+                            File tlf=new File(lf.getPath()+"/"+ff[i].getName());
                             File[] lfl=tlf.listFiles();
                             if (lfl!=null) {
                                 for (int j=0;j<lfl.length;j++) {
@@ -950,7 +968,7 @@ public class CommonFileSelector extends DialogFragment {
                                 }
                             }
                         }
-                        tfi=buildTreeFileListItem(ff[i],fp);
+                        TreeFilelistItem tfi=buildTreeFileListItem(ff[i],fp);
                         tfi.setSubDirItemCount(dirct);
                         if (!fileOnly) {
                             if (ff[i].isDirectory()) tfl.add(tfi);
