@@ -43,6 +43,9 @@ import com.sentaroh.android.Utilities.TreeFilelist.TreeFilelistItem;
 import com.sentaroh.android.Utilities.Widget.CustomSpinnerAdapter;
 import com.sentaroh.android.Utilities.Widget.CustomTextView;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -86,11 +89,13 @@ public class CommonFileSelector extends DialogFragment {
 
     private Handler mUiHandler=null;
 
+    private static Logger slf4jLog = LoggerFactory.getLogger(CommonFileSelector.class);
+
     public static CommonFileSelector newInstance(boolean debug,
                                                  boolean enableCreate, boolean hideMp, int selectCat,
                                                  boolean singleSelect, boolean include_mp,
                                                  String lmp, String ldir, String file_name, String title) {
-        if (debug) Log.v(APPLICATION_TAG,"newInstance"+
+        slf4jLog.info("newInstance"+
                 " debug="+debug+", enableCreate="+enableCreate+
                 ", title="+title+", lmp="+lmp+", ldir="+ldir+", filename="+file_name+", singleSelect="+singleSelect+", include_mp="+include_mp);
         CommonFileSelector frag = new CommonFileSelector();
@@ -114,13 +119,13 @@ public class CommonFileSelector extends DialogFragment {
     public void setNotifyEvent(NotifyEvent ntfy) {mNotifyEvent=ntfy;}
 
     public CommonFileSelector() {
-        if (mDebugEnable) Log.v(APPLICATION_TAG,"Constructor(Default)");
+        slf4jLog.info("Constructor(Default)");
     };
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (mDebugEnable) Log.v(APPLICATION_TAG,"onSaveInstanceState");
+        slf4jLog.info("onSaveInstanceState");
         if(outState.isEmpty()){
             outState.putBoolean("WORKAROUND_FOR_BUG_19917_KEY", true);
         }
@@ -131,13 +136,13 @@ public class CommonFileSelector extends DialogFragment {
     final public void onConfigurationChanged(final Configuration newConfig) {
         // Ignore orientation change to keep activity from restarting
         super.onConfigurationChanged(newConfig);
-        if (mDebugEnable) Log.v(APPLICATION_TAG,"onConfigurationChanged");
+        slf4jLog.info("onConfigurationChanged");
         reInitViewWidget();
     };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (mDebugEnable) Log.v(APPLICATION_TAG,"onCreateView");
+        slf4jLog.info("onCreateView");
         View view=super.onCreateView(inflater, container, savedInstanceState);
         CommonDialog.setDlgBoxSizeLimit(mDialog,true);
         return view;
@@ -162,7 +167,7 @@ public class CommonFileSelector extends DialogFragment {
         mDialogIncludeMp=bd.getBoolean("includeMp");
         mDialogSelectedFilePathWithMountPoint=bd.getBoolean("selectedFilePathWithMountPoint");
         mDialogHideHiddenDirsFiles=bd.getBoolean("hideHiddenDirsFiles");
-        if (mDebugEnable) Log.v(APPLICATION_TAG,"onCreate");
+        slf4jLog.info("onCreate");
 
         if (savedInstanceState!=null) mRestartStatus=2;
 
@@ -172,7 +177,7 @@ public class CommonFileSelector extends DialogFragment {
         if (!mTerminateRequired) {
 //            setRetainInstance(true);
 
-            if (mDebugEnable) Log.v(APPLICATION_TAG,"Create="+mDialogEnableCreate+
+            slf4jLog.info("Create="+mDialogEnableCreate+
                     ", SelectCat="+mDialogSelectCat+
                     ", SingleSelect="+mDialogSingleSelect+
                     ", Title="+mDialogTitle+", lurl="+ mDialogLocalMP +
@@ -185,7 +190,7 @@ public class CommonFileSelector extends DialogFragment {
     @Override
     final public void onResume() {
         super.onResume();
-        if (mDebugEnable) Log.v(APPLICATION_TAG,"onResume restart="+mRestartStatus);
+        slf4jLog.info("onResume restart="+mRestartStatus);
         if (mRestartStatus==1) {
         }
         mRestartStatus=1;
@@ -194,34 +199,34 @@ public class CommonFileSelector extends DialogFragment {
     @Override
     final public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (mDebugEnable) Log.v(APPLICATION_TAG,"onActivityCreated");
+        slf4jLog.info("onActivityCreated");
     };
     @Override
     final public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if (mDebugEnable) Log.v(APPLICATION_TAG,"onAttach");
+        slf4jLog.info("onAttach");
     };
     @Override
     final public void onDetach() {
         super.onDetach();
-        if (mDebugEnable) Log.v(APPLICATION_TAG,"onDetach");
+        slf4jLog.info("onDetach");
     };
     @Override
     final public void onStart() {
 //    	CommonDialog.setDlgBoxSizeLimit(mDialog,true);
         super.onStart();
-        if (mDebugEnable) Log.v(APPLICATION_TAG,"onStart");
+        slf4jLog.info("onStart");
         if (mTerminateRequired) mDialog.cancel();
     };
     @Override
     final public void onStop() {
         super.onStop();
-        if (mDebugEnable) Log.v(APPLICATION_TAG,"onStop");
+        slf4jLog.info("onStop");
     };
 
     @Override
     public void onDestroyView() {
-        if (mDebugEnable) Log.v(APPLICATION_TAG,"onDestroyView");
+        slf4jLog.info("onDestroyView");
         if (getDialog() != null && getRetainInstance())
             getDialog().setDismissMessage(null);
 //	    mCcMenu.cleanup();
@@ -229,7 +234,7 @@ public class CommonFileSelector extends DialogFragment {
     }
     @Override
     public void onCancel(DialogInterface di) {
-        if (mDebugEnable) Log.v(APPLICATION_TAG,"onCancel");
+        slf4jLog.info("onCancel");
 //	    super.onCancel(di);
         if (!mTerminateRequired) {
             Button btnCancel = (Button) mDialog.findViewById(R.id.common_file_selector_btn_cancel);
@@ -239,13 +244,13 @@ public class CommonFileSelector extends DialogFragment {
     }
     @Override
     public void onDismiss(DialogInterface di) {
-        if (mDebugEnable) Log.v(APPLICATION_TAG,"onDismiss");
+        slf4jLog.info("onDismiss");
         super.onDismiss(di);
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        if (mDebugEnable) Log.v(APPLICATION_TAG,"onCreateDialog");
+        slf4jLog.info("onCreateDialog");
         mDialog=new Dialog(getActivity());//, MiscUtil.getAppTheme(getActivity()));
         mDialog.setCanceledOnTouchOutside(false);
         mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -278,7 +283,7 @@ public class CommonFileSelector extends DialogFragment {
     }
 
     private void saveViewContents() {
-        if (mDebugEnable) Log.v(APPLICATION_TAG,"saveViewContents");
+        slf4jLog.info("saveViewContents");
         mSavedViewContentsValue=new CommonFileSelector.SavedViewContentsValue();
         if (mCreateDirDialog!=null) {
             final EditText etDir=(EditText) mCreateDirDialog.findViewById(R.id.single_item_input_dir);
@@ -304,7 +309,7 @@ public class CommonFileSelector extends DialogFragment {
     };
 
     private void restoreViewContents() {
-        if (mDebugEnable) Log.v(APPLICATION_TAG,"restoreViewContents mSavedViewContentsValue="+mSavedViewContentsValue);
+        slf4jLog.info("restoreViewContents mSavedViewContentsValue="+mSavedViewContentsValue);
         if (mSavedViewContentsValue==null) return;
         final SavedViewContentsValue sv=mSavedViewContentsValue;
         Handler hndl=new Handler();
@@ -332,7 +337,7 @@ public class CommonFileSelector extends DialogFragment {
     };
 
     private void reInitViewWidget() {
-        if (mDebugEnable) Log.v(APPLICATION_TAG,"reInitViewWidget");
+        slf4jLog.info("reInitViewWidget");
         if (!mTerminateRequired) {
             Handler hndl=new Handler();
             hndl.post(new Runnable(){
@@ -363,9 +368,9 @@ public class CommonFileSelector extends DialogFragment {
     private ThemeColorList mThemeColorList;
 
     private void initViewWidget() {
-        if (mDebugEnable) Log.v(APPLICATION_TAG,"initViewWidget");
+        slf4jLog.info("initViewWidget");
 
-        if (mDebugEnable) Log.v(APPLICATION_TAG,"Create="+mDialogEnableCreate+
+        slf4jLog.info("Create="+mDialogEnableCreate+
                 ", Title="+mDialogTitle+", lurl="+ mDialogLocalMP +
                 ", ldir="+mDialogLocalDir+", file name="+mDialogFileName);
 
@@ -538,7 +543,7 @@ public class CommonFileSelector extends DialogFragment {
                 mTreeFileListView.setScrollbarFadingEnabled(false);
             }
         });
-        createLocalFilelist(mDialogSelectCat==DIALOG_SELECT_CATEGORY_FILE, mDialogLocalMP, "", ntfy_file_list);
+        createLocalFilelist(mDialogSelectCat==DIALOG_SELECT_CATEGORY_FILE, mDialogLocalMP, "", ntfy_file_list, false);
         mTreeFileListView.setVisibility(TextView.INVISIBLE);
         tv_empty.setVisibility(TextView.GONE);
 
@@ -669,6 +674,7 @@ public class CommonFileSelector extends DialogFragment {
                 final int pos=mTreeFilelistAdapter.getItem(idx);
                 final TreeFilelistItem tfi=mTreeFilelistAdapter.getDataItem(pos);
                 final String turl=(String) mLocalMountPointSpinner.getSelectedItem();
+                slf4jLog.info("TreeFileListView clicked pos="+pos+", name="+tfi.getName());
                 if (tfi.isDir()) {
                     if (tfi.getSubDirItemCount()>=0) {
 //                        mDialogLocalDir=tfi.getPath()+tfi.getName();
@@ -705,7 +711,7 @@ public class CommonFileSelector extends DialogFragment {
                             }
                         });
                         mDialogLocalDir=tfi.getPath()+tfi.getName();
-                        createLocalFilelist(mDialogSelectCat==DIALOG_SELECT_CATEGORY_FILE, turl,mDialogLocalDir, ntfy);
+                        createLocalFilelist(mDialogSelectCat==DIALOG_SELECT_CATEGORY_FILE, turl,mDialogLocalDir, ntfy, true);
                     }
                 } else {
                     mTreeFilelistAdapter.setDataItemIsSelected(pos);
@@ -723,6 +729,7 @@ public class CommonFileSelector extends DialogFragment {
 
         mTreeFileListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener(){
             public boolean onItemLongClick(AdapterView<?> items, View view, int idx, long id) {
+                slf4jLog.info("TreeFileListView long clicked idx="+idx);
                 if (mTreeFilelistAdapter.isDirectorySelectable()) {
                     final int pos=mTreeFilelistAdapter.getItem(idx);
                     final TreeFilelistItem tfi=mTreeFilelistAdapter.getDataItem(pos);
@@ -738,6 +745,7 @@ public class CommonFileSelector extends DialogFragment {
         btnTop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                slf4jLog.info("TreeFileListView top button clicked");
                 ArrayList<TreeFilelistItem> tfl = createLocalFilelist(mDialogSelectCat==DIALOG_SELECT_CATEGORY_FILE, mDialogLocalMP,"");
                 mDialogLocalDir="";
                 dir_path.setText(mDialogLocalMP+mDialogLocalDir+"/");
@@ -756,6 +764,7 @@ public class CommonFileSelector extends DialogFragment {
         btnUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                slf4jLog.info("TreeFileListView up button clicked");
                 String c_dir=dir_path.getText().toString().substring(0,dir_path.getText().length()-1);
                 String new_dir=c_dir.substring(0,c_dir.lastIndexOf("/"));
                 mDialogLocalDir=new_dir.replace(mDialogLocalMP,"") ;
@@ -781,6 +790,7 @@ public class CommonFileSelector extends DialogFragment {
         //Create button
         btnCreate.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                slf4jLog.info("TreeFileListView create button clicked");
                 NotifyEvent ntfy=new NotifyEvent(context);
                 // set file list thread response listener
                 ntfy.setListener(new NotifyEvent.NotifyEventListener() {
@@ -802,6 +812,7 @@ public class CommonFileSelector extends DialogFragment {
         //Refresh button
         btnRefresh.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                slf4jLog.info("TreeFileListView refresh button clicked");
                 String mp=mLocalMountPointSpinner.getSelectedItem().toString();
                 ArrayList<TreeFilelistItem> tfl =createLocalFilelist(mDialogSelectCat==DIALOG_SELECT_CATEGORY_FILE, mp, mDialogLocalDir);//mDialogLocalMP,"");
                 if (tfl.size()<1) {
@@ -825,8 +836,10 @@ public class CommonFileSelector extends DialogFragment {
                     sl_array[1]=mDialogLocalDir; //
                     if (mDialogSelectCat==DIALOG_SELECT_CATEGORY_DIRECTORY) sl_array[2]="";
                     else sl_array[2]=et_file_name.getText().toString(); //
+                    slf4jLog.info("TreeFileListView ok button clicked, name="+mDialogLocalDir+"/"+sl_array[2]);
                     if (mNotifyEvent!=null) mNotifyEvent.notifyToListener(true, sl_array);
                 } else {
+                    slf4jLog.info("TreeFileListView ok button clicked");
                 }
                 mFragment.dismiss();
             }
@@ -834,6 +847,7 @@ public class CommonFileSelector extends DialogFragment {
         // CANCELボタンの指定
         btnCancel.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                slf4jLog.info("TreeFileListView cancel button clicked");
 //				mDialog.dismiss();
                 mFragment.dismiss();
                 if (mNotifyEvent!=null) mNotifyEvent.notifyToListener(false, null);
@@ -911,7 +925,7 @@ public class CommonFileSelector extends DialogFragment {
     };
 
     public void showDialog(FragmentManager fm, Fragment frag, NotifyEvent ntfy) {
-        if (mDebugEnable) Log.v(APPLICATION_TAG,"showDialog");
+        slf4jLog.info("showDialog");
         mTerminateRequired=false;
         mNotifyEvent=ntfy;
         FragmentTransaction ft = fm.beginTransaction();
@@ -919,13 +933,21 @@ public class CommonFileSelector extends DialogFragment {
         ft.commitAllowingStateLoss();
     };
 
-    private void  createLocalFilelist(final boolean fileOnly, final String url, final String dir, final NotifyEvent ntfy) {
+    private void  createLocalFilelist(final boolean fileOnly, final String url, final String dir, final NotifyEvent ntfy, final boolean show_pd_circle_delay) {
         final Dialog pd=CommonDialog.showProgressSpinIndicator(getActivity());
-        pd.show();
+        if (show_pd_circle_delay) {
+            mUiHandler.post(new Runnable(){
+                @Override
+                public void run() {
+                    pd.show();
+                }
+            });
+        } else {
+            pd.show();
+        }
         Thread th=new Thread(){
             @Override
             public void run() {
-//                SystemClock.sleep(1000*10);
                 final ArrayList<TreeFilelistItem> tfl=createLocalFilelist(fileOnly, url, dir);
                 mUiHandler.post(new Runnable(){
                     @Override
@@ -940,6 +962,7 @@ public class CommonFileSelector extends DialogFragment {
     }
 
     private ArrayList<TreeFilelistItem>  createLocalFilelist(final boolean fileOnly, final String url, final String dir) {
+        slf4jLog.info("createLocalFilelist entered, url="+url+", dir="+dir);
 //		Log.v("","url="+url+", dir="+dir);
         ArrayList<TreeFilelistItem> tfl = new ArrayList<TreeFilelistItem>(); ;
         String tdir,fp;
@@ -952,6 +975,7 @@ public class CommonFileSelector extends DialogFragment {
         File lf = new File(url+tdir);
         final File[]  ff = lf.listFiles();
         if (ff!=null) {
+            slf4jLog.info("createLocalFilelist list file size="+ff.length);
             for (int i=0;i<ff.length;i++){
                 if (!ff[i].isHidden() || (ff[i].isHidden() && !mDialogHideHiddenDirsFiles)) {
                     if (ff[i].canRead()) {
@@ -960,6 +984,7 @@ public class CommonFileSelector extends DialogFragment {
                             File tlf=new File(lf.getPath()+"/"+ff[i].getName());
                             File[] lfl=tlf.listFiles();
                             if (lfl!=null) {
+                                slf4jLog.info("createLocalFilelist sub dir="+tlf.getPath()+", count="+lfl.length);
                                 for (int j=0;j<lfl.length;j++) {
                                     if (!fileOnly) {
                                         if (lfl[j].isDirectory()) dirct++;
@@ -978,6 +1003,7 @@ public class CommonFileSelector extends DialogFragment {
             }
             Collections.sort(tfl);
         }
+        slf4jLog.info("createLocalFilelist ended, file list size="+tfl.size());
         return tfl;
     };
 
@@ -1074,8 +1100,10 @@ public class CommonFileSelector extends DialogFragment {
                             SafFile sf=mSafFileMgr.createSdcardItem(n_path, true);
                             if (sf==null) {
                                 CommonDialog cd=new CommonDialog(context, getFragmentManager());
-                                cd.showCommonDialog(false, "W", "SafFile cretae error", mSafFileMgr.getLastErrorMessage(), null);
+                                String error_msg=mSafFileMgr.getLastErrorMessage();
+                                cd.showCommonDialog(false, "W", "SdcardSafFile cretae error", error_msg, null);
                                 dlg_msg.setText("SafFile create Error");
+                                slf4jLog.info("fileSelectEditDialogCreateBtn SdcardSafFile cretae error+\n"+error_msg);
                                 return;
                             }
                             rc_create=sf.exists();
@@ -1083,8 +1111,10 @@ public class CommonFileSelector extends DialogFragment {
                             SafFile sf=mSafFileMgr.createUsbItem(n_path, true);
                             if (sf==null) {
                                 CommonDialog cd=new CommonDialog(context, getFragmentManager());
-                                cd.showCommonDialog(false, "W", "SafFile cretae error", mSafFileMgr.getLastErrorMessage(), null);
+                                String error_msg=mSafFileMgr.getLastErrorMessage();
+                                cd.showCommonDialog(false, "W", "UsbSafFile cretae error", error_msg, null);
                                 dlg_msg.setText("SafFile create Error");
+                                slf4jLog.info("fileSelectEditDialogCreateBtn UsbSafFile cretae error+\n"+error_msg);
                                 return;
                             }
                             rc_create=sf.exists();
@@ -1109,6 +1139,7 @@ public class CommonFileSelector extends DialogFragment {
                                     sep="/";
                                 }
                             }
+                            slf4jLog.info("fileSelectEditDialogCreateBtn Directory cretaed name="+n_path);
                             mCreateDirDialog.dismiss();
                             mCreateDirDialog=null;
                             p_ntfy.notifyToListener(true,
