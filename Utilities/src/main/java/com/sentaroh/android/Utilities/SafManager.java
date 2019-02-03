@@ -1,5 +1,6 @@
 package com.sentaroh.android.Utilities;
 
+import android.content.ContentProviderClient;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -543,31 +544,44 @@ public class SafManager {
 
         if (slf4jLog.isDebugEnabled()) putDebugMessage("rootUri="+rf.getUri()+", relativePath="+relativePath);
 
-        if (!relativePath.equals("")) {
-            String[] parts = relativePath.split("\\/");
-            for (int i = 0; i < parts.length; i++) {
-                if (slf4jLog.isDebugEnabled()) putDebugMessage("parts="+parts[i]);
-                if (!parts[i].equals("")) {
-                    SafFile nextDocument = document.findFile(parts[i]);
-                    if (slf4jLog.isDebugEnabled()) putDebugMessage("findFile="+parts[i]+", result="+nextDocument);
-                    if (nextDocument == null) {
-                        if ((i < parts.length - 1) || isDirectory) {
-                            String c_dir=parts[i];
-                            nextDocument = document.createDirectory(c_dir);
-                            if (slf4jLog.isDebugEnabled()) putDebugMessage("Directory was created name="+c_dir+", result="+nextDocument);
+        ContentProviderClient client =null;
+        try {
+            client = mContext.getContentResolver().acquireContentProviderClient(rf.getUri().getAuthority());
+            if (!relativePath.equals("")) {
+                String[] parts = relativePath.split("\\/");
+                for (int i = 0; i < parts.length; i++) {
+                    if (slf4jLog.isDebugEnabled()) putDebugMessage("parts="+parts[i]);
+                    if (!parts[i].equals("")) {
+                        SafFile nextDocument = document.findFile(client, parts[i]);
+                        if (slf4jLog.isDebugEnabled()) putDebugMessage("findFile="+parts[i]+", result="+nextDocument);
+                        if (nextDocument == null) {
+                            if ((i < parts.length - 1) || isDirectory) {
+                                String c_dir=parts[i];
+                                nextDocument = document.createDirectory(c_dir);
+                                if (slf4jLog.isDebugEnabled()) putDebugMessage("Directory was created name="+c_dir+", result="+nextDocument);
 //                			Log.v("","saf="+document.getMsgArea());
-                        } else {
-                            nextDocument = document.createFile("", parts[i]);
-                            if (slf4jLog.isDebugEnabled()) putDebugMessage("File was created name="+parts[i]+", result="+nextDocument);
+                            } else {
+                                nextDocument = document.createFile("", parts[i]);
+                                if (slf4jLog.isDebugEnabled()) putDebugMessage("File was created name="+parts[i]+", result="+nextDocument);
+                            }
                         }
-                    }
-                    parent=document;
-                    document = nextDocument;
-                    if (document!=null) {
-                        document.setParentFile(parent);
+                        parent=document;
+                        document = nextDocument;
+                        if (document!=null) {
+                            document.setParentFile(parent);
+                        }
                     }
                 }
             }
+        } catch(Exception e) {
+            StackTraceElement[] st=e.getStackTrace();
+            String stm="";
+            for (int i=0;i<st.length;i++) {
+                stm+="\n at "+st[i].getClassName()+"."+ st[i].getMethodName()+"("+st[i].getFileName()+ ":"+st[i].getLineNumber()+")";
+            }
+            putErrorMessage("createItem Error="+e.getMessage()+stm);
+        } finally {
+            client.release();
         }
         if (slf4jLog.isDebugEnabled()) putDebugMessage("createItem elapsed="+(System.currentTimeMillis()-b_time));
         return document;
@@ -600,26 +614,41 @@ public class SafManager {
         }
 
         if (slf4jLog.isDebugEnabled()) putDebugMessage("rootUri="+rf.getUri()+", relativePath="+relativePath);
-        if (!relativePath.equals("")) {
-            String[] parts = relativePath.split("\\/");
-            for (int i = 0; i < parts.length; i++) {
-                if (slf4jLog.isDebugEnabled()) putDebugMessage("parts="+parts[i]);
-                if (!parts[i].equals("")) {
-                    SafFile nextDocument = document.findFile(parts[i]);
-                    if (slf4jLog.isDebugEnabled()) putDebugMessage("findFile="+parts[i]+", result="+nextDocument);
-                    if (nextDocument != null) {
-                        parent=document;
-                        document = nextDocument;
-                        if (document!=null) {
-                            document.setParentFile(parent);
+
+        ContentProviderClient client =null;
+        try {
+            client = mContext.getContentResolver().acquireContentProviderClient(rf.getUri().getAuthority());
+            if (!relativePath.equals("")) {
+                String[] parts = relativePath.split("\\/");
+                for (int i = 0; i < parts.length; i++) {
+                    if (slf4jLog.isDebugEnabled()) putDebugMessage("parts="+parts[i]);
+                    if (!parts[i].equals("")) {
+                        SafFile nextDocument = document.findFile(client, parts[i]);
+                        if (slf4jLog.isDebugEnabled()) putDebugMessage("findFile="+parts[i]+", result="+nextDocument);
+                        if (nextDocument != null) {
+                            parent=document;
+                            document = nextDocument;
+                            if (document!=null) {
+                                document.setParentFile(parent);
+                            }
+                        } else {
+                            document = null;
+                            break;
                         }
-                    } else {
-                        document = null;
-                        break;
                     }
                 }
             }
+        } catch(Exception e) {
+            StackTraceElement[] st=e.getStackTrace();
+            String stm="";
+            for (int i=0;i<st.length;i++) {
+                stm+="\n at "+st[i].getClassName()+"."+ st[i].getMethodName()+"("+st[i].getFileName()+ ":"+st[i].getLineNumber()+")";
+            }
+            putErrorMessage("findItem Error="+e.getMessage()+stm);
+        } finally {
+            client.release();
         }
+
         if (slf4jLog.isDebugEnabled()) putDebugMessage("findItem elapsed="+(System.currentTimeMillis()-b_time));
         return document;
     };

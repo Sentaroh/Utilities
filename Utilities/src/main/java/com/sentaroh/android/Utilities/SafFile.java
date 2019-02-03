@@ -261,7 +261,8 @@ public class SafFile {
         final ArrayList<SafFileListInfo> result = listDocUris(mContext, mUri);
         final SafFile[] resultFiles = new SafFile[result.size()];
         for (int i = 0; i < result.size(); i++) {
-            resultFiles[i] = new SafFile(mContext, result.get(i).doc_uri, result.get(i).doc_name);
+            Uri childlen_uri = DocumentsContract.buildDocumentUriUsingTree(mUri, result.get(i).doc_id);
+            resultFiles[i] = new SafFile(mContext, childlen_uri, result.get(i).doc_name);
             resultFiles[i].setParentFile(this);
         }
         return resultFiles;
@@ -276,16 +277,62 @@ public class SafFile {
         return resultFiles;
     }
 
-    public SafFile findFile(String name) {
+//    public SafFile findFile(String name) {
+//        long b_time=System.currentTimeMillis();
+//        final ContentResolver resolver = mContext.getContentResolver();
+//        final Uri childrenUri = DocumentsContract.buildChildDocumentsUriUsingTree(mUri, DocumentsContract.getDocumentId(mUri));
+//
+//        SafFile result=null;
+//
+//        Cursor c = null;
+//        try {
+//            c = resolver.query(childrenUri, new String[] {
+//                            DocumentsContract.Document.COLUMN_DOCUMENT_ID,
+//                            DocumentsContract.Document.COLUMN_DISPLAY_NAME
+//                    },
+//                    DocumentsContract.Document.COLUMN_DISPLAY_NAME+"=?",
+//                    new String[]{name},
+//                    DocumentsContract.Document.COLUMN_DISPLAY_NAME+" ASC");
+////            null,//"_display_name = ?",
+////                    null,//new String[]{name},
+////                    null);
+//
+////            putInfoMessage("SafFile#findFile name="+name+", count="+c.getCount());
+//            while (c.moveToNext()) {
+//                String doc_name=c.getString(1);
+////                putInfoMessage("SafFile#findFile name="+doc_name+", key="+name);
+//                if (doc_name.equals(name)) {
+//                    String doc_id=c.getString(0);
+//                    Uri documentUri = DocumentsContract.buildDocumentUriUsingTree(mUri, doc_id);
+//                    result=new SafFile(mContext,  documentUri, doc_name);
+////                    result.setParent(this.getUri());
+//                    break;
+//                }
+//            }
+//        } catch (Exception e) {
+////            Log.w("SafFile", "SafFile#findFile Failed query: " + e);
+//            StackTraceElement[] st=e.getStackTrace();
+//            String stm="";
+//            for (int i=0;i<st.length;i++) {
+//                stm+="\n at "+st[i].getClassName()+"."+ st[i].getMethodName()+"("+st[i].getFileName()+ ":"+st[i].getLineNumber()+")";
+//            }
+//            putErrorMessage("SafFile#findFile Failed to Query, Error="+e.getMessage()+stm);
+//        } finally {
+//            closeQuietly(c);
+//        }
+////        putInfoMessage("SafFile#findFile elapased time="+(System.currentTimeMillis()-b_time));
+//        return result;
+//    }
+
+    public SafFile findFile(ContentProviderClient cpc, String name) {
         long b_time=System.currentTimeMillis();
-        final ContentResolver resolver = mContext.getContentResolver();
         final Uri childrenUri = DocumentsContract.buildChildDocumentsUriUsingTree(mUri, DocumentsContract.getDocumentId(mUri));
 
         SafFile result=null;
 
         Cursor c = null;
         try {
-            c = resolver.query(childrenUri, new String[] {
+            c = cpc.query(childrenUri, new String[] {
                             DocumentsContract.Document.COLUMN_DOCUMENT_ID,
                             DocumentsContract.Document.COLUMN_DISPLAY_NAME
                     },
@@ -325,8 +372,7 @@ public class SafFile {
 
     private ArrayList<SafFileListInfo> listDocUris(Context context, Uri uri) {
         final ContentResolver resolver = context.getContentResolver();
-        final Uri childrenUri = DocumentsContract.buildChildDocumentsUriUsingTree(uri,
-                DocumentsContract.getDocumentId(uri));
+        final Uri childrenUri = DocumentsContract.buildChildDocumentsUriUsingTree(uri, DocumentsContract.getDocumentId(uri));
         final ArrayList<SafFileListInfo> results = new ArrayList<SafFileListInfo>();
         Cursor c = null;
         try {
@@ -337,11 +383,9 @@ public class SafFile {
             while (c.moveToNext()) {
                 final String documentId = c.getString(0);
                 final String documentName = c.getString(1);
-                final Uri documentUri = DocumentsContract.buildDocumentUriUsingTree(uri,
-                        documentId);
                 SafFileListInfo info=new SafFileListInfo();
                 info.doc_name=documentName;
-                info.doc_uri=documentUri;
+                info.doc_id=documentId;
                 results.add(info);
             }
         } catch (Exception e) {
@@ -460,7 +504,7 @@ public class SafFile {
     }
 
     static class SafFileListInfo {
-        public Uri doc_uri;
+        public String doc_id;
         public String doc_name, doc_type;
         public boolean can_read, can_write;
         public long doc_last_modified;
