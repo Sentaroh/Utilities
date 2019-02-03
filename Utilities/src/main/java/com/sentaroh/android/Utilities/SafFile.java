@@ -32,6 +32,10 @@ public class SafFile {
     private static Logger slf4jLog = LoggerFactory.getLogger(SafFile.class);
 
     private void putDebugMessage(String msg) {
+        slf4jLog.debug(msg);
+    }
+
+    private void putInfoMessage(String msg) {
         slf4jLog.info(msg);
     }
 
@@ -47,14 +51,14 @@ public class SafFile {
         return em;
     }
 
-    SafFile(Context context, Uri uri) {
+    public SafFile(Context context, Uri uri) {
         mContext = context;
         mUri = uri;
         mDocName=queryForString(mContext, mUri, DocumentsContract.Document.COLUMN_DISPLAY_NAME, null);
         mPath="/"+uri.getPath().substring(uri.getPath().lastIndexOf(":")+1);
     }
 
-    SafFile(Context context, Uri uri, String name) {
+    public SafFile(Context context, Uri uri, String name) {
         mContext = context;
         mUri = uri;
         mDocName=name;
@@ -85,7 +89,7 @@ public class SafFile {
         Uri result=null;
         try {
             result=DocumentsContract.createDocument(mContext.getContentResolver(), mUri, mimeType, displayName);
-            putDebugMessage("SafFile#createFile result="+result);
+//            putDebugMessage("SafFile#createFile result="+result);
         } catch (Exception e) {
             StackTraceElement[] st=e.getStackTrace();
             String stm="";
@@ -96,56 +100,38 @@ public class SafFile {
         }
         SafFile saf=null;
         if (result != null) saf=new SafFile(mContext, result);
-        putDebugMessage("SafFile#createFile SafFile="+saf);
         return saf;
     }
 
     public SafFile createDirectory(String displayName) {
         Uri result=null;
-        if (Build.VERSION.SDK_INT>=28) {
-            try {
-                result=DocumentsContract.createDocument(mContext.getContentResolver(), mUri, DocumentsContract.Document.MIME_TYPE_DIR, displayName);
-            } catch (Exception e) {
-//                Log.w("SafFile", "Failed to create directory", e);
-                StackTraceElement[] st=e.getStackTrace();
-                String stm="";
-                for (int i=0;i<st.length;i++) {
-                    stm+="\n at "+st[i].getClassName()+"."+ st[i].getMethodName()+"("+st[i].getFileName()+ ":"+st[i].getLineNumber()+")";
-                }
-                putErrorMessage("SafFile#createDirectory Failed to create directory, Error="+e.getMessage()+stm);
+        try {
+            result=DocumentsContract.createDocument(mContext.getContentResolver(), mUri, DocumentsContract.Document.MIME_TYPE_DIR, displayName);
+//            putDebugMessage("SafFile#createDirectory result="+result);
+        } catch (Exception e) {
+            StackTraceElement[] st=e.getStackTrace();
+            String stm="";
+            for (int i=0;i<st.length;i++) {
+                stm+="\n at "+st[i].getClassName()+"."+ st[i].getMethodName()+"("+st[i].getFileName()+ ":"+st[i].getLineNumber()+")";
             }
-        } else {
-            ContentProviderClient client = mContext.getContentResolver().acquireUnstableContentProviderClient(mUri.getAuthority());
-            try {
-                result=createDocument(client, mUri, DocumentsContract.Document.MIME_TYPE_DIR, displayName);
-            } catch (Exception e) {
-//                Log.w("SafFile", "Failed to create directory", e);
-                StackTraceElement[] st=e.getStackTrace();
-                String stm="";
-                for (int i=0;i<st.length;i++) {
-                    stm+="\n at "+st[i].getClassName()+"."+ st[i].getMethodName()+"("+st[i].getFileName()+ ":"+st[i].getLineNumber()+")";
-                }
-                putErrorMessage("SafFile#createDirectory Failed to create directory, Error="+e.getMessage()+stm);
-            } finally {
-                client.release();
-            }
+            putErrorMessage("SafFile#createDirectory Failed to create directory, Error="+e.getMessage()+stm);
         }
         return (result != null) ? new SafFile(mContext, result) : null;
     }
 
-    public static final String METHOD_CREATE_DOCUMENT = "android:createDocument";
-    public static final String EXTRA_URI = "uri";
-
-    public Uri createDocument(ContentProviderClient client, Uri parentDocumentUri,
-                                     String mimeType, String displayName) throws RemoteException {
-        final Bundle in = new Bundle();
-        in.putParcelable(EXTRA_URI, parentDocumentUri);
-        in.putString(DocumentsContract.Document.COLUMN_MIME_TYPE, mimeType);
-        in.putString(DocumentsContract.Document.COLUMN_DISPLAY_NAME, displayName);
-
-        final Bundle out = client.call(METHOD_CREATE_DOCUMENT, null, in);
-        return out.getParcelable(EXTRA_URI);
-    }
+//    public static final String METHOD_CREATE_DOCUMENT = "android:createDocument";
+//    public static final String EXTRA_URI = "uri";
+//
+//    public Uri createDocument(ContentProviderClient client, Uri parentDocumentUri,
+//                                     String mimeType, String displayName) throws RemoteException {
+//        final Bundle in = new Bundle();
+//        in.putParcelable(EXTRA_URI, parentDocumentUri);
+//        in.putString(DocumentsContract.Document.COLUMN_MIME_TYPE, mimeType);
+//        in.putString(DocumentsContract.Document.COLUMN_DISPLAY_NAME, displayName);
+//
+//        final Bundle out = client.call(METHOD_CREATE_DOCUMENT, null, in);
+//        return out.getParcelable(EXTRA_URI);
+//    }
 
 //    public Uri createDocument(ContentResolver cr, Uri parentDocumentUri,
 //                              String mimeType, String displayName) throws RemoteException, FileNotFoundException {
@@ -259,13 +245,12 @@ public class SafFile {
                     DocumentsContract.Document.COLUMN_DOCUMENT_ID }, null, null, null);
             return c.getCount() > 0;
         } catch (Exception e) {
-//            Log.w("SafFile", "SafFile#exists Failed query: " + e);
-            StackTraceElement[] st=e.getStackTrace();
-            String stm="";
-            for (int i=0;i<st.length;i++) {
-                stm+="\n at "+st[i].getClassName()+"."+ st[i].getMethodName()+"("+st[i].getFileName()+ ":"+st[i].getLineNumber()+")";
-            }
-            putErrorMessage("SafFile#exists Failed to Query, Error="+e.getMessage()+stm);
+//            StackTraceElement[] st=e.getStackTrace();
+//            String stm="";
+//            for (int i=0;i<st.length;i++) {
+//                stm+="\n at "+st[i].getClassName()+"."+ st[i].getMethodName()+"("+st[i].getFileName()+ ":"+st[i].getLineNumber()+")";
+//            }
+//            putErrorMessage("SafFile#exists Failed to Query, Error="+e.getMessage());//+stm);
             return false;
         } finally {
             closeQuietly(c);
@@ -292,6 +277,7 @@ public class SafFile {
     }
 
     public SafFile findFile(String name) {
+        long b_time=System.currentTimeMillis();
         final ContentResolver resolver = mContext.getContentResolver();
         final Uri childrenUri = DocumentsContract.buildChildDocumentsUriUsingTree(mUri, DocumentsContract.getDocumentId(mUri));
 
@@ -303,12 +289,17 @@ public class SafFile {
                             DocumentsContract.Document.COLUMN_DOCUMENT_ID,
                             DocumentsContract.Document.COLUMN_DISPLAY_NAME
                     },
-                    null,//"_display_name = ?",
-                    null,//new String[]{name},
-                    null);
+                    DocumentsContract.Document.COLUMN_DISPLAY_NAME+"=?",
+                    new String[]{name},
+                    DocumentsContract.Document.COLUMN_DISPLAY_NAME+" ASC");
+//            null,//"_display_name = ?",
+//                    null,//new String[]{name},
+//                    null);
 
+//            putInfoMessage("SafFile#findFile name="+name+", count="+c.getCount());
             while (c.moveToNext()) {
                 String doc_name=c.getString(1);
+//                putInfoMessage("SafFile#findFile name="+doc_name+", key="+name);
                 if (doc_name.equals(name)) {
                     String doc_id=c.getString(0);
                     Uri documentUri = DocumentsContract.buildDocumentUriUsingTree(mUri, doc_id);
@@ -328,6 +319,7 @@ public class SafFile {
         } finally {
             closeQuietly(c);
         }
+//        putInfoMessage("SafFile#findFile elapased time="+(System.currentTimeMillis()-b_time));
         return result;
     }
 
@@ -381,20 +373,20 @@ public class SafFile {
     public boolean moveTo(SafFile to_file) {
         Uri move_result=null;
         try {
-            putDebugMessage("moveTo mUri="+mUri.getPath()+", to_file="+to_file.getUri().getPath());
+            if (slf4jLog.isDebugEnabled()) putDebugMessage("moveTo mUri="+mUri.getPath()+", to_file="+to_file.getUri().getPath());
             move_result = DocumentsContract.moveDocument(mContext.getContentResolver(), mUri, getParentFile().getUri(), to_file.getParentFile().getUri());
             mUri = move_result;
             if (mUri!=null) {
-                putDebugMessage("moveTo result="+mUri.getPath());
+                if (slf4jLog.isDebugEnabled()) putDebugMessage("moveTo result="+mUri.getPath());
                 Uri rename_result=move_result;
                 if (!getName().equals(to_file.getName())) {
                     if (to_file.exists()) to_file.delete();
                     rename_result=DocumentsContract.renameDocument(mContext.getContentResolver(), mUri, to_file.getName());
-                    putDebugMessage("moveTo rename result="+rename_result.getPath());
+                    if (slf4jLog.isDebugEnabled()) putDebugMessage("moveTo rename result="+rename_result.getPath());
                 }
                 return true;
             } else {
-                putErrorMessage("moveTo move failed");
+                putErrorMessage("moveTo move failed, to="+to_file);
                 return false;
             }
         } catch (FileNotFoundException e) {
