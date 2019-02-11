@@ -74,6 +74,10 @@ public class ContentProviderUtil {
                 tlf=new File(path);
             }
             cursor.close();
+//        } else if (content_uri.toString().startsWith("content://com.asus.filemanager.OpenFileProvider/file/storage/emulated/0/Android")) {
+//            //Download
+//            String tfp=content_uri.toString().replace("content://com.asus.filemanager.OpenFileProvider/file","");
+//            tlf=new File(tfp);
         } else if (content_uri.toString().startsWith("content://")) {
             Cursor cursor = c.getContentResolver().query(content_uri, column, null, null, null);
             if (cursor!=null) {
@@ -81,24 +85,29 @@ public class ContentProviderUtil {
 //				long id=cursor.getLong(cursor.getColumnIndex(MediaStore.MediaColumns._ID));
 //    			Uri image_uri = ContentUris.withAppendedId(content_uri, Long.valueOf(id));
                     String t_file_name = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME));
+                    String t_file_path = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DATA));
 //				String file_path = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DATA));
 //				Log.v("","data="+file_path);
-                    clearCacheFile(cd);
-                    String file_name=t_file_name==null?"attachedFile":t_file_name;
-                    tlf=new File(cd+file_name);
-                    try {
-                        InputStream is=c.getContentResolver().openInputStream(content_uri);//image_uri);
-                        FileOutputStream fos=new FileOutputStream(tlf);
-                        byte[] buff=new byte[1024*1024];
-                        int rc=is.read(buff);
-                        while(rc>0) {
-                            fos.write(buff, 0, rc);
-                            rc=is.read(buff);
+                    if (t_file_path!=null && !t_file_path.equals("")) {
+                        tlf=new File(t_file_path);
+                    } else {
+                        clearCacheFile(cd);
+                        String file_name=t_file_name==null?"attachedFile":t_file_name;
+                        tlf=new File(cd+file_name);
+                        try {
+                            InputStream is=c.getContentResolver().openInputStream(content_uri);//image_uri);
+                            FileOutputStream fos=new FileOutputStream(tlf);
+                            byte[] buff=new byte[1024*1024];
+                            int rc=is.read(buff);
+                            while(rc>0) {
+                                fos.write(buff, 0, rc);
+                                rc=is.read(buff);
+                            }
+                            fos.flush();
+                            fos.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
-                        fos.flush();
-                        fos.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
                     }
                 }
                 cursor.close();
