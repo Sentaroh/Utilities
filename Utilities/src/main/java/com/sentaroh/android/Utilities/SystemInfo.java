@@ -55,7 +55,8 @@ public class SystemInfo {
 
         out.add("getExternalStorageDirectory="+LocalMountPoint.getExternalStorageDir());
 
-        File[] fl = ContextCompat.getExternalFilesDirs(c, null);
+//        File[] fl = ContextCompat.getExternalFilesDirs(c, null);
+        File[] fl = c.getExternalFilesDirs(null);
         out.add("ExternalFilesDirs :");
         if (fl != null) {
             for (File f : fl) {

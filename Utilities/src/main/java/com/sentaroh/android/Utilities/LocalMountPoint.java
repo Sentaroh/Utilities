@@ -31,7 +31,6 @@ import java.util.Collections;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Environment;
-import android.support.v4.content.ContextCompat;
 
 @SuppressLint("SdCardPath")
 public class LocalMountPoint {
@@ -352,7 +351,8 @@ public class LocalMountPoint {
 		addMountPointPrimaryAndSecondary("/mnt/extSdCard", ml, pkg_name);
 		addMountPointPrimaryAndSecondary("/sdcard/external_sd", ml, pkg_name);
 
-		File[] ext_dirs =ContextCompat.getExternalFilesDirs(c, null);
+//		File[] ext_dirs =ContextCompat.getExternalFilesDirs(c, null);
+        File[] ext_dirs =c.getExternalFilesDirs(null);
 		if (ext_dirs!=null) {
 			for (int i=0;i<ext_dirs.length;i++) {
 				if (ext_dirs[i]!=null && ext_dirs[i].getPath()!=null) {

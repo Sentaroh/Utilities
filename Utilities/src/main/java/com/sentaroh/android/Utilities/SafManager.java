@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.storage.StorageManager;
 import android.preference.PreferenceManager;
-import android.support.v4.content.ContextCompat;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,7 +91,8 @@ public class SafManager {
     }
 
     private String getExternalSdcardMountPoint() {
-        File[] fl= ContextCompat.getExternalFilesDirs(mContext, null);
+//        File[] fl= ContextCompat.getExternalFilesDirs(mContext, null);
+        File[] fl= mContext.getExternalFilesDirs(null);
         String ld= LocalMountPoint.getExternalStorageDir();
         String esd=UNKNOWN_SDCARD_DIRECTORY;
         if (fl!=null) {
@@ -116,7 +116,8 @@ public class SafManager {
     }
 
     public boolean hasExternalSdcardPath() {
-        File[] fl= ContextCompat.getExternalFilesDirs(mContext, null);
+//        File[] fl= ContextCompat.getExternalFilesDirs(mContext, null);
+        File[] fl= mContext.getExternalFilesDirs(null);
         String ld= LocalMountPoint.getExternalStorageDir();
         String esd="";
         if (fl!=null) {

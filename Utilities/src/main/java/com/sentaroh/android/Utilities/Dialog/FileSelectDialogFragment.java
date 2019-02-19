@@ -35,7 +35,6 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -535,7 +534,8 @@ public class FileSelectDialogFragment extends DialogFragment {
 	    mLocalMountPointSpinner.setOnItemSelectedListener(null);
 	    if (mDialogMpLimitInternalAndSdcard) {
 	    	adapter.add(Environment.getExternalStorageDirectory().toString());
-			File[] fl=ContextCompat.getExternalFilesDirs(context, null);
+//			File[] fl=ContextCompat.getExternalFilesDirs(context, null);
+            File[] fl= context.getExternalFilesDirs(null);
 			for(File item:fl) {
 			    if (item!=null && item.getPath()!=null) {
                     if (!item.getPath().startsWith(Environment.getExternalStorageDirectory().toString())) {

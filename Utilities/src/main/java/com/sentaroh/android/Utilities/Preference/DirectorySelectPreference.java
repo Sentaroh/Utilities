@@ -53,7 +53,6 @@ import android.os.Handler;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.preference.DialogPreference;
-import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -294,7 +293,8 @@ public class DirectorySelectPreference extends DialogPreference{
 	//    adapter.setTextColor(Color.BLACK);
 	
 	    mLocalMountPointSpinner.setOnItemSelectedListener(null);
-        File[] ext_dirs = ContextCompat.getExternalFilesDirs(context, null);
+//        File[] ext_dirs = ContextCompat.getExternalFilesDirs(context, null);
+        File[] ext_dirs = context.getExternalFilesDirs(null);
         int sel_no=0;
         if (ext_dirs==null) {
             adapter.add("/mnt/sdcard");
