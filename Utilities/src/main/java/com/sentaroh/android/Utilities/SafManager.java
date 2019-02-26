@@ -67,6 +67,13 @@ public class SafManager {
         loadSafFile();
     }
 
+    public SafManager(boolean usb_no_mp, Context c, boolean debug) {
+        mContext=c;
+        setDebugEnabled(debug);
+        if (usb_no_mp) loadSafFileNoUsbMountPoint();
+        else loadSafFile();
+    }
+
     public void setDebugEnabled(boolean enabled) {
         mDebugEnabled=enabled;
     }
@@ -201,6 +208,60 @@ public class SafManager {
                             putErrorMessage("loadSafFile USB uuid found but mount point does not exists, uuid="+uuid);
                         }
 
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    public void loadSafFileNoUsbMountPoint() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        String uuid_list=prefs.getString(SDCARD_UUID_KEY, "");
+        sdcardRootDirectory=UNKNOWN_SDCARD_DIRECTORY;
+        sdcardRootSafFile=null;
+        sdcardRootUuid=null;
+
+        if (!uuid_list.equals("")) {
+            String[] uuid_array=uuid_list.split(",");
+            for(String uuid:uuid_array) {
+                if (!isUsbUuid(uuid)) {
+                    SafFile sf= SafFile.fromTreeUri(mContext, Uri.parse("content://com.android.externalstorage.documents/tree/"+uuid+"%3A"));
+                    if (sf!=null && sf.getName()!=null) {
+                        sdcardRootUuid=uuid;
+                        String esd="";
+                        if (Build.VERSION.SDK_INT>=23) {//for Huawei mediapad
+                            esd="/storage/"+uuid;
+                        } else {
+                            esd= getExternalSdcardMountPoint();
+                        }
+                        if (esd!=null && !esd.equals("")) {
+                            File mp=new File(esd);
+                            if (mp.exists()) {
+                                sdcardRootSafFile=sf;
+                                sdcardRootDirectory=esd;
+//                            msg_array+="locadSafFile SDCARD uuid found, uuid="+uuid+"\n";
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        uuid_list=prefs.getString(USB_UUID_KEY, "");
+        usbRootDirectory=UNKNOWN_USB_DIRECTORY;
+        usbRootSafFile=null;
+        usbRootUuid=null;
+        if (!uuid_list.equals("")) {
+            String[] uuid_array=uuid_list.split(",");
+            for(String uuid:uuid_array) {
+                if (isUsbUuid(uuid)) {
+                    SafFile sf= SafFile.fromTreeUri(mContext, Uri.parse("content://com.android.externalstorage.documents/tree/"+uuid+"%3A"));
+                    if (sf!=null && sf.getName()!=null) {
+                        usbRootDirectory="/usbMedia/"+uuid;
+                        usbRootSafFile=sf;
+                        usbRootUuid=uuid;
+                        putInfoMessage("loadSafFileNoUsbMountPoint USB uuid found, uuid="+uuid);
                         break;
                     }
                 }
@@ -521,6 +582,17 @@ public class SafManager {
     }
 
     private SafFile createItem(SafFile rf, String target_path, boolean isDirectory) {
+        ContentProviderClient client =null;
+        SafFile saf=null;
+        try {
+            client = mContext.getContentResolver().acquireContentProviderClient(rf.getUri().getAuthority());
+            saf=createItem(client, rf, target_path, isDirectory);
+        } finally {
+            client.release();
+        }
+        return saf;
+    }
+    private SafFile createItem(ContentProviderClient client, SafFile rf, String target_path, boolean isDirectory) {
         SafFile parent=null;
 //        clearMessages();
         if (slf4jLog.isDebugEnabled()) putDebugMessage("createItem target_path="+target_path+", isDirectory="+isDirectory);
@@ -545,9 +617,7 @@ public class SafManager {
 
         if (slf4jLog.isDebugEnabled()) putDebugMessage("rootUri="+rf.getUri()+", relativePath="+relativePath);
 
-        ContentProviderClient client =null;
         try {
-            client = mContext.getContentResolver().acquireContentProviderClient(rf.getUri().getAuthority());
             if (!relativePath.equals("")) {
                 String[] parts = relativePath.split("\\/");
                 for (int i = 0; i < parts.length; i++) {
@@ -581,8 +651,6 @@ public class SafManager {
                 stm+="\n at "+st[i].getClassName()+"."+ st[i].getMethodName()+"("+st[i].getFileName()+ ":"+st[i].getLineNumber()+")";
             }
             putErrorMessage("createItem Error="+e.getMessage()+stm);
-        } finally {
-            client.release();
         }
         if (slf4jLog.isDebugEnabled()) putDebugMessage("createItem elapsed="+(System.currentTimeMillis()-b_time));
         return document;
