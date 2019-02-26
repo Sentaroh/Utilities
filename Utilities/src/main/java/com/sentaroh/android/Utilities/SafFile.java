@@ -228,6 +228,46 @@ public class SafFile {
         return false;
     }
 
+    public boolean deleteIfExists() {
+        boolean exists=false;
+        boolean delete_success=false;
+        ContentProviderClient client =null;
+        try {
+            client=mContext.getContentResolver().acquireContentProviderClient(getUri().getAuthority());
+            deleteIfExists(client);
+        } finally {
+            client.release();
+        }
+        return delete_success;
+    }
+
+    public boolean deleteIfExists(ContentProviderClient client) {
+        boolean exists=false;
+        boolean delete_success=false;
+        client=mContext.getContentResolver().acquireContentProviderClient(getUri().getAuthority());
+
+        Cursor c = null;
+        try {
+            c = client.query(mUri, new String[] {DocumentsContract.Document.COLUMN_DOCUMENT_ID }, null, null, null);
+            exists=c.getCount() > 0;
+        } catch (Exception e) {
+        } finally {
+            closeQuietly(c);
+        }
+        if (exists) {
+            try {
+                final Bundle in = new Bundle();
+                in.putParcelable(EXTRA_URI, getUri());
+                client.call(METHOD_DELETE_DOCUMENT, null, in);
+                delete_success=true;
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+        return delete_success;
+    }
+
+
     public boolean delete() {
         try {
             return DocumentsContract.deleteDocument(mContext.getContentResolver(), mUri);
@@ -245,12 +285,6 @@ public class SafFile {
                     DocumentsContract.Document.COLUMN_DOCUMENT_ID }, null, null, null);
             return c.getCount() > 0;
         } catch (Exception e) {
-//            StackTraceElement[] st=e.getStackTrace();
-//            String stm="";
-//            for (int i=0;i<st.length;i++) {
-//                stm+="\n at "+st[i].getClassName()+"."+ st[i].getMethodName()+"("+st[i].getFileName()+ ":"+st[i].getLineNumber()+")";
-//            }
-//            putErrorMessage("SafFile#exists Failed to Query, Error="+e.getMessage());//+stm);
             return false;
         } finally {
             closeQuietly(c);
@@ -437,6 +471,106 @@ public class SafFile {
             putErrorMessage("moveTo move failed, msg="+e.getMessage());
             return false;
         }
+    }
+
+    public boolean moveToCC(SafFile to_file) {
+        Uri move_result=null;
+        ContentProviderClient client =null;
+        try {
+            client=mContext.getContentResolver().acquireContentProviderClient(getUri().getAuthority());
+            moveToCC(client, to_file);
+            return true;
+        } finally {
+            client.release();
+        }
+//        return false;
+    }
+
+    public boolean moveToCC(ContentProviderClient client, SafFile to_file) {
+        Uri move_result=null;
+        try {
+            if (slf4jLog.isDebugEnabled()) putDebugMessage("moveTo mUri="+mUri.getPath()+", to_file="+to_file.getUri().getPath());
+            move_result = moveDocument(client, mUri, getParentFile().getUri(), to_file.getParentFile().getUri());
+            mUri = move_result;
+            if (mUri!=null) {
+                if (slf4jLog.isDebugEnabled()) putDebugMessage("moveTo result="+mUri.getPath());
+                Uri rename_result=move_result;
+                if (!getName().equals(to_file.getName())) {
+                    if (to_file.exists()) to_file.delete();
+                    rename_result=renameDocument(client, mUri, to_file.getName());
+                    if (slf4jLog.isDebugEnabled()) putDebugMessage("moveTo rename result="+rename_result.getPath());
+                }
+                return true;
+            } else {
+                putErrorMessage("moveTo move failed, to="+to_file);
+                return false;
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private static final String METHOD_CREATE_DOCUMENT = "android:createDocument";
+    private static final String METHOD_RENAME_DOCUMENT = "android:renameDocument";
+    private static final String METHOD_DELETE_DOCUMENT = "android:deleteDocument";
+    private static final String METHOD_COPY_DOCUMENT = "android:copyDocument";
+    private static final String METHOD_MOVE_DOCUMENT = "android:moveDocument";
+    private static final String METHOD_IS_CHILD_DOCUMENT = "android:isChildDocument";
+    private static final String METHOD_REMOVE_DOCUMENT = "android:removeDocument";
+    private static final String METHOD_UPLOAD_DOCUMENT = "android:uploadDocument";
+
+    private static final String METHOD_COMPRESS_DOCUMENT = "android:compressDocument";
+    private static final String METHOD_UNCOMPRESS_DOCUMENT = "android:uncompressDocument";
+
+    private static final String EXTRA_PARENT_URI = "parentUri";
+    private static final String EXTRA_URI = "uri";
+    private static final String EXTRA_UPLOAD_URI = "upload_uri";
+    private static final String EXTRA_THUMBNAIL_SIZE = "thumbnail_size";
+    private static final String EXTRA_DOCUMENT_TO= "document_to";
+    private static final String EXTRA_DELETE_AFTER = "delete_after";
+    private static final String EXTRA_DOCUMENTS_COMPRESS = "documents_compress";
+    private static final String EXTRA_DOCUMENTS_UNCOMPRESS = "documents_uncompress";
+
+    private static final String EXTRA_TARGET_URI = "android.content.extra.TARGET_URI";
+
+    private static final String PATH_ROOT = "root";
+    private static final String PATH_RECENT = "recent";
+    private static final String PATH_DOCUMENT = "document";
+    private static final String PATH_CHILDREN = "children";
+    private static final String PATH_SEARCH = "search";
+    private static final String PATH_TREE = "tree";
+
+    private static final String PARAM_QUERY = "query";
+    private static final String PARAM_MANAGE = "manage";
+
+    private static void deleteDocument(ContentProviderClient client, Uri documentUri)
+            throws RemoteException {
+        final Bundle in = new Bundle();
+        in.putParcelable(EXTRA_URI, documentUri);
+        client.call(METHOD_DELETE_DOCUMENT, null, in);
+    }
+
+    private static Uri moveDocument(ContentProviderClient client, Uri sourceDocumentUri,
+                                   Uri sourceParentDocumentUri, Uri targetParentDocumentUri) throws RemoteException {
+        final Bundle in = new Bundle();
+        in.putParcelable(EXTRA_URI, sourceDocumentUri);
+        in.putParcelable(EXTRA_PARENT_URI, sourceParentDocumentUri);
+        in.putParcelable(EXTRA_TARGET_URI, targetParentDocumentUri);
+
+        final Bundle out = client.call(METHOD_MOVE_DOCUMENT, null, in);
+        return out.getParcelable(EXTRA_URI);
+    }
+
+    private static Uri renameDocument(ContentProviderClient client, Uri documentUri,
+                                     String displayName) throws RemoteException {
+        final Bundle in = new Bundle();
+        in.putParcelable(EXTRA_URI, documentUri);
+        in.putString(DocumentsContract.Document.COLUMN_DISPLAY_NAME, displayName);
+
+        final Bundle out = client.call(METHOD_RENAME_DOCUMENT, null, in);
+        final Uri outUri = out.getParcelable(EXTRA_URI);
+        return (outUri != null) ? outUri : documentUri;
     }
 
     private String queryForString(Context context, Uri self, String column, String defaultValue) {
