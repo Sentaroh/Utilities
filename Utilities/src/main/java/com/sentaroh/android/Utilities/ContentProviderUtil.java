@@ -85,7 +85,11 @@ public class ContentProviderUtil {
 //				long id=cursor.getLong(cursor.getColumnIndex(MediaStore.MediaColumns._ID));
 //    			Uri image_uri = ContentUris.withAppendedId(content_uri, Long.valueOf(id));
                     String t_file_name = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME));
-                    String t_file_path = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DATA));
+                    String t_file_path = null;
+                    try {
+                        t_file_path =cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DATA));
+                    } catch(Exception e) {
+                    }
 //				String file_path = cursor.getString(cursor.getColumnIndex(MediaStore.MediaColumns.DATA));
 //				Log.v("","data="+file_path);
                     if (t_file_path!=null && !t_file_path.equals("")) {
