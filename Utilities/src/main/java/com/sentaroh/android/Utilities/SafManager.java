@@ -588,7 +588,7 @@ public class SafManager {
             client = mContext.getContentResolver().acquireContentProviderClient(rf.getUri().getAuthority());
             saf=createItem(client, rf, target_path, isDirectory);
         } finally {
-            client.release();
+            if (client!=null) client.release();
         }
         return saf;
     }
@@ -715,7 +715,7 @@ public class SafManager {
             }
             putErrorMessage("findItem Error="+e.getMessage()+stm);
         } finally {
-            client.release();
+            if (client!=null) client.release();
         }
 
         if (slf4jLog.isDebugEnabled()) putDebugMessage("findItem elapsed="+(System.currentTimeMillis()-b_time));

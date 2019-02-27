@@ -236,7 +236,7 @@ public class SafFile {
             client=mContext.getContentResolver().acquireContentProviderClient(getUri().getAuthority());
             deleteIfExists(client);
         } finally {
-            client.release();
+            if (client!=null) client.release();
         }
         return delete_success;
     }
@@ -481,7 +481,7 @@ public class SafFile {
             moveToCC(client, to_file);
             return true;
         } finally {
-            client.release();
+            if (client!=null) client.release();
         }
 //        return false;
     }
