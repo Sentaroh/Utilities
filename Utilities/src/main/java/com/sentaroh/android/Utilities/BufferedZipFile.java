@@ -19,6 +19,9 @@ import net.lingala.zip4j.util.InternalZipConstants;
 import net.lingala.zip4j.util.Zip4jConstants;
 import net.lingala.zip4j.util.Zip4jUtil;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -27,6 +30,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -55,6 +59,8 @@ public class BufferedZipFile {
 	private static final String DEFAULT_ZIP_FILENAME_ENCODING="UTF-8";
 	
 	private boolean debug_enabled=false;
+
+    private static Logger slf4jLog = LoggerFactory.getLogger(BufferedZipFile.class);
 	
 	class BzfFileHeaderItem {
 		public FileHeader file_header;
@@ -70,11 +76,12 @@ public class BufferedZipFile {
 		this(new File(input_path), encoding, debug);
 	}
 	private void putDebugMsg(String id, String msg) {
-		if (debug_enabled) {
-			String w_id=(id+"                ").substring(0,16);
-			String m_text=w_id+" "+msg;
-			Log.v("BufferedZipFile", m_text);
-		}
+        if (debug_enabled) slf4jLog.debug(msg);
+//		if (debug_enabled) {
+//			String w_id=(id+"                ").substring(0,16);
+//			String m_text=w_id+" "+msg;
+//			Log.v("BufferedZipFile", m_text);
+//		}
 	}
 	public BufferedZipFile(File input, String encoding, boolean debug) {
 		debug_enabled=debug;
@@ -116,11 +123,14 @@ public class BufferedZipFile {
 				}
 			}
 		} catch (ZipException e) {
-			e.printStackTrace();
+            slf4jLog.debug("<init>",e);
+//			e.printStackTrace();
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+            slf4jLog.debug("<init>",e);
+//			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+            slf4jLog.debug("<init>",e);
+//            e.printStackTrace();
 		}
 		primary_output_file=new File(primary_zip_file.getFile().getPath()+".wrk");
 
@@ -409,7 +419,8 @@ public class BufferedZipFile {
 			}
 
 		} catch (IOException e) {
-			e.printStackTrace();
+            slf4jLog.debug("close",e);
+//			e.printStackTrace();
 			throw new ZipException(e.getMessage());
 		}
 	};
@@ -500,9 +511,11 @@ public class BufferedZipFile {
 			}
 			
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+            slf4jLog.debug("writeAddZipFile",e);
+//			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+            slf4jLog.debug("writeAddZipFile",e);
+//			e.printStackTrace();
 		}
 	}
 	
@@ -537,6 +550,7 @@ public class BufferedZipFile {
 			}
 		} catch (IOException e) {
 //			e.printStackTrace();
+            slf4jLog.debug("copyZipFile",e);
 			throw new IOException(e);
 		}
 		

@@ -15,6 +15,8 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.mozilla.universalchardet.UniversalDetector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
@@ -29,6 +31,8 @@ import com.sentaroh.android.Utilities.Dialog.ProgressBarDialogFragment;
 public class ZipUtil {
 	
 	public static final String DEFAULT_ZIP_FILENAME_ENCODING="UTF-8";
+
+    private static Logger slf4jLog = LoggerFactory.getLogger(ZipUtil.class);
 	
 	static public String detectFileNameEncoding(String zip_path) {
 		String encoding="";
@@ -78,10 +82,14 @@ public class ZipUtil {
 					result=DEFAULT_ZIP_FILENAME_ENCODING;
 				}
 			}
-		}catch(Exception e) {
-//			e.printStackTrace();
+		}catch(ZipException e) {
+		    slf4jLog.debug("detectFileNameEncoding",e);
 			result=null;
+        }catch(Exception e) {
+            slf4jLog.debug("detectFileNameEncoding",e);
+            result=null;
 		}
+        slf4jLog.trace("detectFileNameEncoding result="+result);
 		return result;
 	};
 
@@ -260,8 +268,10 @@ public class ZipUtil {
 					
 				});
 			}
-		}catch(Exception e) {
-//			e.printStackTrace();
+		}catch(ZipException e) {
+            slf4jLog.debug("buildZipFileList",e);
+        }catch(Exception e) {
+            slf4jLog.debug("buildZipFileList",e);
 		}
 		return tfl;
 	};
@@ -402,9 +412,11 @@ public class ZipUtil {
 		    zos.close();
 		    
 		} catch (IOException e) {
+            slf4jLog.debug("createEncZipFile",e);
 //			e.printStackTrace();
 			return false;
 		} catch (ZipException e) {
+            slf4jLog.debug("createEncZipFile",e);
 //			e.printStackTrace();
 			return false;
 		}

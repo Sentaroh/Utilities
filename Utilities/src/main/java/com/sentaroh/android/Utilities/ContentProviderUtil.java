@@ -8,18 +8,23 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 public class ContentProviderUtil {
+    private static Logger slf4jLog = LoggerFactory.getLogger(ContentProviderUtil.class);
 	@SuppressLint("NewApi")
 	public static String getFilePath(Context c, String cache_dir, Uri content_uri) {
 		if (content_uri==null) return null;
 		final String[] column={MediaStore.MediaColumns._ID,  MediaStore.MediaColumns.DATA, MediaStore.MediaColumns.DISPLAY_NAME};
 		String cd=cache_dir;
 		File tlf=null;
+        slf4jLog.debug("getFilePath Uri="+content_uri.toString());
 		if (ContentResolver.SCHEME_FILE.equals(content_uri.getScheme())) {
 			//File
 			tlf=new File(content_uri.getPath());
@@ -165,6 +170,7 @@ public class ContentProviderUtil {
 //				}
 //			}
 		}
+        slf4jLog.debug("getFilePath Path="+tlf.getAbsolutePath());
 		return tlf==null?null:tlf.getAbsolutePath();
 	};
 

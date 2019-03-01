@@ -26,7 +26,6 @@ public class SafManager {
 
     private static final String APPLICATION_TAG="SafManager";
 
-    private boolean mDebugEnabled=false;
     private Context mContext=null;
 
     public final static String UNKNOWN_USB_DIRECTORY="/unknown_usb";
@@ -63,19 +62,13 @@ public class SafManager {
 
     public SafManager(Context c, boolean debug) {
         mContext=c;
-        setDebugEnabled(debug);
         loadSafFile();
     }
 
     public SafManager(boolean usb_no_mp, Context c, boolean debug) {
         mContext=c;
-        setDebugEnabled(debug);
         if (usb_no_mp) loadSafFileNoUsbMountPoint();
         else loadSafFile();
-    }
-
-    public void setDebugEnabled(boolean enabled) {
-        mDebugEnabled=enabled;
     }
 
     public boolean isSdcardMounted(){
