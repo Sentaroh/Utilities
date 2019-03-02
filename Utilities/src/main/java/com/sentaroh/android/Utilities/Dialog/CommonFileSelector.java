@@ -445,7 +445,11 @@ public class CommonFileSelector extends DialogFragment {
                         if (mp.startsWith("/storage/emulated")) {
                             ml.add(mp);
                         } else {
-                            if (mp.equals(sm.getSdcardRootPath()) || mp.equals(sm.getUsbRootPath()))ml.add(mp);
+                            if (mDialogEnableCreate) {
+                                if (mp.equals(sm.getSdcardRootPath()) || mp.equals(sm.getUsbRootPath()))ml.add(mp);
+                            } else {
+                                ml.add(mp);
+                            }
                         }
                     } else {
                         ml.add(fp);
@@ -677,18 +681,6 @@ public class CommonFileSelector extends DialogFragment {
                 slf4jLog.info("TreeFileListView clicked pos="+pos+", name="+tfi.getName());
                 if (tfi.isDir()) {
                     if (tfi.getSubDirItemCount()>=0) {
-//                        mDialogLocalDir=tfi.getPath()+tfi.getName();
-//                        ArrayList<TreeFilelistItem> tfl = createLocalFilelist(mDialogSelectCat==DIALOG_SELECT_CATEGORY_FILE, turl,mDialogLocalDir );
-//                        dir_path.setText((turl+mDialogLocalDir+"/").replaceAll("//","/"));
-//                        if (tfl.size()==0) {
-//                            tv_empty.setVisibility(TextView.VISIBLE);
-//                            mTreeFileListView.setVisibility(TextView.GONE);
-//                        } else {
-//                            tv_empty.setVisibility(TextView.GONE);
-//                            mTreeFileListView.setVisibility(TextView.VISIBLE);
-//                            mTreeFilelistAdapter.setDataList(tfl);
-//                        }
-//                        setTopUpButtonEnabled(true);
                         NotifyEvent ntfy=new NotifyEvent(context);
                         ntfy.setListener(new NotifyEvent.NotifyEventListener() {
                             @Override
@@ -715,12 +707,7 @@ public class CommonFileSelector extends DialogFragment {
                     }
                 } else {
                     mTreeFilelistAdapter.setDataItemIsSelected(pos);
-//                    dir_name.setText((turl+mTreeFilelistAdapter.getDataItem(pos).getPath()));
-//                    String t_dir=(dir_path.getText().toString()+mTreeFilelistAdapter.getDataItem(pos).getName()).replace(turl,"");
                     et_file_name.setText(mTreeFilelistAdapter.getDataItem(pos).getName());
-//
-//                    if  (mDialogIncludeMp) et_file_name.setText(dir_path.getText().toString()+mTreeFilelistAdapter.getDataItem(pos).getName()); //
-//                    else et_file_name.setText(mTreeFilelistAdapter.getDataItem(pos).getName());
                     if (mTreeFilelistAdapter.getDataItem(pos).isDir() && mDialogSelectCat==DIALOG_SELECT_CATEGORY_FILE) btnOk.setEnabled(false);
                     else btnOk.setEnabled(true);
                 }
@@ -746,18 +733,34 @@ public class CommonFileSelector extends DialogFragment {
             @Override
             public void onClick(View view) {
                 slf4jLog.info("TreeFileListView top button clicked");
-                ArrayList<TreeFilelistItem> tfl = createLocalFilelist(mDialogSelectCat==DIALOG_SELECT_CATEGORY_FILE, mDialogLocalMP,"");
-                mDialogLocalDir="";
-                dir_path.setText(mDialogLocalMP+mDialogLocalDir+"/");
-                if (tfl.size()==0) {
-                    tv_empty.setVisibility(TextView.VISIBLE);
-                    mTreeFileListView.setVisibility(TextView.GONE);
-                } else {
-                    tv_empty.setVisibility(TextView.GONE);
-                    mTreeFileListView.setVisibility(TextView.VISIBLE);
-                    mTreeFilelistAdapter.setDataList(tfl);
-                }
-                setTopUpButtonEnabled(false);
+                NotifyEvent ntfy_file_list=new NotifyEvent(context);
+                ntfy_file_list.setListener(new NotifyEvent.NotifyEventListener() {
+                    @Override
+                    public void positiveResponse(Context c, Object[] o) {
+                        ArrayList<TreeFilelistItem> tfl =(ArrayList<TreeFilelistItem>)o[0];
+                        mDialogLocalDir="";
+                        dir_path.setText(mDialogLocalMP+mDialogLocalDir+"/");
+                        if (tfl.size()==0) {
+                            tv_empty.setVisibility(TextView.VISIBLE);
+                            mTreeFileListView.setVisibility(TextView.GONE);
+                        } else {
+                            tv_empty.setVisibility(TextView.GONE);
+                            mTreeFileListView.setVisibility(TextView.VISIBLE);
+                            mTreeFilelistAdapter.setDataList(tfl);
+                        }
+                        setTopUpButtonEnabled(false);
+                    }
+
+                    @Override
+                    public void negativeResponse(Context c, Object[] o) {
+                        tv_empty.setVisibility(TextView.VISIBLE);
+                        mTreeFileListView.setVisibility(TextView.GONE);
+
+                        mTreeFileListView.setScrollingCacheEnabled(false);
+                        mTreeFileListView.setScrollbarFadingEnabled(false);
+                    }
+                });
+                createLocalFilelist(mDialogSelectCat==DIALOG_SELECT_CATEGORY_FILE, mDialogLocalMP, "", ntfy_file_list, false);
             }
         });
 
@@ -775,15 +778,32 @@ public class CommonFileSelector extends DialogFragment {
                     dir_path.setText(mDialogLocalMP+mDialogLocalDir+"/");
                     setTopUpButtonEnabled(true);
                 }
-                ArrayList<TreeFilelistItem> tfl = createLocalFilelist(mDialogSelectCat==DIALOG_SELECT_CATEGORY_FILE, mDialogLocalMP, mDialogLocalDir);
-                if (tfl.size()==0) {
-                    tv_empty.setVisibility(TextView.VISIBLE);
-                    mTreeFileListView.setVisibility(TextView.GONE);
-                } else {
-                    tv_empty.setVisibility(TextView.GONE);
-                    mTreeFileListView.setVisibility(TextView.VISIBLE);
-                    mTreeFilelistAdapter.setDataList(tfl);
-                }
+                NotifyEvent ntfy_file_list=new NotifyEvent(context);
+                ntfy_file_list.setListener(new NotifyEvent.NotifyEventListener() {
+                    @Override
+                    public void positiveResponse(Context c, Object[] o) {
+                        ArrayList<TreeFilelistItem> tfl =(ArrayList<TreeFilelistItem>)o[0];
+                        if (tfl.size()==0) {
+                            tv_empty.setVisibility(TextView.VISIBLE);
+                            mTreeFileListView.setVisibility(TextView.GONE);
+                        } else {
+                            tv_empty.setVisibility(TextView.GONE);
+                            mTreeFileListView.setVisibility(TextView.VISIBLE);
+                            mTreeFilelistAdapter.setDataList(tfl);
+                        }
+                    }
+
+                    @Override
+                    public void negativeResponse(Context c, Object[] o) {
+                        tv_empty.setVisibility(TextView.VISIBLE);
+                        mTreeFileListView.setVisibility(TextView.GONE);
+
+                        mTreeFileListView.setScrollingCacheEnabled(false);
+                        mTreeFileListView.setScrollbarFadingEnabled(false);
+                    }
+                });
+                createLocalFilelist(mDialogSelectCat==DIALOG_SELECT_CATEGORY_FILE, mDialogLocalMP, mDialogLocalDir, ntfy_file_list, false);
+
             }
         });
 
@@ -814,15 +834,31 @@ public class CommonFileSelector extends DialogFragment {
             public void onClick(View v) {
                 slf4jLog.info("TreeFileListView refresh button clicked");
                 String mp=mLocalMountPointSpinner.getSelectedItem().toString();
-                ArrayList<TreeFilelistItem> tfl =createLocalFilelist(mDialogSelectCat==DIALOG_SELECT_CATEGORY_FILE, mp, mDialogLocalDir);//mDialogLocalMP,"");
-                if (tfl.size()<1) {
-                    tv_empty.setVisibility(TextView.VISIBLE);
-                    mTreeFileListView.setVisibility(TextView.GONE);
-                } else {
-                    tv_empty.setVisibility(TextView.GONE);
-                    mTreeFileListView.setVisibility(TextView.VISIBLE);
-                }
-                mTreeFilelistAdapter.setDataList(tfl);
+                NotifyEvent ntfy_file_list=new NotifyEvent(context);
+                ntfy_file_list.setListener(new NotifyEvent.NotifyEventListener() {
+                    @Override
+                    public void positiveResponse(Context c, Object[] o) {
+                        ArrayList<TreeFilelistItem> tfl =(ArrayList<TreeFilelistItem>)o[0];
+                        if (tfl.size()<1) {
+                            tv_empty.setVisibility(TextView.VISIBLE);
+                            mTreeFileListView.setVisibility(TextView.GONE);
+                        } else {
+                            tv_empty.setVisibility(TextView.GONE);
+                            mTreeFileListView.setVisibility(TextView.VISIBLE);
+                        }
+                        mTreeFilelistAdapter.setDataList(tfl);
+                    }
+
+                    @Override
+                    public void negativeResponse(Context c, Object[] o) {
+                        tv_empty.setVisibility(TextView.VISIBLE);
+                        mTreeFileListView.setVisibility(TextView.GONE);
+
+                        mTreeFileListView.setScrollingCacheEnabled(false);
+                        mTreeFileListView.setScrollbarFadingEnabled(false);
+                    }
+                });
+                createLocalFilelist(mDialogSelectCat==DIALOG_SELECT_CATEGORY_FILE, mp, mDialogLocalDir, ntfy_file_list, false);
             }
         });
         //OK button
@@ -948,7 +984,9 @@ public class CommonFileSelector extends DialogFragment {
         Thread th=new Thread(){
             @Override
             public void run() {
+                slf4jLog.info("createLocalFilelist Thread started");
                 final ArrayList<TreeFilelistItem> tfl=createLocalFilelist(fileOnly, url, dir);
+                slf4jLog.info("createLocalFilelist Thread ended");
                 mUiHandler.post(new Runnable(){
                     @Override
                     public void run() {
