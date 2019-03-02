@@ -9,7 +9,7 @@ android {
         abortOnError false
     }
 
-    def verName="1.0.14"
+    def verName="1.0.15"
     def verCode=2
     defaultConfig {
         minSdkVersion 7
