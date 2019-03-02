@@ -60,6 +60,10 @@ public class SafManager {
         return em;
     }
 
+    public void setDebugEnabled(boolean enabled) {
+        //NOP
+    }
+
     public SafManager(Context c, boolean debug) {
         mContext=c;
         loadSafFile();
