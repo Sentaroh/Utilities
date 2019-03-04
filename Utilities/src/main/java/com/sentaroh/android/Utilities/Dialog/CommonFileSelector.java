@@ -474,9 +474,11 @@ public class CommonFileSelector extends DialogFragment {
                 }
                 if (!dup) {
                     adapter.add(ml.get(i));
+                    if (mDialogLocalMP.equals(ml.get(i))) a_no=adapter.getCount()-1;
                 }
             }
 //            Log.v("","sel="+mLocalMountPointSpinner.getSelectedItemPosition()+", a_no="+a_no);
+            if (a_no>=0 && a_no<adapter.getCount()) a_no=0;
             mLocalMountPointSpinner.setSelection(a_no);
         }
         if (mDialogHideMp) mLocalMountPointSpinner.setVisibility(LinearLayout.GONE);
