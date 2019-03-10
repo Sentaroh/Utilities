@@ -119,6 +119,23 @@ public class SafManager {
         return esd;
     }
 
+    public boolean hasExternalMediaPath() {//  /storage/xxxx-xxxx形式のみチェック
+//        File[] fl= ContextCompat.getExternalFilesDirs(mContext, null);
+        File[] fl= mContext.getExternalFilesDirs(null);
+        String ld= LocalMountPoint.getExternalStorageDir();
+        String esd="";
+        if (fl!=null) {
+            for(File f:fl) {
+                if (f!=null && f.getPath()!=null && !f.getPath().startsWith(ld)) {
+                    String path=f.getPath().substring(0, f.getPath().indexOf("/Android/data"));
+                    if (isFilePathExists(path, false)) esd=path;
+                    break;
+                }
+            }
+        }
+        return esd.equals("")?false:true;
+    }
+
     public boolean hasExternalSdcardPath() {
 //        File[] fl= ContextCompat.getExternalFilesDirs(mContext, null);
         File[] fl= mContext.getExternalFilesDirs(null);
