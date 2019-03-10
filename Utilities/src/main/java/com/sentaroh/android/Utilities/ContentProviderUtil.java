@@ -75,8 +75,10 @@ public class ContentProviderUtil {
                     column, sel, new String[]{ id }, null);
             int columnIndex = cursor.getColumnIndex(column[1]);
             if (cursor.moveToFirst()) {
-                String path = cursor.getString(columnIndex);
-                tlf=new File(path);
+                try {
+                    String path = cursor.getString(columnIndex);
+                    tlf=new File(path);
+                } catch(Exception e) {}
             }
             cursor.close();
 //        } else if (content_uri.toString().startsWith("content://com.asus.filemanager.OpenFileProvider/file/storage/emulated/0/Android")) {
