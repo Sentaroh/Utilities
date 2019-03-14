@@ -599,8 +599,12 @@ public class SafManager {
         ContentProviderClient client =null;
         SafFile saf=null;
         try {
-            client = mContext.getContentResolver().acquireContentProviderClient(rf.getUri().getAuthority());
-            saf=createItem(client, rf, target_path, isDirectory);
+            if (rf!=null) {
+                client = mContext.getContentResolver().acquireContentProviderClient(rf.getUri().getAuthority());
+                saf=createItem(client, rf, target_path, isDirectory);
+            } else {
+                putErrorMessage("createItem SafRoot file is null.");
+            }
         } finally {
             if (client!=null) client.release();
         }
@@ -614,6 +618,7 @@ public class SafManager {
 //        for(UriPermission item:permissions) putDebugMessage(item.toString());
 
         if (rf==null) {
+            putErrorMessage("createItem SafRoot file is null.");
             return null;
         }
 

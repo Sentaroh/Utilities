@@ -1140,7 +1140,7 @@ public class CommonFileSelector extends DialogFragment {
                             SafFile sf=mSafFileMgr.createSdcardItem(n_path, true);
                             if (sf==null) {
                                 CommonDialog cd=new CommonDialog(context, getFragmentManager());
-                                String error_msg=mSafFileMgr.getLastErrorMessage();
+                                String error_msg="SafRoot="+mSafFileMgr.getSdcardRootSafFile()+"\n"+mSafFileMgr.getLastErrorMessage();
                                 cd.showCommonDialog(false, "W", "SdcardSafFile cretae error", error_msg, null);
                                 dlg_msg.setText("SafFile create Error");
                                 slf4jLog.info("fileSelectEditDialogCreateBtn SdcardSafFile cretae error+\n"+error_msg);
@@ -1151,7 +1151,7 @@ public class CommonFileSelector extends DialogFragment {
                             SafFile sf=mSafFileMgr.createUsbItem(n_path, true);
                             if (sf==null) {
                                 CommonDialog cd=new CommonDialog(context, getFragmentManager());
-                                String error_msg=mSafFileMgr.getLastErrorMessage();
+                                String error_msg="SafRoot="+mSafFileMgr.getUsbRootSafFile()+"\n"+mSafFileMgr.getLastErrorMessage();
                                 cd.showCommonDialog(false, "W", "UsbSafFile cretae error", error_msg, null);
                                 dlg_msg.setText("SafFile create Error");
                                 slf4jLog.info("fileSelectEditDialogCreateBtn UsbSafFile cretae error+\n"+error_msg);
