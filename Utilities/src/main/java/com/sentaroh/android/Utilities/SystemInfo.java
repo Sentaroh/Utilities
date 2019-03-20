@@ -179,23 +179,11 @@ public class SystemInfo {
             }
         }
 
-        out.add("/storage/emulated directory:");
-        fl = (new File("/storage/emulated")).listFiles();
-        if (fl != null) {
-            for (File item : fl) {
-                if (item.isDirectory())
-                    out.add("   /storage/emulated/" + item.getName() + ", read=" + item.canRead()+", write="+item.canWrite());
-            }
-        }
-
-        out.add("/storage/self directory:");
-        fl = (new File("/storage/self")).listFiles();
-        if (fl != null) {
-            for (File item : fl) {
-                if (item.isDirectory())
-                    out.add("   /storage/self/" + item.getName() + ", read=" + item.canRead()+", write="+item.canWrite());
-            }
-        }
+        out.add("/storage/emulated/0 directory:");
+        File lf = new File("/storage/emulated/0");
+        try {
+            if (lf.exists()) out.add("   /storage/emulated/0" + ", read=" + lf.canRead()+", write="+lf.canWrite());
+        } catch(Exception e) {}
 
         out.add("/Removable directory:");
         fl = (new File("/Removable")).listFiles();
