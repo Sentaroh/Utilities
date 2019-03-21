@@ -34,12 +34,13 @@
     <string name="msgs_log_file_list_no_log_files">No log files</string>
 
     <string name="msgs_log_file_list_confirm_send_log_title">Send log file to the developer.</string>
+    <string name="msgs_log_file_list_confirm_send_log_description">Please describe your problem or question below.\n\n\n</string>
     <string name="msgs_log_file_list_confirm_send_log_send">Send</string>
     <string name="msgs_log_file_list_confirm_send_log_preview">Preview</string>
     <string name="msgs_log_file_list_confirm_send_log_msg">Send log file by E-Mail to the developer.\n
 1.Press the Preview button to see the temp_log.txt, then please check the contents.(If the selection screen of the application is displayed, and then select the FAVORIT application to display the text file.)\n
 2.When you are finished reading file to send, then select the E-Mail in EMail selection dialog.\n
-3.Enter the message in the EMAIL body if necessary. (The log file is attached with compressed into zip and )</string>
+3.Please enter a problem/question in the E-Mail body and send an E-Mail.(The log file is attached with compressed into zip and )</string>
 		    
     <string name="msgs_log_file_list_manage_logfile">Manage log file</string>
 	<string name="msgs_log_file_browse_app_can_not_found">Application that displays the text file was not found.</string>		

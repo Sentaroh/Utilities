@@ -551,7 +551,7 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
 //		    intent.putExtra(Intent.EXTRA_CC, new String[]{"cc@example.com"});  
 //		    intent.putExtra(Intent.EXTRA_BCC, new String[]{"bcc@example.com"});  
 	    intent.putExtra(Intent.EXTRA_SUBJECT, "Log file");  
-	    intent.putExtra(Intent.EXTRA_TEXT, "Please fill in the details of the problem.");
+	    intent.putExtra(Intent.EXTRA_TEXT, mContext.getString(R.string.msgs_log_file_list_confirm_send_log_description));
 	    intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(lf)); 
 	    mContext.startActivity(intent);
 	};

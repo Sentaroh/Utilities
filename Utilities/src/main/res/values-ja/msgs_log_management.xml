@@ -34,12 +34,13 @@
 	<string name="msgs_log_file_list_no_log_files">ログファイルが存在しません</string>
 
     <string name="msgs_log_file_list_confirm_send_log_title">ログファイルを開発者に送信</string>
+    <string name="msgs_log_file_list_confirm_send_log_description">下記に貴方の問題・疑問を記述してください。\n\n\n</string>
     <string name="msgs_log_file_list_confirm_send_log_send">送信</string>
     <string name="msgs_log_file_list_confirm_send_log_preview">内容表示</string>
     <string name="msgs_log_file_list_confirm_send_log_msg">ログを開発者にE-Mailを使用して送信します。\n
 １．内容表示ボタンを押しtemp_log.txtを表示し、内容を確認してください（テキストファイルを表示するためのアプリケーション選択の画面が表示されたら、アプリケーションを表示してください）\n
 ２．送信する内容を確認したら、送信ボタンを押しE-Mail選択ダイアログでE-Mailを選択\n
-３，必要ならばE-Mail本文にメッセージを入力し、E-Mailを送信してください。（ログはzipに圧縮し、添付ファイルになっています）</string>
+３. E-Mail本文に問題/疑問を入力し、E-Mailを送信してください。（ログはzipに圧縮し、添付ファイルになっています）</string>
 		    
     <string name="msgs_log_file_list_manage_logfile">ログファイル管理</string>
 	<string name="msgs_log_file_browse_app_can_not_found">テキストファイルを表示するアプリケーションが見つかりませんでした。</string>
