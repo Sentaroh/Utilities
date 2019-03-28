@@ -241,10 +241,10 @@ public class SafFile {
         return delete_success;
     }
 
-    public boolean deleteIfExists(ContentProviderClient client) {
+    private boolean deleteIfExists(ContentProviderClient client) {
         boolean exists=false;
         boolean delete_success=false;
-        client=mContext.getContentResolver().acquireContentProviderClient(getUri().getAuthority());
+//        client=mContext.getContentResolver().acquireContentProviderClient(getUri().getAuthority());
 
         Cursor c = null;
         try {
@@ -473,43 +473,43 @@ public class SafFile {
         }
     }
 
-    public boolean moveToCC(SafFile to_file) {
-        Uri move_result=null;
-        ContentProviderClient client =null;
-        try {
-            client=mContext.getContentResolver().acquireContentProviderClient(getUri().getAuthority());
-            moveToCC(client, to_file);
-            return true;
-        } finally {
-            if (client!=null) client.release();
-        }
+//    public boolean moveToCC(SafFile to_file) {
+//        Uri move_result=null;
+//        ContentProviderClient client =null;
+//        try {
+//            client=mContext.getContentResolver().acquireContentProviderClient(getUri().getAuthority());
+//            moveToCC(client, to_file);
+//            return true;
+//        } finally {
+//            if (client!=null) client.release();
+//        }
+////        return false;
+//    }
+//
+//    public boolean moveToCC(ContentProviderClient client, SafFile to_file) {
+//        Uri move_result=null;
+//        try {
+//            if (slf4jLog.isDebugEnabled()) putDebugMessage("moveTo mUri="+mUri.getPath()+", to_file="+to_file.getUri().getPath());
+//            move_result = moveDocument(client, mUri, getParentFile().getUri(), to_file.getParentFile().getUri());
+//            mUri = move_result;
+//            if (mUri!=null) {
+//                if (slf4jLog.isDebugEnabled()) putDebugMessage("moveTo result="+mUri.getPath());
+//                Uri rename_result=move_result;
+//                if (!getName().equals(to_file.getName())) {
+//                    if (to_file.exists()) to_file.delete();
+//                    rename_result=renameDocument(client, mUri, to_file.getName());
+//                    if (slf4jLog.isDebugEnabled()) putDebugMessage("moveTo rename result="+rename_result.getPath());
+//                }
+//                return true;
+//            } else {
+//                putErrorMessage("moveTo move failed, to="+to_file);
+//                return false;
+//            }
+//        } catch (RemoteException e) {
+//            e.printStackTrace();
+//        }
 //        return false;
-    }
-
-    public boolean moveToCC(ContentProviderClient client, SafFile to_file) {
-        Uri move_result=null;
-        try {
-            if (slf4jLog.isDebugEnabled()) putDebugMessage("moveTo mUri="+mUri.getPath()+", to_file="+to_file.getUri().getPath());
-            move_result = moveDocument(client, mUri, getParentFile().getUri(), to_file.getParentFile().getUri());
-            mUri = move_result;
-            if (mUri!=null) {
-                if (slf4jLog.isDebugEnabled()) putDebugMessage("moveTo result="+mUri.getPath());
-                Uri rename_result=move_result;
-                if (!getName().equals(to_file.getName())) {
-                    if (to_file.exists()) to_file.delete();
-                    rename_result=renameDocument(client, mUri, to_file.getName());
-                    if (slf4jLog.isDebugEnabled()) putDebugMessage("moveTo rename result="+rename_result.getPath());
-                }
-                return true;
-            } else {
-                putErrorMessage("moveTo move failed, to="+to_file);
-                return false;
-            }
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
+//    }
 
     private static final String METHOD_CREATE_DOCUMENT = "android:createDocument";
     private static final String METHOD_RENAME_DOCUMENT = "android:renameDocument";
