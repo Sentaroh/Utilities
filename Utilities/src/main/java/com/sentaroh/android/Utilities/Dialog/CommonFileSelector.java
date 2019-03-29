@@ -1087,7 +1087,7 @@ public class CommonFileSelector extends DialogFragment {
         final TextView dlg_title = (TextView) mCreateDirDialog.findViewById(R.id.single_item_input_title);
         dlg_title.setText(context.getString(R.string.msgs_file_select_edit_dlg_create));
         final TextView dlg_msg = (TextView) mCreateDirDialog.findViewById(R.id.single_item_input_msg);
-        dlg_msg.setVisibility(TextView.GONE);
+        dlg_msg.setVisibility(TextView.VISIBLE);
         final TextView dlg_cmp = (TextView) mCreateDirDialog.findViewById(R.id.single_item_input_name);
         final Button btnOk = (Button) mCreateDirDialog.findViewById(R.id.single_item_input_ok_btn);
         final Button btnCancel = (Button) mCreateDirDialog.findViewById(R.id.single_item_input_cancel_btn);
@@ -1113,10 +1113,12 @@ public class CommonFileSelector extends DialogFragment {
 //					Log.v("","fp="+lf.getPath());
                     if (lf.exists()) {
                         btnOk.setEnabled(false);
+//                        dlg_msg.setVisibility(TextView.VISIBLE);
                         dlg_msg.setText(context.getString(
                                 R.string.msgs_single_item_input_dlg_duplicate_dir));
                     } else {
                         btnOk.setEnabled(true);
+//                        dlg_msg.setVisibility(TextView.GONE);
                         dlg_msg.setText("");
                     }
                 }
