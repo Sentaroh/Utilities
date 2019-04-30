@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.PowerManager;
 import android.os.storage.StorageManager;
+import android.os.storage.StorageVolume;
 import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
 
@@ -114,22 +115,27 @@ public class SystemInfo {
         out.add("Storage Manager:");
         try {
             StorageManager sm = (StorageManager) context.getSystemService(Context.STORAGE_SERVICE);
-            Method getVolumeList = sm.getClass().getDeclaredMethod("getVolumeList");
-            Object[] volumeList = (Object[]) getVolumeList.invoke(sm);
-            for (Object volume : volumeList) {
-                Method getPath = volume.getClass().getDeclaredMethod("getPath");
+            if (Build.VERSION.SDK_INT>=24 && Build.VERSION.SDK_INT<=28) {
+                List<StorageVolume> svl=sm.getStorageVolumes();
+                for(StorageVolume item:svl)
+                    out.add("  "+item.getDescription(context)+", isPrimary="+item.isPrimary()+", isRemovable="+item.isRemovable()+", uuid="+item.getUuid());
+            } else {
+                Method getVolumeList = sm.getClass().getDeclaredMethod("getVolumeList");
+                Object[] volumeList = (Object[]) getVolumeList.invoke(sm);
+                for (Object volume : volumeList) {
+                    Method getPath = volume.getClass().getDeclaredMethod("getPath");
 //	            Method isRemovable = volume.getClass().getDeclaredMethod("isRemovable");
-                Method isPrimary = volume.getClass().getDeclaredMethod("isPrimary");
-                Method getUuid = volume.getClass().getDeclaredMethod("getUuid");
-                Method getId = volume.getClass().getDeclaredMethod("getId");
-                Method toString = volume.getClass().getDeclaredMethod("toString");
+                    Method isPrimary = volume.getClass().getDeclaredMethod("isPrimary");
+                    Method getUuid = volume.getClass().getDeclaredMethod("getUuid");
+                    Method getId = volume.getClass().getDeclaredMethod("getId");
+                    Method toString = volume.getClass().getDeclaredMethod("toString");
 //                Method allowMassStorage = volume.getClass().getDeclaredMethod("allowMassStorage");
 //                Method getStorageId = volume.getClass().getDeclaredMethod("getStorageId");
-                String path = (String) getPath.invoke(volume);
+                    String path = (String) getPath.invoke(volume);
 //	            boolean removable = (Boolean)isRemovable.invoke(volume);
 //                mpi+="allowMassStorage="+(boolean) allowMassStorage.invoke(volume)+"\n";
 //                mpi+="getStorageId="+String.format("0x%8h",((int) getStorageId.invoke(volume)))+"\n";
-                out.add("  "+((String)toString.invoke(volume)+", isPrimary="+(boolean)isPrimary.invoke(volume)));
+                    out.add("  "+((String)toString.invoke(volume)+", isPrimary="+(boolean)isPrimary.invoke(volume)));
 //	            if ((String)getUuid.invoke(volume)!=null) {
 //	            	paths.add(path);
 //					if (debug) {
@@ -137,6 +143,7 @@ public class SystemInfo {
 //						mUtil.addLogMsg("I", (String)toString.invoke(volume));
 //					}
 //	            }
+                }
             }
         } catch (ClassCastException e) {
             e.printStackTrace();
