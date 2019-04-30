@@ -384,7 +384,7 @@ public class CommonFileSelector extends DialogFragment {
         title.setTextColor(mThemeColorList.text_color_dialog_title);
         title.setText(mDialogTitle);
         final TextView dlg_msg = (TextView) mDialog.findViewById(R.id.common_file_selector_dlg_msg);
-        dlg_msg.setVisibility(TextView.GONE);
+//        dlg_msg.setVisibility(TextView.GONE);
 //        final Button btnHome = (Button) mDialog.findViewById(R.id.file_select_edit_dlg_home_dir_btn);
 //        btnHome.setTextColor(mThemeColorList.text_color_primary);
 //        btnHome.setVisibility(Button.VISIBLE);
@@ -954,10 +954,10 @@ public class CommonFileSelector extends DialogFragment {
 
     private void putDlgMsg(TextView msg, String txt) {
         if (txt.equals("")) {
-            msg.setVisibility(TextView.GONE);
+//            msg.setVisibility(TextView.GONE);
             msg.setText("");
         } else {
-            msg.setVisibility(TextView.VISIBLE);
+//            msg.setVisibility(TextView.VISIBLE);
             msg.setText(txt);
         }
     };
