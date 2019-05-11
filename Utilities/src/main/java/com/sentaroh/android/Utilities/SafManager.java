@@ -422,18 +422,20 @@ public class SafManager {
             Object[] volumeList = (Object[]) getVolumeList.invoke(sm);
             for (Object volume : volumeList) {
 //                Method getPath = volume.getClass().getDeclaredMethod("getPath");
-//	            Method isRemovable = volume.getClass().getDeclaredMethod("isRemovable");
+	            Method isRemovable = volume.getClass().getDeclaredMethod("isRemovable");
                 Method isPrimary = volume.getClass().getDeclaredMethod("isPrimary");
                 Method getUuid = volume.getClass().getDeclaredMethod("getUuid");
                 Method toString = volume.getClass().getDeclaredMethod("toString");
                 String desc=(String)toString.invoke(volume);
                 Method getLabel = volume.getClass().getDeclaredMethod("getUserLabel");
                 boolean primary=(boolean)isPrimary.invoke(volume);
+                boolean removable=(boolean)isRemovable.invoke(volume);
                 String uuid=(String) getUuid.invoke(volume);
                 String label=(String) getLabel.invoke(volume);
 //                String path = (String) getPath.invoke(volume);
                 putInfoMessage("getSdcardUuidFromStorageManager uuid found="+uuid+", Label="+label);
-                if (uuid!=null && (!primary && !label.toLowerCase().contains("usb"))) {
+//                if (uuid!=null && (!primary && !label.toLowerCase().contains("usb"))) {
+                if (uuid!=null && (removable && !label.toLowerCase().contains("usb"))) {
                     uuids.add(uuid);
                     putInfoMessage("getSdcardUuidFromStorageManager added="+uuid);
                 }
