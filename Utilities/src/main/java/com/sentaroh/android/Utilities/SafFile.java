@@ -381,7 +381,7 @@ public class SafFile {
             while (c.moveToNext()) {
                 String doc_name=c.getString(1);
 //                putInfoMessage("SafFile#findFile name="+doc_name+", key="+name);
-                if (doc_name.equals(name)) {
+                if (doc_name.equalsIgnoreCase(name)) {
                     String doc_id=c.getString(0);
                     Uri documentUri = DocumentsContract.buildDocumentUriUsingTree(mUri, doc_id);
                     result=new SafFile(mContext,  documentUri, doc_name);
