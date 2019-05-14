@@ -83,6 +83,8 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
 	private final static boolean DEBUG_ENABLE=false;
 	private final static String APPLICATION_TAG="LogFileManagement";
 
+	private final static String MAIL_TO="gm.developer.fhoshino@gmail.com";
+
 	private Dialog mDialog=null;
 	private boolean mTerminateRequired=true;
 	private CommonLogFileListDialogFragment mFragment=null;
@@ -100,15 +102,21 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
 	private ArrayList<CommonLogFileListItem> mLogFileList=null;
 
 	private boolean mShowSaveButton =true;
+	private String mEnableMessage="";
+    private String mSendMessage="";
+    private String mSendSubject="";
 
-	public static CommonLogFileListDialogFragment newInstance(boolean retainInstance, String title) {
+	public static CommonLogFileListDialogFragment newInstance(boolean retainInstance, String title,
+                                                              String send_msg, String enable_msg, String send_subject) {
 		if (DEBUG_ENABLE) Log.v(APPLICATION_TAG,"newInstance");
 		CommonLogFileListDialogFragment frag = new CommonLogFileListDialogFragment();
         Bundle bundle = new Bundle();
         bundle.putBoolean("retainInstance", retainInstance);
         bundle.putBoolean("showSaveButton", true);
         bundle.putString("title", title);
-//        bundle.putString("msgtext", msgtext);
+        bundle.putString("msgtext", send_msg);
+        bundle.putString("enableMsg", enable_msg);
+        bundle.putString("subject", send_subject);
         frag.setArguments(bundle);
         return frag;
     }
@@ -167,6 +175,9 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
             Bundle bd=getArguments();
             setRetainInstance(bd.getBoolean("retainInstance"));
             mDialogTitle=bd.getString("title");
+            mEnableMessage=bd.getString("enableMsg");
+            mSendMessage=bd.getString("msgtext");
+            mSendSubject=bd.getString("subject");
             mShowSaveButton =bd.getBoolean("showSaveButton");
         	mLogFileList=CommonLogUtil.createLogFileList(mGp);
         }
@@ -460,6 +471,7 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
 		TextView msg=(TextView)dialog.findViewById(R.id.confirm_send_log_dlg_msg);
 		msg.setTextColor(mThemeColorList.text_color_primary);
 		msg.setBackgroundColor(mThemeColorList.dialog_msg_background_color);
+		msg.setText(mSendMessage);
 		
 		final Button btn_ok=(Button)dialog.findViewById(R.id.confirm_send_log_dlg_ok_btn);
 		final Button btn_cancel=(Button)dialog.findViewById(R.id.confirm_send_log_dlg_cancel_btn);
@@ -547,10 +559,10 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
 //	    intent.setType("text/plain");
 	    intent.setType("application/zip");
 	      
-	    intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"gm.developer.fhoshino@gmail.com"});  
+	    intent.putExtra(Intent.EXTRA_EMAIL, new String[]{MAIL_TO});
 //		    intent.putExtra(Intent.EXTRA_CC, new String[]{"cc@example.com"});  
 //		    intent.putExtra(Intent.EXTRA_BCC, new String[]{"bcc@example.com"});  
-	    intent.putExtra(Intent.EXTRA_SUBJECT, "Log file");  
+	    intent.putExtra(Intent.EXTRA_SUBJECT, mSendSubject);
 	    intent.putExtra(Intent.EXTRA_TEXT, mContext.getString(R.string.msgs_log_file_list_confirm_send_log_description));
 	    intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(lf)); 
 	    mContext.startActivity(intent);
@@ -589,10 +601,8 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
 			}
 		});
 		String msg="";
-		if (enabled) {
-		    msg=getString(R.string.msgs_log_file_list_confirm_log_enable)+"\n\n"+
-                    getString(R.string.msgs_log_file_list_confirm_log_enable_msg);
-        } else  msg=getString(R.string.msgs_log_file_list_confirm_log_disable);
+		if (enabled) msg=mEnableMessage;
+        else  msg=getString(R.string.msgs_log_file_list_confirm_log_disable);
         MessageDialogFragment cdf =MessageDialogFragment.newInstance(true, "W", msg, "");
         cdf.showDialog(getFragmentManager(),cdf,ntfy);
 	};
