@@ -457,7 +457,7 @@ public class SafFile {
             if (mUri!=null) {
                 if (slf4jLog.isDebugEnabled()) putDebugMessage("moveTo result="+mUri.getPath());
                 Uri rename_result=move_result;
-                if (!getName().equals(to_file.getName())) {
+                if (!getName().equalsIgnoreCase(to_file.getName())) {
                     if (to_file.exists()) to_file.delete();
                     rename_result=DocumentsContract.renameDocument(mContext.getContentResolver(), mUri, to_file.getName());
                     if (slf4jLog.isDebugEnabled()) putDebugMessage("moveTo rename result="+rename_result.getPath());
