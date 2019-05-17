@@ -52,7 +52,11 @@ public class CommonLogUtil {
 		mLogIdent=(li+"                 ").substring(0,16)+" ";
 	};
 
-	final public void closeLog() {
+    final public String getLogId() {
+        return mLogIdent;
+    };
+
+    final public void closeLog() {
 		closeLog(mContext, mGp);
 	};
 
@@ -85,10 +89,14 @@ public class CommonLogUtil {
 	};
 
     final public void deleteLogFile() {
-        CommonLogWriter.enqueue(mGp, mContext, mGp.getLogIntentDelete(), "", true);
+        deleteLogFile(mContext, mGp);
 	};
 
-	final public void addLogMsg(String cat, String... msg) {
+    final public static void deleteLogFile(Context c, CommonGlobalParms mGp) {
+        CommonLogWriter.enqueue(mGp, c, mGp.getLogIntentDelete(), "", true);
+    };
+
+    final public void addLogMsg(String cat, String... msg) {
 //		Log.v("","lvl="+mGp.getDebugLevel()+", ena="+mGp.isLogEnabled());
 		if (mGp.getDebugLevel()>0 || mGp.isLogEnabled() || cat.equals("E")) {
 			addLogMsg(mGp, mContext, mLogIdent, cat, msg);

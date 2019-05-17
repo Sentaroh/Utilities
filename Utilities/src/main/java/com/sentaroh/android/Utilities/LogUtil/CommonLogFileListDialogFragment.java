@@ -852,8 +852,12 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
         cdf.showDialog(mFragment.getFragmentManager(),cdf,ntfy);
     };
 
-    private void rotateLogFile(final CommonLogFileListAdapter lfm_adapter) {
-    	CommonLogUtil.rotateLogFile(mContext, mGp);
+    public void performRotateLog() {
+        CommonLogUtil.rotateLogFile(mContext, mGp);
+    }
+
+    public void rotateLogFile(final CommonLogFileListAdapter lfm_adapter) {
+        performRotateLog();
 
     	mUiHandler.postDelayed(new Runnable(){
 			@Override

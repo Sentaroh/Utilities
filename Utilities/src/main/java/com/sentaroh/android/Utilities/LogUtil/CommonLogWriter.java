@@ -23,7 +23,7 @@ import static com.sentaroh.android.Utilities.LogUtil.CommonLogConstants.LOG_FILE
 public class CommonLogWriter {
     private static PrintWriter printWriter=null;
     //	private static BufferedWriter bufferedWriter;
-    private static FileWriter fileWriter ;
+//    private static FileWriter fileWriter ;
     private static String log_dir=null;
     private static int debug_level=1;
     private static File logFile=null;
@@ -240,11 +240,11 @@ public class CommonLogWriter {
         if (printWriter!=null) {
             printWriter.flush();
             printWriter.close();
-            try {
-                fileWriter.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                fileWriter.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
             printWriter=null;
         }
     }
@@ -255,8 +255,8 @@ public class CommonLogWriter {
             try {
                 File lf=new File(log_dir);
                 if (!lf.exists()) lf.mkdirs();
-                fileWriter=new FileWriter(log_dir+mCgp.getLogFileName()+".txt",true);
-                bw=new BufferedWriter(fileWriter,LOG_FILE_BUFFER_SIZE);
+                FileWriter fw=new FileWriter(log_dir+mCgp.getLogFileName()+".txt",true);
+                bw=new BufferedWriter(fw,LOG_FILE_BUFFER_SIZE);
             } catch (IOException e) {
                 e.printStackTrace();
             }
