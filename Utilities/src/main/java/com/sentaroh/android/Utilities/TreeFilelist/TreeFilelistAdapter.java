@@ -24,6 +24,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 */
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -95,7 +97,11 @@ public class TreeFilelistAdapter extends BaseAdapter {
 
 	private void initTextColor() {
 		mThemeColorList=ThemeUtil.getThemeColorList(mContext);
-	}
+        if (ThemeUtil.isLightThemeUsed(mContext)) {
+            mIconImage[0]=R.drawable.cc_expanded_dark;
+            mIconImage[1]=R.drawable.cc_collapsed_dark;
+        }
+    }
 	public void setDirectorySelectable(boolean p) {mSelectableDirectory=p;}
 	public boolean  isDirectorySelectable() {return mSelectableDirectory;}
 	public void setFileSelectable(boolean p) {mSelectableFile=p;}
@@ -460,6 +466,8 @@ public class TreeFilelistAdapter extends BaseAdapter {
         if (mDataItems.size()>p) return getDataItem(p).isEnableItem();
         else return false;
 	}
+
+	private ColorStateList mPrimayTextColor=null;
 	
 	@Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -483,23 +491,24 @@ public class TreeFilelistAdapter extends BaseAdapter {
             	holder.tv_modtime=(TextView)v.findViewById(R.id.tree_file_list_time);
             	holder.ll_select_view=(LinearLayout)v.findViewById(R.id.tree_file_list_select_view);
         		holder.ll_date_time_view=(LinearLayout)v.findViewById(R.id.tree_file_list_date_time_view);
-            	if (mThemeColorList.theme_is_light) {
-            		holder.ll_view=(LinearLayout)v.findViewById(R.id.tree_file_list_view);
-
-            		if (mSetColor) {
-                    	holder.tv_spacer.setBackgroundColor(mThemeColorList.dialog_msg_background_color);
-                    	holder.iv_expand.setBackgroundColor(mThemeColorList.dialog_msg_background_color);
-                    	holder.iv_image1.setBackgroundColor(mThemeColorList.dialog_msg_background_color);
-                    	holder.tv_name.setBackgroundColor(mThemeColorList.dialog_msg_background_color);
-                    	holder.tv_size.setBackgroundColor(mThemeColorList.dialog_msg_background_color);
-                    	holder.tv_moddate.setBackgroundColor(mThemeColorList.dialog_msg_background_color);
-                    	holder.tv_modtime.setBackgroundColor(mThemeColorList.dialog_msg_background_color);
-
-                    	holder.ll_date_time_view.setBackgroundColor(mThemeColorList.dialog_msg_background_color);
-                		holder.ll_view.setBackgroundColor(mThemeColorList.dialog_msg_background_color);
-            		}
-
-            	}
+                if (mPrimayTextColor==null) mPrimayTextColor=holder.tv_name.getTextColors();
+//            	if (mThemeColorList.theme_is_light) {
+//            		holder.ll_view=(LinearLayout)v.findViewById(R.id.tree_file_list_view);
+//
+//            		if (mSetColor) {
+//                    	holder.tv_spacer.setBackgroundColor(mThemeColorList.dialog_msg_background_color);
+//                    	holder.iv_expand.setBackgroundColor(mThemeColorList.dialog_msg_background_color);
+//                    	holder.iv_image1.setBackgroundColor(mThemeColorList.dialog_msg_background_color);
+//                    	holder.tv_name.setBackgroundColor(mThemeColorList.dialog_msg_background_color);
+//                    	holder.tv_size.setBackgroundColor(mThemeColorList.dialog_msg_background_color);
+//                    	holder.tv_moddate.setBackgroundColor(mThemeColorList.dialog_msg_background_color);
+//                    	holder.tv_modtime.setBackgroundColor(mThemeColorList.dialog_msg_background_color);
+//
+//                    	holder.ll_date_time_view.setBackgroundColor(mThemeColorList.dialog_msg_background_color);
+//                		holder.ll_view.setBackgroundColor(mThemeColorList.dialog_msg_background_color);
+//            		}
+//
+//            	}
 
 //            	if (normal_text_color==-1) normal_text_color=holder.tv_name.getCurrentTextColor();
 //            	Log.v("","n="+String.format("0x%08x",holder.tv_name.getCurrentTextColor()));
@@ -586,10 +595,10 @@ public class TreeFilelistAdapter extends BaseAdapter {
         		            	holder.tv_moddate.setTextColor(mThemeColorList.text_color_warning);//normal_text_color);
         		            	holder.tv_modtime.setTextColor(mThemeColorList.text_color_warning);//normal_text_color);
                    			} else {
-                           		holder.tv_name.setTextColor(mThemeColorList.text_color_primary);//normal_text_color);
-        		            	holder.tv_size.setTextColor(mThemeColorList.text_color_primary);//normal_text_color);
-        		            	holder.tv_moddate.setTextColor(mThemeColorList.text_color_primary);//normal_text_color);
-        		            	holder.tv_modtime.setTextColor(mThemeColorList.text_color_primary);//normal_text_color);
+                           		holder.tv_name.setTextColor(mPrimayTextColor);//normal_text_color);
+        		            	holder.tv_size.setTextColor(mPrimayTextColor);//normal_text_color);
+        		            	holder.tv_moddate.setTextColor(mPrimayTextColor);//normal_text_color);
+        		            	holder.tv_modtime.setTextColor(mPrimayTextColor);//normal_text_color);
                    			}
                    		} else {
                        		holder.tv_name.setTextColor(mThemeColorList.text_color_disabled);//Color.GRAY);

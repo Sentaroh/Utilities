@@ -195,7 +195,7 @@ public class ProgressSpinDialogFragment extends DialogFragment {
     	if (DEBUG_ENABLE) Log.v(APPLICATION_TAG,"onCreateDialog");
     	if (mDialog == null) {
         	super.setShowsDialog (false);
-        	mDialog=new Dialog(getActivity());//, MiscUtil.getAppTheme(getActivity()));
+        	mDialog=new Dialog(getActivity(), ThemeUtil.getAppTheme(getActivity()));//, MiscUtil.getAppTheme(getActivity()));
     		mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
     		mDialog.setCancelable(mDialogCancellable);
     		mDialog.setCanceledOnTouchOutside(false);
@@ -230,19 +230,18 @@ public class ProgressSpinDialogFragment extends DialogFragment {
     private ThemeColorList mThemeColorList;
     private void initViewWidget() {
     	if (DEBUG_ENABLE) Log.v(APPLICATION_TAG,"initViewWidget");
+    	mThemeColorList=ThemeUtil.getThemeColorList(getActivity());
 
 		mDialog.setContentView(R.layout.progress_spin_dlg_fragment);
 
-    	mThemeColorList=ThemeUtil.getThemeColorList(getActivity());
-    	
 		LinearLayout title_view=(LinearLayout)mDialog.findViewById(R.id.progress_spin_dlg_fragment_ll_title);
-		title_view.setBackgroundColor(mThemeColorList.dialog_title_background_color);
+		title_view.setBackgroundColor(mThemeColorList.title_background_color);
 
 		LinearLayout dlg_view=(LinearLayout)mDialog.findViewById(R.id.progress_spin_dlg_fragment);
-		dlg_view.setBackgroundColor(mThemeColorList.dialog_msg_background_color);
+//		dlg_view.setBackgroundColor(mThemeColorList.dialog_msg_background_color);
 
 		TextView tv_title=(TextView)mDialog.findViewById(R.id.progress_spin_dlg_fragment_title);
-		tv_title.setTextColor(mThemeColorList.text_color_dialog_title);
+		tv_title.setTextColor(mThemeColorList.title_text_color);
 		tv_title.setText(mDialogTitle);
 
 		TextView tv_msg=(TextView)mDialog.findViewById(R.id.progress_spin_dlg_fragment_msg);

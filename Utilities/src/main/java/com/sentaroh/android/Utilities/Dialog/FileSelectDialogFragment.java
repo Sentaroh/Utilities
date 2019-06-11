@@ -102,8 +102,8 @@ public class FileSelectDialogFragment extends DialogFragment {
 	
 	private SafManager mSafFileMgr=null;
 	private int mRestartStatus=0;
-	
-	public static FileSelectDialogFragment newInstance(boolean debug, 
+
+	public static FileSelectDialogFragment newInstance(boolean debug,
 			boolean enableCreate, boolean fileOnly, boolean hideMp, boolean includeRoot, 
 			boolean singleSelect, String lurl, String ldir, String file_name,String title) {
 		if (debug) Log.v(APPLICATION_TAG,"newInstance"+
@@ -129,7 +129,7 @@ public class FileSelectDialogFragment extends DialogFragment {
         return frag;
     };
 
-	public static FileSelectDialogFragment newInstance(boolean debug, 
+    public static FileSelectDialogFragment newInstance(boolean debug,
 			boolean enableCreate, boolean fileOnly, boolean hideMp, boolean includeRoot, 
 			boolean singleSelect, boolean mp_internal_and_sdcard, String lurl, String ldir, String file_name,String title) {
 		if (debug) Log.v(APPLICATION_TAG,"newInstance"+
@@ -155,7 +155,7 @@ public class FileSelectDialogFragment extends DialogFragment {
         return frag;
     };
 
-	public static FileSelectDialogFragment newInstance(String lurl, String ldir, String file_name,String title) {
+    public static FileSelectDialogFragment newInstance(String lurl, String ldir, String file_name,String title) {
         FileSelectDialogFragment frag = new FileSelectDialogFragment();
         Bundle bundle = new Bundle();
         bundle.putBoolean("debug", false);
@@ -175,7 +175,7 @@ public class FileSelectDialogFragment extends DialogFragment {
         frag.setArguments(bundle);
         return frag;
     };
-    
+
     public void setOptionDebug(boolean p) {
     	Bundle bundle=getArguments();
     	bundle.putBoolean("debug", p);
@@ -364,7 +364,9 @@ public class FileSelectDialogFragment extends DialogFragment {
 	@Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
     	if (mDebugEnable) Log.v(APPLICATION_TAG,"onCreateDialog");
-    	mDialog=new Dialog(getActivity());//, MiscUtil.getAppTheme(getActivity()));
+
+        mDialog=new Dialog(getActivity(), ThemeUtil.getAppTheme(getActivity()));
+
     	mDialog.setCanceledOnTouchOutside(false);
     	mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
@@ -492,25 +494,25 @@ public class FileSelectDialogFragment extends DialogFragment {
     	
 		mDialog.setContentView(R.layout.file_select_edit_dlg);
 		LinearLayout title_view=(LinearLayout)mDialog.findViewById(R.id.file_select_edit_dlg_title_view);
-		title_view.setBackgroundColor(mThemeColorList.dialog_title_background_color);
+		title_view.setBackgroundColor(mThemeColorList.title_background_color);
 		TextView title=(TextView)mDialog.findViewById(R.id.file_select_edit_dlg_title);
-		title.setTextColor(mThemeColorList.text_color_dialog_title);
+		title.setTextColor(mThemeColorList.title_text_color);
 		title.setText(mDialogTitle);
 		final TextView dlg_msg = (TextView) mDialog.findViewById(R.id.file_select_edit_dlg_msg);
 		final Button btnHome = (Button) mDialog.findViewById(R.id.file_select_edit_dlg_home_dir_btn);
-		btnHome.setTextColor(mThemeColorList.text_color_primary);
+//		btnHome.setTextColor(mThemeColorList.text_color_primary);
 		btnHome.setVisibility(Button.VISIBLE);
 		final Button btnCreate = (Button) mDialog.findViewById(R.id.file_select_edit_dlg_create_btn);
-		btnCreate.setTextColor(mThemeColorList.text_color_primary);
+//		btnCreate.setTextColor(mThemeColorList.text_color_primary);
 		final Button btnOk = (Button) mDialog.findViewById(R.id.file_select_edit_dlg_ok_btn);
 //		btnOk.setTextColor(mThemeColorList.text_color_primary);
 		final Button btnCancel = (Button)mDialog.findViewById(R.id.file_select_edit_dlg_cancel_btn);
-		btnCancel.setTextColor(mThemeColorList.text_color_primary);
+//		btnCancel.setTextColor(mThemeColorList.text_color_primary);
 		final Button btnRefresh = (Button) mDialog.findViewById(R.id.file_select_edit_dlg_refresh_btn);
-		btnRefresh.setTextColor(mThemeColorList.text_color_primary);
+//		btnRefresh.setTextColor(mThemeColorList.text_color_primary);
 
 		LinearLayout ll_dlg_view=(LinearLayout) mDialog.findViewById(R.id.file_select_edit_dlg_view);
-		ll_dlg_view.setBackgroundColor(mThemeColorList.dialog_msg_background_color);
+//		ll_dlg_view.setBackgroundColor(mThemeColorList.dialog_msg_background_color);
 		
 		
 		final Activity activity=getActivity();
@@ -521,7 +523,7 @@ public class FileSelectDialogFragment extends DialogFragment {
 		}
 		
 		mLocalMountPointSpinner=(Spinner) mDialog.findViewById(R.id.file_select_edit_dlg_rdir);
-		setSpinnerBackground(context, mLocalMountPointSpinner, mThemeColorList.theme_is_light);
+		setSpinnerBackground(context, mLocalMountPointSpinner, ThemeUtil.isLightThemeUsed(getActivity()));
 		mLocalMountPointSpinner.setVisibility(Spinner.VISIBLE);
 		//	Root directory spinner
 	    CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(activity, android.R.layout.simple_spinner_item);
@@ -578,7 +580,7 @@ public class FileSelectDialogFragment extends DialogFragment {
 	//	final TextView v_spacer=(TextView)mDialog.findViewById(R.id.file_select_edit_dlg_spacer);
 		mTreeFileListView = (ListView) mDialog.findViewById(android.R.id.list);
 		final CustomTextView dir_name = (CustomTextView) mDialog.findViewById(R.id.file_select_edit_dlg_dir_name);
-		dir_name.setTextColor(mThemeColorList.text_color_primary);
+//		dir_name.setTextColor(mThemeColorList.text_color_primary);
 		final EditText file_name = (EditText) mDialog.findViewById(R.id.file_select_edit_dlg_file_name);
 		if (!mDialogSingleSelect) file_name.setVisibility(EditText.GONE);
 		else file_name.setVisibility(EditText.VISIBLE);

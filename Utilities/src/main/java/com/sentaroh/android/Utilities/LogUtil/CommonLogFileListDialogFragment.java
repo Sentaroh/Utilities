@@ -111,6 +111,23 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
 		if (DEBUG_ENABLE) Log.v(APPLICATION_TAG,"newInstance");
 		CommonLogFileListDialogFragment frag = new CommonLogFileListDialogFragment();
         Bundle bundle = new Bundle();
+        bundle.putString("theme_id", "");
+        bundle.putBoolean("retainInstance", retainInstance);
+        bundle.putBoolean("showSaveButton", true);
+        bundle.putString("title", title);
+        bundle.putString("msgtext", send_msg);
+        bundle.putString("enableMsg", enable_msg);
+        bundle.putString("subject", send_subject);
+        frag.setArguments(bundle);
+        return frag;
+    }
+
+    public static CommonLogFileListDialogFragment newInstance(String theme_id, boolean retainInstance, String title,
+                                                              String send_msg, String enable_msg, String send_subject) {
+        if (DEBUG_ENABLE) Log.v(APPLICATION_TAG,"newInstance");
+        CommonLogFileListDialogFragment frag = new CommonLogFileListDialogFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("theme_id", theme_id);
         bundle.putBoolean("retainInstance", retainInstance);
         bundle.putBoolean("showSaveButton", true);
         bundle.putString("title", title);
@@ -187,8 +204,9 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
     public Dialog onCreateDialog(Bundle savedInstanceState) {
     	if (DEBUG_ENABLE) Log.v(APPLICATION_TAG,"onCreateDialog");
 
-    	mDialog=new Dialog(getActivity());
-		mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mDialog=new Dialog(getActivity(), ThemeUtil.getAppTheme(getActivity()));
+
+        mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		mDialog.setCanceledOnTouchOutside(false);
 
 		if (!mTerminateRequired) {
@@ -298,9 +316,9 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
     	ThemeColorList tcl=ThemeUtil.getThemeColorList(getActivity());
     	
 		final LinearLayout title_view=(LinearLayout) mDialog.findViewById(R.id.log_file_list_dlg_title_view);
-		title_view.setBackgroundColor(tcl.dialog_title_background_color);
+		title_view.setBackgroundColor(tcl.title_background_color);
     	final TextView dlg_title=(TextView)mDialog.findViewById(R.id.log_file_list_dlg_title);
-		dlg_title.setTextColor(tcl.text_color_dialog_title);
+		dlg_title.setTextColor(tcl.title_text_color);
 
     	dlg_title.setText(mDialogTitle);
     	final ImageButton dlg_done=(ImageButton)mDialog.findViewById(R.id.log_file_list_dlg_done);
@@ -458,19 +476,20 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
 
 		mThemeColorList=ThemeUtil.getThemeColorList(getActivity());
 		createTempLogFile();
-		
-		final Dialog dialog=new Dialog(getActivity());
-		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); 
+
+
+        final Dialog dialog=new Dialog(getActivity(), ThemeUtil.getAppTheme(getActivity()));
+		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		dialog.setContentView(R.layout.confirm_send_log_dlg);
 		dialog.setCanceledOnTouchOutside(false);
 		
 		LinearLayout title_view=(LinearLayout)dialog.findViewById(R.id.confirm_send_log_dlg_title_view);
-		title_view.setBackgroundColor(mThemeColorList.dialog_title_background_color);
+		title_view.setBackgroundColor(mThemeColorList.title_background_color);
 		TextView title=(TextView)dialog.findViewById(R.id.confirm_send_log_dlg_title);
-		title.setTextColor(mThemeColorList.text_color_dialog_title);
+		title.setTextColor(mThemeColorList.title_text_color);
 		TextView msg=(TextView)dialog.findViewById(R.id.confirm_send_log_dlg_msg);
-		msg.setTextColor(mThemeColorList.text_color_primary);
-		msg.setBackgroundColor(mThemeColorList.dialog_msg_background_color);
+//		msg.setTextColor(mThemeColorList.text_color_primary);
+//		msg.setBackgroundColor(mThemeColorList.dialog_msg_background_color);
 		msg.setText(mSendMessage);
 		
 		final Button btn_ok=(Button)dialog.findViewById(R.id.confirm_send_log_dlg_ok_btn);

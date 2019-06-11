@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -169,8 +170,9 @@ public class PasswordInputDialogFragment extends DialogFragment {
 	@Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
     	if (DEBUG_ENABLE) Log.v(APPLICATION_TAG,"onCreateDialog terminateRequired="+terminateRequired);
-    	mDialog=new Dialog(getActivity());//, MiscUtil.getAppTheme(getActivity()));
+    	mDialog=new Dialog(getActivity(), ThemeUtil.getAppTheme(getActivity()));//, MiscUtil.getAppTheme(getActivity()));
 		mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 		mDialog.setCanceledOnTouchOutside(false);
 
 		if (!terminateRequired) {
@@ -214,13 +216,13 @@ public class PasswordInputDialogFragment extends DialogFragment {
     	ImageView title_icon=(ImageView)mDialog.findViewById(R.id.password_input_dlg_icon);
     	TextView title=(TextView)mDialog.findViewById(R.id.password_input_dlg_title);
     	LinearLayout title_view=(LinearLayout)mDialog.findViewById(R.id.password_input_dlg_title_view);
-    	title_view.setBackgroundColor(mThemeColorList.dialog_title_background_color);
+    	title_view.setBackgroundColor(mThemeColorList.title_background_color);
     	
     	LinearLayout btn_view=(LinearLayout)mDialog.findViewById(R.id.common_dialog_btn_view);
-    	btn_view.setBackgroundColor(mThemeColorList.dialog_msg_background_color);
+//    	btn_view.setBackgroundColor(mThemeColorList.dialog_msg_background_color);
     	
 		title_icon.setImageResource(R.drawable.dialog_information);
-		title.setTextColor(mThemeColorList.text_color_info);
+		title.setTextColor(mThemeColorList.title_text_color);
 		title.setText(mDialogTitle);
 		mDlgMsg=(TextView)mDialog.findViewById(R.id.password_input_preference_msg);
 		
@@ -228,10 +230,10 @@ public class PasswordInputDialogFragment extends DialogFragment {
 		final Button btnCancel = (Button) mDialog.findViewById(R.id.common_dialog_btn_cancel);
 		btnCancel.setVisibility(View.VISIBLE);
 		
-		if (Build.VERSION.SDK_INT<=10 && mThemeColorList.theme_is_light) {
-			btnOk.setTextColor(mThemeColorList.text_color_info);
-			btnCancel.setTextColor(mThemeColorList.text_color_info);
-		}
+//		if (Build.VERSION.SDK_INT<=10 && mThemeColorList.theme_is_light) {
+//			btnOk.setTextColor(mThemeColorList.text_color_info);
+//			btnCancel.setTextColor(mThemeColorList.text_color_info);
+//		}
 		
 		newPasswdEditText=(EditText)mDialog.findViewById(R.id.password_input_preference_new_pswd);
 		confirmPasswdEditText=(EditText)mDialog.findViewById(R.id.password_input_preference_conf_pswd);

@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <style name="Main" parent="Base.Theme.AppCompat" >
-    </style>
-    <style name="MainLight" parent="Base.Theme.AppCompat.Light.DarkActionBar" >
-	</style>
-</resources>

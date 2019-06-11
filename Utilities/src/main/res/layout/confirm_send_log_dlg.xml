@@ -4,6 +4,8 @@
     android:id="@+id/confirm_send_log_dlg_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="7dp"
+    android:background="@drawable/dialog_box_outline"
     android:orientation="vertical"
     tools:ignore="UseCompoundDrawables,ContentDescription" >
 

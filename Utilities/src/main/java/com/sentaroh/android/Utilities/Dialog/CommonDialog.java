@@ -30,8 +30,10 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.support.v4.app.FragmentManager;
+import android.view.Gravity;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
+import android.view.WindowManager;
 
 public class CommonDialog {
 	private FragmentManager mFragMgr =null;
@@ -43,8 +45,7 @@ public class CommonDialog {
 	public void showCommonDialog(
 			final boolean negative, String type, String title, String msgtext,
 			final NotifyEvent ntfy) {
-        MessageDialogFragment cdf =MessageDialogFragment.newInstance(
-        		negative, type, title, msgtext);
+        MessageDialogFragment cdf =MessageDialogFragment.newInstance(negative, type, title, msgtext);
         cdf.showDialog(mFragMgr,cdf,ntfy);
 	};
 
@@ -57,104 +58,92 @@ public class CommonDialog {
         return dialog;
     }
 
-    @SuppressWarnings("deprecation")
-	static public void setDlgBoxSizeCompact(Dialog dlg) {
-		if (dlg==null) return;
-		int w=dlg.getWindow().getWindowManager().getDefaultDisplay().getWidth();
-		int h=dlg.getWindow().getWindowManager().getDefaultDisplay().getHeight();
+    static public void setDlgBoxSizeCompact(Dialog dialog) {
+		if (dialog==null) return;
+		int w=dialog.getWindow().getWindowManager().getDefaultDisplay().getWidth();
+		int h=dialog.getWindow().getWindowManager().getDefaultDisplay().getHeight();
 		int nw=0;
 		
 		if (w>h) {//Landscape
-//			Log.v("","Landscape");
 			if (w>800) {
 				if (w>=1200) nw=(w/3)*2;
 				else nw=800;
 			} else nw=LayoutParams.FILL_PARENT;
 		} else {//Portrait
-//			Log.v("","Portlait");
 			nw=LayoutParams.FILL_PARENT;
 		}
-		dlg.getWindow().setLayout(nw, LayoutParams.WRAP_CONTENT);
-//		Log.v("","w="+w+", h="+h+", nw="+nw);
-		
+		dialog.getWindow().setLayout(nw, LayoutParams.WRAP_CONTENT);
 	};
-	
-	@SuppressWarnings("deprecation")
+
+    static public void setDlgBoxSizeCompactWithInput(Dialog dialog) {
+        if (dialog==null) return;
+        setDlgBoxSizeCompact(dialog);
+
+        WindowManager.LayoutParams lp=dialog.getWindow().getAttributes();
+        lp.gravity= Gravity.TOP;
+        lp.verticalMargin=0.1f;
+        dialog.getWindow().setAttributes(lp);
+
+    };
+
 	static public void setDlgBoxSizeLimit(Dialog dlg,boolean set_max) {
 		if (dlg==null) return;
-//		int w=dlg.getWindow().getWindowManager().getDefaultDisplay().getWidth();
-//		int h=dlg.getWindow().getWindowManager().getDefaultDisplay().getHeight();
 		if (!set_max) {// W=fill_parent H=fill_parent
 			setDlgBoxSizeCompact(dlg);
 		} else {// W=fill_parent H=wrap_content
 			dlg.getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
 		}
 	};
-	
-	@SuppressWarnings("deprecation")
+
+    static public void setDlgBoxSizeLimitWithInput(Dialog dlg,boolean set_max) {
+        if (dlg==null) return;
+        if (!set_max) {// W=fill_parent H=fill_parent
+            setDlgBoxSizeCompactWithInput(dlg);
+        } else {// W=fill_parent H=wrap_content
+            dlg.getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+        }
+    };
+
+    @SuppressWarnings("deprecation")
 	static public void setDlgBoxSizeHeightMax(Dialog dlg) {
 		if (dlg==null) return;
 			dlg.getWindow().setLayout(LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT);
 	};
 
-//	public void fileSelectWithCreate(String lurl, String ldir, 
+//	public void fileOnlySelectWithCreate(String lurl, String ldir,
 //			String file_name,String dlg_title, NotifyEvent ntfy) {
-//		fileSelect(true,false,false,lurl,ldir,file_name,dlg_title,ntfy);
+//		fileSelect(true,true,false,lurl,ldir,file_name,dlg_title,ntfy);
 //	};
-//	public void fileSelectWithCreateMP(String lurl, String ldir, 
+//	public void fileOnlySelectWithCreateLimitMP(String lurl, String ldir,
 //			String file_name,String dlg_title, NotifyEvent ntfy) {
-//		fileSelect(true,false,true,lurl,ldir,file_name,dlg_title,ntfy);
+//		FileSelectDialogFragment fsdf=
+//				FileSelectDialogFragment.newInstance(false, true, true, false, false, true, true, lurl, ldir,
+//					file_name, dlg_title);
+//		fsdf.showDialog(mFragMgr, fsdf, ntfy);
 //	};
-//	public void fileSelectWithoutCreate(String lurl, String ldir, 
+//	public void fileOnlySelectWithCreateHideMP(String lurl, String ldir,
 //			String file_name,String dlg_title, NotifyEvent ntfy) {
-//		fileSelect(false,false,false,lurl,ldir,file_name,dlg_title,ntfy);
+//		fileSelect(true,true,true,lurl,ldir,file_name,dlg_title,ntfy);
 //	};
-//	public void fileSelectWithoutCreateMP(String lurl, String ldir, 
+//	public void fileOnlySelectWithoutCreate(String lurl, String ldir,
 //			String file_name,String dlg_title, NotifyEvent ntfy) {
-//		fileSelect(false,false,true,lurl,ldir,file_name,dlg_title,ntfy);
+//		fileSelect(false,true,false,lurl,ldir,file_name,dlg_title,ntfy);
 //	};
-	public void fileOnlySelectWithCreate(String lurl, String ldir, 
-			String file_name,String dlg_title, NotifyEvent ntfy) {
-		fileSelect(true,true,false,lurl,ldir,file_name,dlg_title,ntfy);
-	};
-	public void fileOnlySelectWithCreateLimitMP(String lurl, String ldir, 
-			String file_name,String dlg_title, NotifyEvent ntfy) {
-		FileSelectDialogFragment fsdf=
-				FileSelectDialogFragment.newInstance(false, true, true, false, false, true, true, lurl, ldir, 
-					file_name, dlg_title);
-		fsdf.showDialog(mFragMgr, fsdf, ntfy);
-	};
-	public void fileOnlySelectWithCreateHideMP(String lurl, String ldir, 
-			String file_name,String dlg_title, NotifyEvent ntfy) {
-		fileSelect(true,true,true,lurl,ldir,file_name,dlg_title,ntfy);
-	};
-	public void fileOnlySelectWithoutCreate(String lurl, String ldir, 
-			String file_name,String dlg_title, NotifyEvent ntfy) {
-		fileSelect(false,true,false,lurl,ldir,file_name,dlg_title,ntfy);
-	};
-	public void fileOnlySelectWithoutCreateHideMP(String lurl, String ldir, 
-			String file_name,String dlg_title, NotifyEvent ntfy) {
-		fileSelect(false,true,true,lurl,ldir,file_name,dlg_title,ntfy);
-	};
-//	public void fileSelect(boolean enableCreate,final String lurl, final String ldir, 
-//			String file_name,String dlg_title, final NotifyEvent ntfy) {
-//		fileSelect(false,false,false,lurl,ldir,file_name,dlg_title,ntfy);
+//	public void fileOnlySelectWithoutCreateHideMP(String lurl, String ldir,
+//			String file_name,String dlg_title, NotifyEvent ntfy) {
+//		fileSelect(false,true,true,lurl,ldir,file_name,dlg_title,ntfy);
+//	};
+//	public void fileSelect(boolean enableCreate,boolean fileOnly, boolean hideMp, final String lurl,
+//			final String ldir, String file_name,String dlg_title, final NotifyEvent ntfy) {
+//
+//		boolean include_root=false;
+//		FileSelectDialogFragment fsdf=
+//				FileSelectDialogFragment.newInstance(false, enableCreate, fileOnly, hideMp, include_root,
+//						true, lurl, ldir, file_name, dlg_title);
+//		fsdf.showDialog(mFragMgr, fsdf, ntfy);
 //	}
-//	public void fileSelectHideMP(boolean enableCreate,final String lurl, final String ldir, 
-//			String file_name,String dlg_title, final NotifyEvent ntfy) {
-//		fileSelect(false,false,true,lurl,ldir,file_name,dlg_title,ntfy);
-//	}
-	public void fileSelect(boolean enableCreate,boolean fileOnly, boolean hideMp, final String lurl, 
-			final String ldir, String file_name,String dlg_title, final NotifyEvent ntfy) {
-		
-		boolean include_root=false;
-		FileSelectDialogFragment fsdf=
-				FileSelectDialogFragment.newInstance(false, enableCreate, fileOnly, hideMp, include_root, 
-						true, lurl, ldir, file_name, dlg_title);
-		fsdf.showDialog(mFragMgr, fsdf, ntfy);
-	}
 
-    public void fileSelectorFileOnly(Boolean inc_mp, String mount_point, String dir_name, String file_name, String title, NotifyEvent ntfy) {
+    public void fileSelectorFileOnly(boolean inc_mp, String mount_point, String dir_name, String file_name, String title, NotifyEvent ntfy) {
         boolean include_root=false;
         CommonFileSelector fsdf=
                 CommonFileSelector.newInstance(false, false, false, CommonFileSelector.DIALOG_SELECT_CATEGORY_FILE,
@@ -162,7 +151,7 @@ public class CommonDialog {
         fsdf.showDialog(mFragMgr, fsdf, ntfy);
     };
 
-    public void fileSelectorFileOnlyWithCreate(Boolean inc_mp, String mount_point, String dir_name, String file_name, String title, NotifyEvent ntfy) {
+    public void fileSelectorFileOnlyWithCreate(boolean inc_mp, String mount_point, String dir_name, String file_name, String title, NotifyEvent ntfy) {
         boolean include_root=false;
         CommonFileSelector fsdf=
                 CommonFileSelector.newInstance(false, true, false, CommonFileSelector.DIALOG_SELECT_CATEGORY_FILE,
@@ -191,21 +180,21 @@ public class CommonDialog {
         fsdf.showDialog(mFragMgr, fsdf, ntfy);
     };
 
-    public void fileSelectorFileOnlyWithCreateHideMP(Boolean inc_mp, String mount_point, String dir_name, String file_name, String title, NotifyEvent ntfy) {
+    public void fileSelectorFileOnlyWithCreateHideMP(boolean inc_mp, String mount_point, String dir_name, String file_name, String title, NotifyEvent ntfy) {
         CommonFileSelector fsdf=
                 CommonFileSelector.newInstance(false, true, true, CommonFileSelector.DIALOG_SELECT_CATEGORY_FILE,
                         true, inc_mp, mount_point, dir_name, file_name, title);
         fsdf.showDialog(mFragMgr, fsdf, ntfy);
     };
 
-    public void fileSelectorDirOnlyHideMP(Boolean inc_mp, String mount_point, String dir_name, String title, NotifyEvent ntfy) {
+    public void fileSelectorDirOnlyHideMP(boolean inc_mp, String mount_point, String dir_name, String title, NotifyEvent ntfy) {
         CommonFileSelector fsdf=
                 CommonFileSelector.newInstance(false, false, true, CommonFileSelector.DIALOG_SELECT_CATEGORY_DIRECTORY,
                         true, inc_mp, mount_point, dir_name, "", title);
         fsdf.showDialog(mFragMgr, fsdf, ntfy);
     };
 
-    public void fileSelectorDirOnlyWithCreateHideMP(Boolean inc_mp, String mount_point, String dir_name, String title, NotifyEvent ntfy) {
+    public void fileSelectorDirOnlyWithCreateHideMP(boolean inc_mp, String mount_point, String dir_name, String title, NotifyEvent ntfy) {
         CommonFileSelector fsdf=
                 CommonFileSelector.newInstance(false, true, true, CommonFileSelector.DIALOG_SELECT_CATEGORY_DIRECTORY,
                         true, inc_mp, mount_point, dir_name, "", title);

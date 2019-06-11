@@ -5,8 +5,8 @@
     android:id="@+id/progress_bar_dlg_fragment"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="5dp"
-    android:layout_marginRight="5dp"
+    android:padding="7dp"
+    android:background="@drawable/dialog_box_outline"
     android:orientation="vertical"
     tools:ignore="HardcodedText" >
 

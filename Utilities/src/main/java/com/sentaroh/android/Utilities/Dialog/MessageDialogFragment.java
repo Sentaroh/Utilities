@@ -64,7 +64,7 @@ public class MessageDialogFragment extends DialogFragment {
 	private NotifyEvent mNotifyEvent=null;
 	
 	private ThemeColorList mThemeColorList;
-	
+
 	public static MessageDialogFragment newInstance(
 			boolean negative, String type, String title, String msgtext) {
 		if (DEBUG_ENABLE) Log.v(APPLICATION_TAG,"newInstance sub="+title+", msg="+msgtext);
@@ -81,7 +81,8 @@ public class MessageDialogFragment extends DialogFragment {
         frag.setArguments(bundle);
         return frag;
     }
-	public void setNotifyEvent(NotifyEvent ntfy) {mNotifyEvent=ntfy;}
+
+    public void setNotifyEvent(NotifyEvent ntfy) {mNotifyEvent=ntfy;}
 
 	public MessageDialogFragment() {
 		if (DEBUG_ENABLE) Log.v(APPLICATION_TAG,"Constructor(Default) terminateRequired="+terminateRequired);
@@ -188,8 +189,10 @@ public class MessageDialogFragment extends DialogFragment {
 	@Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
     	if (DEBUG_ENABLE) Log.v(APPLICATION_TAG,"onCreateDialog terminateRequired="+terminateRequired);
-    	mDialog=new Dialog(getActivity());//, MiscUtil.getAppTheme(getActivity()));
-		mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        mDialog=new Dialog(getActivity(), ThemeUtil.getAppTheme(getActivity()));
+
+        mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		mDialog.setCanceledOnTouchOutside(false);
 
 		if (!terminateRequired) {
@@ -226,16 +229,16 @@ public class MessageDialogFragment extends DialogFragment {
     	ImageView title_icon=(ImageView)mDialog.findViewById(R.id.common_dialog_icon);
     	TextView title=(TextView)mDialog.findViewById(R.id.common_dialog_title);
     	LinearLayout title_view=(LinearLayout)mDialog.findViewById(R.id.common_dialog_title_view);
-    	title_view.setBackgroundColor(mThemeColorList.dialog_title_background_color);
+    	title_view.setBackgroundColor(mThemeColorList.title_background_color);
     	ScrollView msg_view=(ScrollView)mDialog.findViewById(R.id.common_dialog_msg_view);
-    	msg_view.setBackgroundColor(mThemeColorList.dialog_msg_background_color);
+//    	msg_view.setBackgroundColor(mThemeColorList.dialog_msg_background_color);
     	
     	LinearLayout btn_view=(LinearLayout)mDialog.findViewById(R.id.common_dialog_btn_view);
-    	btn_view.setBackgroundColor(mThemeColorList.dialog_msg_background_color);
+//    	btn_view.setBackgroundColor(mThemeColorList.dialog_msg_background_color);
     	
 		if (mDialogTitleType.equals("I")) {
 			title_icon.setImageResource(R.drawable.dialog_information);
-			title.setTextColor(mThemeColorList.text_color_info);
+//			title.setTextColor(mThemeColorList.text_color_info);
 		} else if (mDialogTitleType.equals("W")) {
 			title_icon.setImageResource(R.drawable.dialog_warning);
 //			title.setTextColor(Color.YELLOW);
@@ -243,14 +246,14 @@ public class MessageDialogFragment extends DialogFragment {
 			title_icon.setImageResource(R.drawable.dialog_error);
 //			title.setTextColor(mThemeColorList.text_color_error);
 		}
-		title.setTextColor(mThemeColorList.text_color_info);
+		title.setTextColor(mThemeColorList.title_text_color);
 		title.setText(mDialogTitle);
 		TextView msg_text=(TextView)mDialog.findViewById(R.id.common_dialog_msg);
 		if (mDialogMsgText.equals("")) msg_text.setVisibility(View.GONE);
 		else {
 			msg_text.setText(mDialogMsgText);
-			msg_text.setTextColor(mThemeColorList.text_color_primary);
-			msg_text.setBackgroundColor(mThemeColorList.dialog_msg_background_color);
+//			msg_text.setTextColor(mThemeColorList.text_color_primary);
+//			msg_text.setBackgroundColor(mThemeColorList.dialog_msg_background_color);
 		}
 		
 		final Button btnOk = (Button) mDialog.findViewById(R.id.common_dialog_btn_ok);
@@ -258,10 +261,10 @@ public class MessageDialogFragment extends DialogFragment {
 		if (mDialogTypeNegative) btnCancel.setVisibility(View.VISIBLE);
 			else  btnCancel.setVisibility(View.GONE);
 		
-		if (Build.VERSION.SDK_INT<=10 && mThemeColorList.theme_is_light) {
-			btnOk.setTextColor(mThemeColorList.text_color_info);
-			btnCancel.setTextColor(mThemeColorList.text_color_info);
-		}
+//		if (Build.VERSION.SDK_INT<=10 && mThemeColorList.theme_is_light) {
+//			btnOk.setTextColor(mThemeColorList.text_color_info);
+//			btnCancel.setTextColor(mThemeColorList.text_color_info);
+//		}
 		
 //		CommonDialog.setDlgBoxSizeCompact(mDialog);
 		

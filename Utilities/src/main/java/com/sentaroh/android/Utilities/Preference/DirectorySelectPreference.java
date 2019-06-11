@@ -47,6 +47,7 @@ import com.sentaroh.android.Utilities.TreeFilelist.TreeFilelistItem;
 import com.sentaroh.android.Utilities.Widget.CustomSpinnerAdapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.os.Handler;
@@ -281,7 +282,7 @@ public class DirectorySelectPreference extends DialogPreference{
 //		ll_dlg_view.setBackgroundColor(tcl.dialog_msg_background_color);
 
 		mLocalMountPointSpinner=(Spinner) file_select_view.findViewById(R.id.directory_select_preference_rdir);
-		setSpinnerBackground(context, mLocalMountPointSpinner, tcl.theme_is_light);
+		setSpinnerBackground(context, mLocalMountPointSpinner, ThemeUtil.isLightThemeUsed(context));
 		mLocalMountPointSpinner.setVisibility(Spinner.VISIBLE);
 		//	Root directory spinner
 	    CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(context, android.R.layout.simple_spinner_item);

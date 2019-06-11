@@ -1,146 +1,119 @@
 package com.sentaroh.android.Utilities;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Build;
+import android.util.Log;
 import android.util.TypedValue;
 
 public class ThemeUtil {
-	public static ThemeColorList getThemeColorList(Context a, boolean theme_is_light) {
-		ThemeColorList tcd=new ThemeColorList();
-//    	TypedValue ov = new TypedValue();
+    public static final int THEME_BLACK=2;
+    public static final int THEME_DEFAULT=0;
+    public static final int THEME_LIGHT=1;
 
-    	tcd.theme_is_light=theme_is_light;
-    	
-//    	a.getTheme().resolveAttribute(android.R.attr.textColorPrimary, ov, true);
-//    	tcd.text_color_primary=a.getResources().getColor(ov.resourceId);
-//    	
-//    	a.getTheme().resolveAttribute(android.R.attr.textColorPrimaryInverse, ov, true);
-//    	tcd.text_color_primary_inverse=a.getResources().getColor(ov.resourceId);
+//	public static ThemeColorList getThemeColorList(Context a, boolean theme_is_light) {
+//        ThemeColorList tcd=new ThemeColorList();
 //
-//    	if (!theme_is_light) {
-//    		tcd.text_color_primary_inverse=tcd.text_color_primary;
-//    	}
+////        tcd.theme_is_light=theme_is_light;
 //
-////    	a.getTheme().resolveAttribute(android.R.attr.textColorPrimaryDisableOnly, ov, true);
-////    	tcd.text_color_disabled=a.getResources().getColor(ov.resourceId);
-//    	if (tcd.theme_is_light) tcd.text_color_disabled=Color.GRAY; 
-//    	else tcd.text_color_disabled=Color.GRAY;
-////    	tcd.text_color_disabled=Color.DKGRAY;
+//        if (theme_is_light) {
+//            setLightTheme(tcd);
+//        } else {
+//            setDefaultTheme(tcd);
+//        }
+//        return tcd;
+//	}
 //
-//    	a.getTheme().resolveAttribute(android.R.attr.colorBackground, ov, true);
-//    	tcd.window_color_background=a.getResources().getColor(ov.resourceId);
+	private static void setLightTheme(ThemeColorList tcd) {
+        tcd.text_color_disabled=Color.GRAY;
+//        tcd.text_color_primary=0xde000000;
+//        tcd.text_color_dialog_title=0xffffffff;
+        tcd.text_background_color=0xffc0c0c0;
+//        if (Build.VERSION.SDK_INT>=21) {
+//            tcd.dialog_title_background_color=0xff303030;//515151;
+//            tcd.dialog_msg_background_color=0xffc0c0c0;
+//            tcd.window_background_color_content=0xffe0e0e0;
+//        } else {
+//            tcd.dialog_title_background_color=0xff303030;//515151;
+//            tcd.dialog_msg_background_color=0xffc0c0c0;
+//            tcd.window_background_color_content=0xffe0e0e0;
+//        }
+        tcd.text_color_warning=Color.argb(255, 192, 0, 255);//Color.argb(255, 192, 158, 0);
 //
-//    	if (Build.VERSION.SDK_INT>=21) {
-//        	a.getTheme().resolveAttribute(android.R.attr.colorPrimary, ov, true);
-//        	tcd.window_color_primary=a.getResources().getColor(ov.resourceId);
-//
-//        	a.getTheme().resolveAttribute(android.R.attr.colorPrimaryDark, ov, true);
-//        	tcd.window_color_primary_dark=a.getResources().getColor(ov.resourceId);
-//    	} else {
-//        	a.getTheme().resolveAttribute(android.R.color.background_dark, ov, true);
-//        	tcd.window_color_primary_dark=a.getResources().getColor(ov.resourceId);
-//    		tcd.window_color_primary=tcd.window_color_primary_dark;
-//    	}
+//        tcd.text_color_info=tcd.text_color_dialog_title;
+        tcd.text_color_error=Color.RED;
+        tcd.title_text_color=0xffffffff;
+        tcd.title_background_color=0xff202020;
+    }
 
-//    	if (Build.VERSION.SDK_INT>=14) {
-//        	if (theme_is_light) {
-//        		tcd.text_color_disabled=Color.GRAY;
-//        		tcd.text_color_primary=0xde000000;
-//        		tcd.text_color_dialog_title=0xde000000;//0xffffffff;
-//        		if (Build.VERSION.SDK_INT>=21) {
-//            		tcd.dialog_title_background_color=0xff808080;
-////            		tcd.dialog_msg_background_color=0xffa0a0a0;
-////            		tcd.window_background_color_content=0xffeeeeee;
-//            		tcd.dialog_msg_background_color=0xffc0c0c0;
-//            		tcd.window_background_color_content=0xffe0e0e0;
-//        		} else {
-//            		tcd.dialog_title_background_color=0xff808080;
-//            		tcd.dialog_msg_background_color=0xffb0b0b0;
-//            		tcd.window_background_color_content=0xffd0d0d0;
-//        		}
-//        	} else {
-//        		tcd.text_color_disabled=Color.GRAY;
-//        		tcd.text_color_primary=0xffffffff;
-//        		tcd.text_color_dialog_title=0xffffffff;
-//        		tcd.dialog_title_background_color=0xff303030;//515151;
-//        		tcd.dialog_msg_background_color=0xff303030;
-//        		tcd.window_background_color_content=0xff303030;
-//        	}
-//    	} else {
-//    		tcd.text_color_disabled=Color.GRAY;
-//    		tcd.text_color_primary=0xffffffff;
-//    		tcd.text_color_dialog_title=0xffffffff;
-//    		tcd.dialog_title_background_color=0xff000000;
-//    		tcd.dialog_msg_background_color=0xff303030;
-//    		tcd.window_background_color_content=0xff000000;
-//    	}
+    private static void setDefaultTheme(ThemeColorList tcd) {
+        tcd.text_color_disabled=Color.GRAY;
+//        tcd.text_color_primary=0xffffffff;
+//        tcd.text_color_dialog_title=0xffffffff;
+//        tcd.dialog_title_background_color=0xff303030;//515151;
+//        tcd.dialog_msg_background_color=0xff303030;
+        tcd.text_background_color=0xff303030;
+//        tcd.window_background_color_content=0xff303030;
+        tcd.text_color_warning=Color.YELLOW;
+//
+//        tcd.text_color_info=tcd.text_color_dialog_title;
+        tcd.text_color_error=Color.RED;
+        tcd.title_text_color=0xffffffff;
+//        tcd.title_background_color=0xff303030;
+        tcd.title_background_color=0xff202020;
+    }
 
-    	if (theme_is_light) {
-    		tcd.text_color_disabled=Color.GRAY;
-    		tcd.text_color_primary=0xde000000;
-//    		tcd.text_color_dialog_title=0xde000000;//0xffffffff;
-    		tcd.text_color_dialog_title=0xffffffff;
-    		if (Build.VERSION.SDK_INT>=21) {
-//        		tcd.dialog_title_background_color=0xff808080;
-        		tcd.dialog_title_background_color=0xff303030;//515151;
-//        		tcd.dialog_msg_background_color=0xffa0a0a0;
-//        		tcd.window_background_color_content=0xffeeeeee;
-        		tcd.dialog_msg_background_color=0xffc0c0c0;
-        		tcd.window_background_color_content=0xffe0e0e0;
-    		} else {
-//        		tcd.dialog_title_background_color=0xff808080;
-//        		tcd.dialog_msg_background_color=0xffb0b0b0;
-//        		tcd.window_background_color_content=0xffd0d0d0;
-        		tcd.dialog_title_background_color=0xff303030;//515151;
-        		tcd.dialog_msg_background_color=0xffc0c0c0;
-        		tcd.window_background_color_content=0xffe0e0e0;
-    		}
-    	} else {
-    		tcd.text_color_disabled=Color.GRAY;
-    		tcd.text_color_primary=0xffffffff;
-    		tcd.text_color_dialog_title=0xffffffff;
-    		tcd.dialog_title_background_color=0xff303030;//515151;
-    		tcd.dialog_msg_background_color=0xff303030;
-    		tcd.window_background_color_content=0xff303030;
-    	}
+    private static void setBlackTheme(ThemeColorList tcd) {
+        tcd.text_color_disabled=Color.GRAY;
+//        tcd.text_color_primary=0xffffffff;
+//        tcd.text_color_dialog_title=0xffffffff;
+//        tcd.dialog_title_background_color=0xff000000;//515151;
+//        tcd.dialog_msg_background_color=0xff000000;
+        tcd.text_background_color=0xff000000;
+//        tcd.window_background_color_content=0xff000000;
+        tcd.text_color_warning=Color.YELLOW;
+//
+//        tcd.text_color_info=tcd.text_color_dialog_title;
+        tcd.text_color_error=Color.RED;
+        tcd.title_text_color=0xffffffff;
+        tcd.title_background_color=0xff000000;
+    }
 
-    	if (tcd.theme_is_light) {
-    		tcd.text_color_warning=Color.argb(255, 192, 0, 255);//Color.argb(255, 192, 158, 0);
-    	} else {
-    		tcd.text_color_warning=Color.YELLOW;
-    	}
-    	tcd.text_color_info=tcd.text_color_dialog_title;
-    	tcd.text_color_error=Color.RED;
-//    	Thread.currentThread().dumpStack();
-//    	Log.v("ThemeColorList","theme_is_light="+tcd.theme_is_light+
-//    			", text_color_primary="+String.format("0x%08x", tcd.text_color_primary)+
-//    			", text_color_primary_inverse="+String.format("0x%08x", tcd.text_color_dialog_title)+
-//    			", text_color_disabled="+String.format("0x%08x", tcd.text_color_disabled)+
-//    			", text_color_info="+String.format("0x%08x", tcd.text_color_info)+
-//    			", text_color_warning="+String.format("0x%08x", tcd.text_color_warning)+
-//    			", text_color_errpr="+String.format("0x%08x", tcd.text_color_error)+
-//    			", window_color_dialog_title="+String.format("0x%08x", tcd.window_color_dialog_title)+
-//    			", window_color_dialog_content="+String.format("0x%08x", tcd.window_color_dialog_content)
-//    			);
-    	return tcd;
-	}
-	
-	public static ThemeColorList getThemeColorList(Context a) {
-    	TypedValue outValue = new TypedValue();
-    	boolean theme_is_light=
-    			a.getTheme().resolveAttribute(R.attr.isLightTheme, outValue, true) && outValue.data != 0;
-    	return getThemeColorList(a,theme_is_light);
-	}
 
-	public static int getAppTheme(Context a) {
-		int theme=0;
-    	TypedValue outValue = new TypedValue();
-    	boolean theme_is_light=
-    			a.getTheme().resolveAttribute(R.attr.isLightTheme, outValue, true) && outValue.data != 0;
-    	if (theme_is_light) theme=R.style.MainLight; 
+    public static ThemeColorList getThemeColorList(Context a) {
+        ThemeColorList tcd=new ThemeColorList();
+
+        TypedValue outValue = new TypedValue();
+        boolean rc=a.getTheme().resolveAttribute(R.attr.AppUsedTheme, outValue, true);
+        int theme=0;
+        if (outValue.data==THEME_LIGHT) {
+            setLightTheme(tcd);
+        } else if (outValue.data==THEME_BLACK) {
+            setBlackTheme(tcd);
+        } else {
+            setDefaultTheme(tcd);
+        }
+
+        return tcd;
+    }
+
+    public static int getAppTheme(Context a) {
+        TypedValue outValue = new TypedValue();
+        boolean rc=a.getTheme().resolveAttribute(R.attr.AppUsedTheme, outValue, true);
+        int theme=0;
+    	if (outValue.data==THEME_LIGHT) theme=R.style.MainLight;
+    	else if (outValue.data==THEME_BLACK) theme=R.style.MainBlack;
     	else theme=R.style.Main;
     	return theme;
 	}
+
+    public static boolean isLightThemeUsed(Context a) {
+        TypedValue outValue = new TypedValue();
+        boolean rc=a.getTheme().resolveAttribute(R.attr.AppUsedTheme, outValue, true);
+        boolean result=false;
+        if (outValue.data==THEME_LIGHT) result=true;
+        return result;
+    }
 
 }

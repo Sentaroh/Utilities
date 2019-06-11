@@ -9,6 +9,9 @@ import android.text.Layout;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextPaint;
+import android.util.Log;
+
+import com.sentaroh.android.Utilities.StringUtil;
 
 public class CustomTextViewFilter implements InputFilter {
     private final CustomTextView view;
@@ -24,8 +27,8 @@ public class CustomTextViewFilter implements InputFilter {
         int wpl = view.getCompoundPaddingLeft();
         int wpr = view.getCompoundPaddingRight();
         int width = w - wpl - wpr;
-//        Log.v("","source="+source);
-//        Log.v("","start="+start+", end="+end+", width="+width+", w="+w+", wpl="+wpl+", wpr="+wpr);
+//        Log.v("CustomTextView","source="+source);
+//        Log.v("CustomTextView","start="+start+", end="+end+", width="+width+", w="+w+", wpl="+wpl+", wpr="+wpr);
 
         if (width<=0) return source;//Modified by F.Hoshino 2018/08/29
         SpannableStringBuilder result = new SpannableStringBuilder();
@@ -35,18 +38,18 @@ public class CustomTextViewFilter implements InputFilter {
                 result.append(source.subSequence(start, index));
                 result.append("\n");
                 start = index;
-//                Log.v("","result="+result);
+//                Log.v("CustomTextView","Append cr/lf, result="+result);
             } else if (source.charAt(index) == '\n') {
                 result.append(source.subSequence(start, index));
                 start = index;
             }
-//            Log.v("","start="+start+", end="+end+", index="+index+", rts="+rts);
+//            Log.v("CustomTextView","start="+start+", end="+end+", index="+index+", rts="+rts);
         }
 
         if (start < end) {
             result.append(source.subSequence(start, end));
         }
-//        Log.v("","result="+ StringUtil.getDumpFormatHexString(result.toString().getBytes(), 0,result.toString().getBytes().length));
+//        Log.v("CustomTextView","result="+ StringUtil.getDumpFormatHexString(result.toString().getBytes(), 0,result.toString().getBytes().length));
         return result;
     }
 }

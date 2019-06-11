@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:padding="7dp"
+    android:background="@drawable/dialog_box_outline"
     android:orientation="vertical"
     tools:ignore="SpUsage,UseCompoundDrawables,ContentDescription" >
 

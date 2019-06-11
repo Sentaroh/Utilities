@@ -16,6 +16,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -248,12 +249,18 @@ public class CommonFileSelector extends DialogFragment {
         super.onDismiss(di);
     }
 
+    private ThemeColorList mThemeColorList=null;
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         slf4jLog.info("onCreateDialog");
-        mDialog=new Dialog(getActivity());//, MiscUtil.getAppTheme(getActivity()));
+
+        mDialog=new Dialog(getActivity(), ThemeUtil.getAppTheme(getActivity()));
+
         mDialog.setCanceledOnTouchOutside(false);
         mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        mThemeColorList=ThemeUtil.getThemeColorList(getActivity());
 
         if (!mTerminateRequired) {
             initViewWidget();
@@ -365,7 +372,6 @@ public class CommonFileSelector extends DialogFragment {
     private ListView mTreeFileListView=null;
     private TreeFilelistAdapter mTreeFilelistAdapter=null;
     private Spinner mLocalMountPointSpinner=null;
-    private ThemeColorList mThemeColorList;
 
     private void initViewWidget() {
         slf4jLog.info("initViewWidget");
@@ -375,13 +381,11 @@ public class CommonFileSelector extends DialogFragment {
                 ", ldir="+mDialogLocalDir+", file name="+mDialogFileName);
 
 
-        mThemeColorList= ThemeUtil.getThemeColorList(getActivity());
-
         mDialog.setContentView(R.layout.common_file_selector_dlg);
         LinearLayout title_view=(LinearLayout)mDialog.findViewById(R.id.common_file_selector_dlg_title_view);
-        title_view.setBackgroundColor(mThemeColorList.dialog_title_background_color);
+        title_view.setBackgroundColor(mThemeColorList.title_background_color);
         TextView title=(TextView)mDialog.findViewById(R.id.common_file_selector_dlg_title);
-        title.setTextColor(mThemeColorList.text_color_dialog_title);
+        title.setTextColor(mThemeColorList.title_text_color);
         title.setText(mDialogTitle);
         final TextView dlg_msg = (TextView) mDialog.findViewById(R.id.common_file_selector_dlg_msg);
 //        dlg_msg.setVisibility(TextView.GONE);
@@ -389,28 +393,28 @@ public class CommonFileSelector extends DialogFragment {
 //        btnHome.setTextColor(mThemeColorList.text_color_primary);
 //        btnHome.setVisibility(Button.VISIBLE);
         final Button btnCreate = (Button) mDialog.findViewById(R.id.common_file_selector_create_btn);
-        btnCreate.setTextColor(mThemeColorList.text_color_primary);
+//        btnCreate.setTextColor(mThemeColorList.text_color_primary);
         final Button btnOk = (Button) mDialog.findViewById(R.id.common_file_selector_btn_ok);
 //		btnOk.setTextColor(mThemeColorList.text_color_primary);
         final Button btnCancel = (Button)mDialog.findViewById(R.id.common_file_selector_btn_cancel);
-        btnCancel.setTextColor(mThemeColorList.text_color_primary);
+//        btnCancel.setTextColor(mThemeColorList.text_color_primary);
         final Button btnRefresh = (Button) mDialog.findViewById(R.id.common_file_selector_refresh_btn);
-        btnRefresh.setTextColor(mThemeColorList.text_color_primary);
+//        btnRefresh.setTextColor(mThemeColorList.text_color_primary);
         final TextView tv_empty = (TextView) mDialog.findViewById(R.id.common_file_selector_empty);
 
         final Button btnTop = (Button)mDialog.findViewById(R.id.common_file_selector_top_btn);
-        btnTop.setTextColor(mThemeColorList.text_color_primary);
-        if (mThemeColorList.theme_is_light) btnTop.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_16_go_top_dark, 0, 0, 0);
+//        btnTop.setTextColor(mThemeColorList.text_color_primary);
+        if (ThemeUtil.isLightThemeUsed(getActivity())) btnTop.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_16_go_top_dark, 0, 0, 0);
         else btnTop.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_16_go_top_light, 0, 0, 0);
 
         final Button btnUp = (Button)mDialog.findViewById(R.id.common_file_selector_up_btn);
-        btnUp.setTextColor(mThemeColorList.text_color_primary);
-        if (mThemeColorList.theme_is_light) btnUp.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_16_go_up_dark, 0, 0, 0);
+//        btnUp.setTextColor(mThemeColorList.text_color_primary);
+        if (ThemeUtil.isLightThemeUsed(getActivity())) btnUp.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_16_go_up_dark, 0, 0, 0);
         else btnUp.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_16_go_up_light, 0, 0, 0);
 
 
         LinearLayout ll_dlg_view=(LinearLayout) mDialog.findViewById(R.id.common_file_selector_dlg_view);
-        ll_dlg_view.setBackgroundColor(mThemeColorList.dialog_msg_background_color);
+//        ll_dlg_view.setBackgroundColor(mThemeColorList.dialog_msg_background_color);
 
 
         final Activity activity=getActivity();
@@ -423,7 +427,7 @@ public class CommonFileSelector extends DialogFragment {
         }
 
         mLocalMountPointSpinner=(Spinner) mDialog.findViewById(R.id.common_file_selector_storage_spinner);
-        setSpinnerBackground(context, mLocalMountPointSpinner, mThemeColorList.theme_is_light);
+        setSpinnerBackground(context, mLocalMountPointSpinner, ThemeUtil.isLightThemeUsed(getActivity()));
         mLocalMountPointSpinner.setVisibility(Spinner.VISIBLE);
         //	Root directory spinner
         CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(activity, android.R.layout.simple_spinner_item);
@@ -488,7 +492,7 @@ public class CommonFileSelector extends DialogFragment {
         //	final TextView v_spacer=(TextView)mDialog.findViewById(R.id.file_select_edit_dlg_spacer);
         mTreeFileListView = (ListView) mDialog.findViewById(R.id.common_file_selector_list);
         final CustomTextView dir_path = (CustomTextView) mDialog.findViewById(R.id.common_file_selector_filepath);
-        dir_path.setTextColor(mThemeColorList.text_color_primary);
+//        dir_path.setTextColor(mThemeColorList.text_color_primary);
         final LinearLayout ll_dir_name = (LinearLayout) mDialog.findViewById(R.id.common_file_selector_dir_name_view);
         final LinearLayout ll_file_name = (LinearLayout) mDialog.findViewById(R.id.common_file_selector_file_name_view);
         final TextView hdr_file_name = (TextView) mDialog.findViewById(R.id.common_file_selector_hdr_file_name);

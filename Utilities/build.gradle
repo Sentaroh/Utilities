@@ -24,7 +24,8 @@ android {
             libraryVariants.all { variant ->
                 if (variant.buildType.name.equals("release")) {
                     variant.outputs.all {
-                        def mod_name = variant.getPackageLibrary().baseName
+//                        def mod_name = variant.getPackageLibrary().baseName
+                        def mod_name = "${rootProject.name}"
                         def fileExtension= outputFileName.toString().substring(outputFileName.toString().lastIndexOf(".")+1)
 //                        def newName = "${mod_name}_${verName}_${verCode}.${fileExtension}"
                         def newName = "${mod_name}-${verName}.${fileExtension}"

@@ -4,6 +4,8 @@
     android:id="@+id/progress_spin_dlg_fragment"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    android:padding="7dp"
+    android:background="@drawable/dialog_box_outline"
     android:orientation="vertical" >
 
     <LinearLayout
@@ -20,7 +22,8 @@
 		    android:minHeight="32dp"
 		    android:text=""
 		    android:textAppearance="?android:attr/textAppearanceLarge" />
-				<include layout="@layout/divider_line1_turquoise" />
+		
+		<include layout="@layout/divider_line1_turquoise" />
     </LinearLayout>
     <LinearLayout
         android:id="@+id/progress_spin_dlg_fragment_ll_ps"
@@ -34,12 +37,14 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="5dp" />
-	    <LinearLayout
+
+	    <LinearLayout
 	        android:layout_width="0dp"
 	        android:layout_height="wrap_content"
 	        android:layout_weight="1"
 	        android:orientation="vertical" >
-        	        <TextView
+        
+	        <TextView
 	            android:id="@+id/progress_spin_dlg_fragment_msg"
 	            android:layout_width="fill_parent"
 	            android:layout_height="wrap_content"
