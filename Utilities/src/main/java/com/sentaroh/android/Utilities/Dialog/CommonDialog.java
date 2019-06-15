@@ -29,7 +29,9 @@ import com.sentaroh.android.Utilities.R;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.v4.app.FragmentManager;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
@@ -58,6 +60,11 @@ public class CommonDialog {
         return dialog;
     }
 
+    final static public float toPixel(Resources res, int dip) {
+        float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip, res.getDisplayMetrics());
+        return px;
+    }
+
     static public void setDlgBoxSizeCompact(Dialog dialog) {
 		if (dialog==null) return;
 		int w=dialog.getWindow().getWindowManager().getDefaultDisplay().getWidth();
@@ -77,16 +84,22 @@ public class CommonDialog {
 
     static public void setDlgBoxSizeCompactWithInput(Dialog dialog) {
         if (dialog==null) return;
+        setDlgBoxSizeCompactWithInput(dialog, (int)toPixel(dialog.getContext().getResources(), 80));
+
+    };
+
+    static public void setDlgBoxSizeCompactWithInput(Dialog dialog, int margin_pix) {
+        if (dialog==null) return;
         setDlgBoxSizeCompact(dialog);
 
         WindowManager.LayoutParams lp=dialog.getWindow().getAttributes();
         lp.gravity= Gravity.TOP;
-        lp.verticalMargin=0.1f;
+        lp.y=margin_pix;
         dialog.getWindow().setAttributes(lp);
 
     };
 
-	static public void setDlgBoxSizeLimit(Dialog dlg,boolean set_max) {
+    static public void setDlgBoxSizeLimit(Dialog dlg,boolean set_max) {
 		if (dlg==null) return;
 		if (!set_max) {// W=fill_parent H=fill_parent
 			setDlgBoxSizeCompact(dlg);

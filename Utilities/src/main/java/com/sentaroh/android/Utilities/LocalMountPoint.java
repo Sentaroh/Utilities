@@ -349,7 +349,8 @@ public class LocalMountPoint {
 
 		addMountPointPrimaryAndSecondary("/storage/extSdCard", ml, pkg_name);
 		addMountPointPrimaryAndSecondary("/mnt/extSdCard", ml, pkg_name);
-		addMountPointPrimaryAndSecondary("/sdcard/external_sd", ml, pkg_name);
+        addMountPointPrimaryAndSecondary("/sdcard/external_sd", ml, pkg_name);
+		addMountPointPrimaryAndSecondary("/storage/external_SD", ml, pkg_name);
 
 //		File[] ext_dirs =ContextCompat.getExternalFilesDirs(c, null);
         File[] ext_dirs =c.getExternalFilesDirs(null);
