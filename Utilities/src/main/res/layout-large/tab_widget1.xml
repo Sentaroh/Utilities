@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:gravity="center_vertical"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/tab_textcolor_selector"
         />
 

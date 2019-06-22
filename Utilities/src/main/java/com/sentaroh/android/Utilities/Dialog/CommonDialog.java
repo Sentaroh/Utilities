@@ -67,20 +67,27 @@ public class CommonDialog {
 
     static public void setDlgBoxSizeCompact(Dialog dialog) {
 		if (dialog==null) return;
-		int w=dialog.getWindow().getWindowManager().getDefaultDisplay().getWidth();
-		int h=dialog.getWindow().getWindowManager().getDefaultDisplay().getHeight();
-		int nw=0;
-		
-		if (w>h) {//Landscape
-			if (w>800) {
-				if (w>=1200) nw=(w/3)*2;
-				else nw=800;
-			} else nw=LayoutParams.FILL_PARENT;
-		} else {//Portrait
-			nw=LayoutParams.FILL_PARENT;
-		}
-		dialog.getWindow().setLayout(nw, LayoutParams.WRAP_CONTENT);
-	};
+        setDefaultDlgBoxSizeCompact(dialog);
+        setDlgBoxPosition(dialog, (int)toPixel(dialog.getContext().getResources(), 80));
+    };
+
+    static private void setDefaultDlgBoxSizeCompact(Dialog dialog) {
+        if (dialog==null) return;
+        int w=dialog.getWindow().getWindowManager().getDefaultDisplay().getWidth();
+        int h=dialog.getWindow().getWindowManager().getDefaultDisplay().getHeight();
+        int nw=0;
+
+        if (w>h) {//Landscape
+            if (w>800) {
+                if (w>=1200) nw=(w/3)*2;
+                else nw=800;
+            } else nw=LayoutParams.FILL_PARENT;
+        } else {//Portrait
+            nw=LayoutParams.FILL_PARENT;
+        }
+        dialog.getWindow().setLayout(nw, LayoutParams.WRAP_CONTENT);
+
+    };
 
     static public void setDlgBoxSizeCompactWithInput(Dialog dialog) {
         if (dialog==null) return;
@@ -90,14 +97,17 @@ public class CommonDialog {
 
     static public void setDlgBoxSizeCompactWithInput(Dialog dialog, int margin_pix) {
         if (dialog==null) return;
-        setDlgBoxSizeCompact(dialog);
+        setDefaultDlgBoxSizeCompact(dialog);
 
+        setDlgBoxPosition(dialog, margin_pix);
+    };
+
+    static private void setDlgBoxPosition(Dialog dialog, int margin_pix) {
         WindowManager.LayoutParams lp=dialog.getWindow().getAttributes();
         lp.gravity= Gravity.TOP;
         lp.y=margin_pix;
         dialog.getWindow().setAttributes(lp);
-
-    };
+    }
 
     static public void setDlgBoxSizeLimit(Dialog dlg,boolean set_max) {
 		if (dlg==null) return;
