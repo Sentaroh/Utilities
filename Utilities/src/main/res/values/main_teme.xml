@@ -16,6 +16,7 @@
     </style>
 
     <style name="MainLight" parent="Base.Theme.AppCompat.Light.DarkActionBar" >
+        <item name="android:textColor">@color/textColorLight</item>
         <item name="android:spinnerStyle">@style/spinner_light</item>
         <item name="AppUsedTheme">1</item>
     </style>
