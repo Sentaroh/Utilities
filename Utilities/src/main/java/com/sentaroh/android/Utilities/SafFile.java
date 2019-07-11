@@ -65,7 +65,7 @@ public class SafFile {
         mPath="/"+uri.getPath().substring(uri.getPath().lastIndexOf(":")+1);
     }
 
-    void setParentFile(SafFile parent) {mParentFile=parent;}
+    public void setParentFile(SafFile parent) {mParentFile=parent;}
     public SafFile getParentFile() {return mParentFile;}
 
     public String getPath() { return mPath;}
