@@ -72,6 +72,9 @@ import com.sentaroh.android.Utilities.ThemeUtil;
 import com.sentaroh.android.Utilities.ThreadCtrl;
 import com.sentaroh.android.Utilities.ZipUtil;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -80,7 +83,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class CommonLogFileListDialogFragment extends DialogFragment{
-	private final static boolean DEBUG_ENABLE=false;
+    private final static Logger log= LoggerFactory.getLogger(CommonLogFileListDialogFragment.class);
+//	private final static boolean log.isInfoEnabled()=false;
 	private final static String APPLICATION_TAG="LogFileManagement";
 
 	private final static String MAIL_TO="gm.developer.fhoshino@gmail.com";
@@ -108,7 +112,7 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
 
 	public static CommonLogFileListDialogFragment newInstance(boolean retainInstance, String title,
                                                               String send_msg, String enable_msg, String send_subject) {
-		if (DEBUG_ENABLE) Log.v(APPLICATION_TAG,"newInstance");
+		if (log.isInfoEnabled()) log.info("newInstance");
 		CommonLogFileListDialogFragment frag = new CommonLogFileListDialogFragment();
         Bundle bundle = new Bundle();
         bundle.putString("theme_id", "");
@@ -124,7 +128,7 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
 
     public static CommonLogFileListDialogFragment newInstance(String theme_id, boolean retainInstance, String title,
                                                               String send_msg, String enable_msg, String send_subject) {
-        if (DEBUG_ENABLE) Log.v(APPLICATION_TAG,"newInstance");
+        if (log.isInfoEnabled()) log.info("newInstance");
         CommonLogFileListDialogFragment frag = new CommonLogFileListDialogFragment();
         Bundle bundle = new Bundle();
         bundle.putString("theme_id", theme_id);
@@ -139,19 +143,19 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
     }
 
     public CommonLogFileListDialogFragment() {
-		if (DEBUG_ENABLE) Log.v(APPLICATION_TAG,"Constructor(Default)");
+		if (log.isInfoEnabled()) log.info("Constructor(Default)");
 	}; 
 	
 	@Override
 	public void onAttach(Activity activity) {
 	    super.onAttach(activity);
-	    if (DEBUG_ENABLE) Log.v(APPLICATION_TAG,"onAttach");
+	    if (log.isInfoEnabled()) log.info("onAttach");
 	};
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {  
 		super.onSaveInstanceState(outState);
-		if (DEBUG_ENABLE) Log.v(APPLICATION_TAG,"onSaveInstanceState");
+		if (log.isInfoEnabled()) log.info("onSaveInstanceState");
 		if(outState.isEmpty()){
 	        outState.putBoolean("WORKAROUND_FOR_BUG_19917_KEY", true);
 	    }
@@ -162,7 +166,7 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
 	public void onConfigurationChanged(final Configuration newConfig) {
 	    // Ignore orientation change to keep activity from restarting
 	    super.onConfigurationChanged(newConfig);
-	    if (DEBUG_ENABLE) Log.v(APPLICATION_TAG,"onConfigurationChanged");
+	    if (log.isInfoEnabled()) log.info("onConfigurationChanged");
 
 	    reInitViewWidget();
 	};
@@ -170,12 +174,12 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 	    super.onActivityCreated(savedInstanceState);
-	    if (DEBUG_ENABLE) Log.v(APPLICATION_TAG,"onActivityCreated");
+	    if (log.isInfoEnabled()) log.info("onActivityCreated");
 	};
 	
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    	if (DEBUG_ENABLE) Log.v(APPLICATION_TAG,"onCreateView");
+    	if (log.isInfoEnabled()) log.info("onCreateView");
     	View view=super.onCreateView(inflater, container, savedInstanceState);
     	return view;
     };
@@ -183,7 +187,7 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
-        if (DEBUG_ENABLE) Log.v(APPLICATION_TAG,"onCreate");
+        if (log.isInfoEnabled()) log.info("onCreate");
         mUiHandler=new Handler();
     	mFragment=this;
         if (!mTerminateRequired) {
@@ -202,7 +206,7 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
     
 	@Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-    	if (DEBUG_ENABLE) Log.v(APPLICATION_TAG,"onCreateDialog");
+    	if (log.isInfoEnabled()) log.info("onCreateDialog");
 
         mDialog=new Dialog(getActivity(), ThemeUtil.getAppTheme(getActivity()));
 
@@ -220,7 +224,7 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
 	public void onStart() {
     	CommonDialog.setDlgBoxSizeLimit(mDialog,true);
 	    super.onStart();
-	    if (DEBUG_ENABLE) Log.v(APPLICATION_TAG,"onStart");
+	    if (log.isInfoEnabled()) log.info("onStart");
 	    if (mTerminateRequired) mDialog.cancel();
 	    else {
 	    	mDialog.setOnKeyListener(new OnKeyListener(){
@@ -246,40 +250,42 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
 	
 	@Override
 	public void onCancel(DialogInterface di) {
-		if (DEBUG_ENABLE) Log.v(APPLICATION_TAG,"onCancel");
+		if (log.isInfoEnabled()) log.info("onCancel");
 		mFragment.dismiss();
 		super.onCancel(di);
 	};
 	
 	@Override
 	public void onDismiss(DialogInterface di) {
-		if (DEBUG_ENABLE) Log.v(APPLICATION_TAG,"onDismiss");
+		if (log.isInfoEnabled()) log.info("onDismiss");
 		super.onDismiss(di);
 	};
 
 	@Override
 	public void onStop() {
 	    super.onStop();
-	    if (DEBUG_ENABLE) Log.v(APPLICATION_TAG,"onStop");
+	    if (log.isInfoEnabled()) log.info("onStop");
 	};
 	
 	@Override
 	public void onDestroyView() {
-		if (DEBUG_ENABLE) Log.v(APPLICATION_TAG,"onDestroyView");
+		if (log.isInfoEnabled()) log.info("onDestroyView");
 	    if (getDialog() != null && getRetainInstance())
 	        getDialog().setDismissMessage(null);
 	    super.onDestroyView();
+        deleteTempLogFile();
+//        deleteZipLogFile();
 	};
 	
 	@Override
 	public void onDetach() {
 	    super.onDetach();
-	    if (DEBUG_ENABLE) Log.v(APPLICATION_TAG,"onDetach");
+	    if (log.isInfoEnabled()) log.info("onDetach");
 	};
 
 
     private void reInitViewWidget() {
-    	if (DEBUG_ENABLE) Log.v(APPLICATION_TAG,"reInitViewWidget");
+    	if (log.isInfoEnabled()) log.info("reInitViewWidget");
     	if (!mTerminateRequired) {
     		Handler hndl=new Handler();
     		hndl.post(new Runnable(){
@@ -309,7 +315,7 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
     };
     
     private void initViewWidget() {
-    	if (DEBUG_ENABLE) Log.v(APPLICATION_TAG,"initViewWidget");
+    	if (log.isInfoEnabled()) log.info("initViewWidget");
 
     	mDialog.setContentView(R.layout.log_file_list_dlg);
     	
@@ -502,18 +508,16 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
 			@Override
 			public void onClick(View arg0) {
 				Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
-				intent.setDataAndType(Uri.parse("file://"+
-						mGp.getLogDirName()+"/temp_log.txt"),
-						"text/plain");
+				intent.setDataAndType(Uri.parse("file://"+getTempLogFilePath()), "text/plain");
 //				startActivity(intent);
-                startActivity(Intent.createChooser(intent, mGp.getLogDirName()+"/temp_log.txt"));
+                startActivity(Intent.createChooser(intent, getTempLogFilePath()));
 			}
 		});
 
 		btn_ok.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
-				sendLogFileToDeveloper(mGp.getLogDirName()+"/temp_log.txt");
+				sendLogFileToDeveloper(getTempLogFilePath());
 				dialog.dismiss();
 			}
 		});
@@ -522,6 +526,7 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
 			@Override
 			public void onClick(View arg0) {
 				dialog.dismiss();
+                deleteTempLogFile();
 			}
 		});
 
@@ -536,22 +541,50 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
 		
 	};
 
-	private void createTempLogFile() {
-		File olf=new File(mGp.getLogDirName()+"/temp_log.txt");
-		File ilf=new File(mGp.getLogDirName()+"/"+mGp.getLogFileName()+".txt");
+	private void deleteTempLogFile() {
+	    File lf=new File(getTempLogFilePath());
+	    lf.delete();
+    }
+
+    private String getTempLogFilePath() {
+        return mGp.getLogDirName()+"/temp_log.txt";
+    }
+
+    private void deleteZipLogFile() {
+        File lf=new File(getZipLogFilePath());
+        lf.delete();
+    }
+
+    private String getZipLogFilePath() {
+        return mGp.getLogDirName()+"/log.zip";
+    }
+
+    private void createTempLogFile() {
+        log.info("Create temp log file");
+
+        File olf=new File(getTempLogFilePath());
+		ArrayList<File> in_log_file_list=new ArrayList<File>();
+        for(int i=mLogFileList.size()-1;i>=0;i--) {
+            if (mLogFileList.get(i).log_file_path!=null) {
+                in_log_file_list.add(new File(mLogFileList.get(i).log_file_path));
+                log.info("log file appended, path="+mLogFileList.get(i).log_file_path);
+            }
+        }
+        in_log_file_list.add(new File(mGp.getLogDirName()+"/"+mGp.getLogFileName()+".txt"));
 		try {
-			FileInputStream fis=new FileInputStream(ilf);
 			FileOutputStream fos=new FileOutputStream(olf);
-			byte[] buff=new byte[1024*256];
-			int rc=0;
-			while((rc=fis.read(buff))>0) {
-				fos.write(buff, 0, rc);
-			}
-			fis.close();
+            for(File in_file:in_log_file_list) {
+                FileInputStream fis=new FileInputStream(in_file);
+                byte[] buff=new byte[1024*256];
+                int rc=0;
+                fos.write((new String(in_file.getPath()+"\n").getBytes()));
+                while((rc=fis.read(buff))>0) {
+                    fos.write(buff, 0, rc);
+                }
+                fis.close();
+                fos.write((new String("\n")).getBytes());
+            }
 			fos.close();
-			
-			
-			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -562,7 +595,7 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
 	final public void sendLogFileToDeveloper(String log_file_path) {
 		CommonLogUtil.resetLogReceiver(mContext, mGp);
 		
-		String zip_file_name=mGp.getLogDirName()+"/log.zip";
+		String zip_file_name=getZipLogFilePath();
 		
 		File lf=new File(zip_file_name);
 		lf.delete();
@@ -759,7 +792,7 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
     };
 
     private void sendLogFile(final CommonLogFileListAdapter lfm_adapter) {
-		final String zip_file_name=mGp.getLogDirName()+"/log.zip";
+		final String zip_file_name=getZipLogFilePath();
 		
 		int no_of_files=0;
 		for (int i=0;i<lfm_adapter.getCount();i++) {
@@ -892,7 +925,7 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
     };
 
     public void showDialog(FragmentManager fm, Fragment frag, CommonGlobalParms gp, NotifyEvent ntfy) {
-    	if (DEBUG_ENABLE) Log.v(APPLICATION_TAG,"showDialog");
+    	if (log.isInfoEnabled()) log.info("showDialog");
     	mTerminateRequired=false;
     	mGp=gp;
 	    FragmentTransaction ft = fm.beginTransaction();
