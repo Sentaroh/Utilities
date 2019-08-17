@@ -542,12 +542,18 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
 	};
 
 	private void deleteTempLogFile() {
-	    File lf=new File(getTempLogFilePath());
-	    lf.delete();
+	    String fp=getTempLogFilePath();
+	    if (fp!=null) {
+            File lf=new File(fp);
+            lf.delete();
+        }
     }
 
     private String getTempLogFilePath() {
-        return mGp.getLogDirName()+"/temp_log.txt";
+	    if (mGp!=null) {
+            return mGp.getLogDirName()+"/temp_log.txt";
+        }
+	    return null;
     }
 
     private void deleteZipLogFile() {
