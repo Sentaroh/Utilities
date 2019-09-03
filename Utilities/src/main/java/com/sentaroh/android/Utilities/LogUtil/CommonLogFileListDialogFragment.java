@@ -364,8 +364,8 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
     	final CheckBox cb_log_enabled=(CheckBox)mDialog.findViewById(R.id.log_file_list_dlg_log_enabled);
     	if (mShowSaveButton) btn_save.setVisibility(Button.VISIBLE);
     	else btn_save.setVisibility(Button.GONE);
-    	btn_save.setEnabled(mGp.isLogEnabled());
-    	btn_send_dev.setEnabled(mGp.isLogEnabled());
+    	CommonDialog.setButtonEnabled(getActivity(), btn_save, mGp.isLogEnabled());
+        CommonDialog.setButtonEnabled(getActivity(), btn_send_dev, mGp.isLogEnabled());
     	cb_log_enabled.setChecked(mGp.isLogEnabled());
     	cb_log_enabled.setOnCheckedChangeListener(new OnCheckedChangeListener(){
 			@Override

@@ -25,17 +25,25 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 import com.sentaroh.android.Utilities.NotifyEvent;
 import com.sentaroh.android.Utilities.R;
+import com.sentaroh.android.Utilities.ThemeUtil;
 
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.support.v4.app.FragmentManager;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 
 public class CommonDialog {
 	private FragmentManager mFragMgr =null;
@@ -132,6 +140,39 @@ public class CommonDialog {
 		if (dlg==null) return;
 			dlg.getWindow().setLayout(LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT);
 	};
+
+    static public void setMenuItemEnabled(Activity a, Menu menu, MenuItem menu_item, boolean enabled) {
+        if (ThemeUtil.isLightThemeUsed(a)) {
+            menu_item.setEnabled(enabled);
+            SpannableString s = new SpannableString(menu_item.getTitle());
+            if (enabled) s.setSpan(new ForegroundColorSpan(Color.BLACK), 0, s.length(), 0);
+            else s.setSpan(new ForegroundColorSpan(Color.LTGRAY), 0, s.length(), 0);
+            menu_item.setTitle(s);
+        } else {
+            menu_item.setEnabled(enabled);
+        }
+    }
+
+    public static void setButtonEnabled(Activity a, Button btn, boolean enabled) {
+//	    log.debug("setButtonEnabled LightTheme="+ThemeUtil.isLightThemeUsed(a)+", Enabled="+enabled);
+//	    Thread.dumpStack();
+        if (ThemeUtil.isLightThemeUsed(a)) {
+            if (enabled) btn.setAlpha(1.0f);
+            else btn.setAlpha(0.4f);
+        }
+        btn.setEnabled(enabled);
+    }
+
+    public static void setViewEnabled(Activity a, View v, boolean enabled) {
+//	    log.debug("setButtonEnabled LightTheme="+ThemeUtil.isLightThemeUsed(a)+", Enabled="+enabled);
+//	    Thread.dumpStack();
+        if (ThemeUtil.isLightThemeUsed(a)) {
+            if (enabled) v.setAlpha(1.0f);
+            else v.setAlpha(0.4f);
+        }
+        v.setEnabled(enabled);
+    }
+
 
 //	public void fileOnlySelectWithCreate(String lurl, String ldir,
 //			String file_name,String dlg_title, NotifyEvent ntfy) {

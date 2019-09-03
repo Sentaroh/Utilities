@@ -11,6 +11,7 @@ import net.lingala.zip4j.io.ZipOutputStream;
 import net.lingala.zip4j.model.CentralDirectory;
 import net.lingala.zip4j.model.EndCentralDirRecord;
 import net.lingala.zip4j.model.FileHeader;
+import net.lingala.zip4j.model.LocalFileHeader;
 import net.lingala.zip4j.model.ZipModel;
 import net.lingala.zip4j.model.ZipParameters;
 import net.lingala.zip4j.util.CRCUtil;
@@ -33,6 +34,7 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 public class BufferedZipFile2 {
     private boolean closed =false;
@@ -256,12 +258,19 @@ public class BufferedZipFile2 {
             }
 
             ArrayList<FileHeader>fhl= add_zip_model.getCentralDirectory().getFileHeaders();
+            List<LocalFileHeader> lfhl= add_zip_model.getLocalFileHeaderList();
+            slf4jLog.debug("addItemInternal Central FileHeader size="+fhl.size()+", Local Fileheader size="+lfhl.size());
             for(int i = mAddZipFileHeaderList.size(); i<fhl.size(); i++) {
                 FileHeader fh=fhl.get(i);
-                BufferedZipFile2.BzfFileHeaderItem bfhi=new BufferedZipFile2.BzfFileHeaderItem();
+                BzfFileHeaderItem bfhi=new BzfFileHeaderItem();
                 bfhi.file_header=fh;
                 mAddZipFileHeaderList.add(bfhi);
-                slf4jLog.info("addItemInternal added name="+fh.getFileName());
+                byte[] gpf=fh.getGeneralPurposeFlag();
+//                gpf[1]=0x08;
+                LocalFileHeader lfh=lfhl.get(i);
+                slf4jLog.info("addItemInternal added name="+fh.getFileName()+", gpflags="+StringUtil.getHexString(gpf,0, gpf.length)+ ", Local file header name="+lfh.getFileName());
+//                slf4jLog.info("addItemInternal Central File header compressed size="+fh.getCompressedSize()+", Uncompressed size="+fh.getUncompressedSize()+", Crc32="+fh.getCrc32());
+//                slf4jLog.info("addItemInternal Local File header compressed size="+lfh.getCompressedSize()+", Uncompressed size="+lfh.getUncompressedSize()+", Crc32="+lfh.getCrc32());
             }
         } catch (ZipException e) {
             if (inputStream != null) try {inputStream.close();} catch (IOException ex) {}
