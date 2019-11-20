@@ -98,6 +98,14 @@ public class BufferedZipFile2 {
         init(input_file, null, os, encoding, wfp);
     }
 
+    private boolean mGpfBit3On=false;
+    public void setGpfBit3On(boolean on) {
+        mGpfBit3On=on;
+    }
+    public Boolean isGpfBit3On() {
+        return mGpfBit3On;
+    }
+
     private boolean mEmptyInputZipFile=true;
     private void init(File input_file, File output_file, OutputStream os, String encoding, String work_file_path) {
         slf4jLog.debug("<init> Input="+input_file+", Output="+output_file+", Encoding="+encoding+", wfp="+work_file_path);
@@ -266,9 +274,12 @@ public class BufferedZipFile2 {
                 bfhi.file_header=fh;
                 mAddZipFileHeaderList.add(bfhi);
                 byte[] gpf=fh.getGeneralPurposeFlag();
-//                gpf[1]=0x08;
+                if (mGpfBit3On) {
+                    if (gpf[0]>=0x08) gpf[1]=0x08;//For Windows Explorer
+                }
                 LocalFileHeader lfh=lfhl.get(i);
-                slf4jLog.info("addItemInternal added name="+fh.getFileName()+", gpflags="+StringUtil.getHexString(gpf,0, gpf.length)+ ", Local file header name="+lfh.getFileName());
+                slf4jLog.info("addItemInternal added name="+fh.getFileName()+", gpflags="+StringUtil.getHexString(gpf,0, gpf.length)+
+                        ", GPF bit3 on="+mGpfBit3On+", Local file header name="+lfh.getFileName()+", UTF8 Encoding="+lfh.isFileNameUTF8Encoded());
 //                slf4jLog.info("addItemInternal Central File header compressed size="+fh.getCompressedSize()+", Uncompressed size="+fh.getUncompressedSize()+", Crc32="+fh.getCrc32());
 //                slf4jLog.info("addItemInternal Local File header compressed size="+lfh.getCompressedSize()+", Uncompressed size="+lfh.getUncompressedSize()+", Crc32="+lfh.getCrc32());
             }
