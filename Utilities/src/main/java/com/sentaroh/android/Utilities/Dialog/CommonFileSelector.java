@@ -1189,7 +1189,7 @@ public class CommonFileSelector extends DialogFragment {
                             }
                             slf4jLog.info("fileSelectEditDialogCreateBtn Directory cretaed name="+n_path);
                             mCreateDirDialog.dismiss();
-                            mCreateDirDialog=null;
+//                            mCreateDirDialog=null;
                             p_ntfy.notifyToListener(true,
                                     new Object[]{etDir.getText().toString()});
                         }
@@ -1207,7 +1207,7 @@ public class CommonFileSelector extends DialogFragment {
             public void onClick(View v) {
                 mCreateDirDialog.dismiss();
 //				Log.v("","cancel create");
-                mCreateDirDialog=null;
+//                mCreateDirDialog=null;
                 p_ntfy.notifyToListener(false, null);
             }
         });
