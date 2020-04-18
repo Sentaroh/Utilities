@@ -43,5 +43,6 @@
 3.Please enter a problem/question in the E-Mail body and send an E-Mail.(The log file is attached with compressed into zip and )</string>
 		    
     <string name="msgs_log_file_list_manage_logfile">Manage log file</string>
-	<string name="msgs_log_file_browse_app_can_not_found">Application that displays the text file was not found.</string>		
+	<string name="msgs_log_file_browse_app_can_not_found">Application that displays the text file was not found.</string>
+    <string name="msgs_log_file_send_app_can_not_found">No application was found to send the log.</string>
 </resources>

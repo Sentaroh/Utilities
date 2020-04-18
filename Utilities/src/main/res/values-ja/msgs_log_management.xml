@@ -44,4 +44,5 @@
 		    
     <string name="msgs_log_file_list_manage_logfile">ログファイル管理</string>
 	<string name="msgs_log_file_browse_app_can_not_found">テキストファイルを表示するアプリケーションが見つかりませんでした。</string>
+    <string name="msgs_log_file_send_app_can_not_found">ログファイルを送信するアプリケーションが見つかりませんでした。</string>
 </resources>

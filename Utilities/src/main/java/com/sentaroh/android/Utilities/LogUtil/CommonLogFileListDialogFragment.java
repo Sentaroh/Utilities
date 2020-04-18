@@ -622,8 +622,14 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
 //		    intent.putExtra(Intent.EXTRA_BCC, new String[]{"bcc@example.com"});  
 	    intent.putExtra(Intent.EXTRA_SUBJECT, mSendSubject);
 	    intent.putExtra(Intent.EXTRA_TEXT, mContext.getString(R.string.msgs_log_file_list_confirm_send_log_description));
-	    intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(lf)); 
-	    mContext.startActivity(intent);
+	    intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(lf));
+	    try {
+            mContext.startActivity(intent);
+        } catch (Exception e) {
+            CommonDialog mCommonDlg=new CommonDialog(getActivity(), getActivity().getSupportFragmentManager());
+            mCommonDlg.showCommonDialog(false, "E",
+                    mContext.getString(R.string.msgs_log_file_send_app_can_not_found), e.getMessage(), null);
+        }
 	};
     
     private boolean mDisableChangeLogEnabled=false;
@@ -845,7 +851,13 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
 //				    intent.setType("text/plain");
 				    intent.setType("application/zip");
 				    intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(lf)); 
-				    mFragment.getActivity().startActivity(intent);
+                    try {
+                        mFragment.getActivity().startActivity(intent);
+                    } catch (Exception e) {
+                        CommonDialog mCommonDlg=new CommonDialog(getActivity(), getActivity().getSupportFragmentManager());
+                        mCommonDlg.showCommonDialog(false, "E",
+                                mContext.getString(R.string.msgs_log_file_send_app_can_not_found), e.getMessage(), null);
+                    }
 
 				    mUiHandler.post(new Runnable(){
 						@Override
