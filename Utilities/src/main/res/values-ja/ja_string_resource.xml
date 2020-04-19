@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<resources>
+    <!-- file_select_edit -->
+        <string name="msgs_file_select_edit_dlg_create">作成</string>
+        <string name="msgs_file_select_edit_dlg_home_dir">ホーム</string>
+        <string name="msgs_file_select_edit_dlg_refresh">リスト再読込</string>
+        <string name="msgs_file_select_edit_dlg_ok">了解</string>
+        <string name="msgs_file_select_edit_dlg_cancel">キャンセル</string>
+        <string name="msgs_file_select_edit_dlg_filename">ファイル名</string>
+        <string name="msgs_file_select_edit_dlg_dir_name">ディレクトリー名</string>
+        <string name="msgs_file_select_edit_dlg_dir_created">%s を作成しました</string>
+        <string name="msgs_file_select_edit_dlg_dir_not_created">%s の作成に失敗しました</string>
+        <string name="msgs_file_select_edit_dlg_dir_create_file">ファイルを作成する</string>
+        <string name="msgs_file_select_edit_dlg_filename_not_specified">ファイル名が指定されていません</string>
+        <string name="msgs_file_select_edit_dlg_directory_not_specified">ディレクトリーが選択されていません</string>
+        <string name="msgs_file_select_edit_dlg_directory_not_selected">ディレクトリーが選択されていません</string>
+        <string name="msgs_single_item_input_dlg_title">ディレクトリ作成</string>
+        <string name="msgs_single_item_input_dlg_duplicate_dir">既に存在しています</string>
+        <string name="msgs_file_select_edit_dir_empty">--- ディレクトリは空です ---</string>
+        <string name="msgs_file_select_edit_local_mount_point">マウントポイント</string>
+        <string name="msgs_file_select_edit_parent_directory">親ディレクトリー</string>
+        <string name="msgs_file_select_edit_confirm_create_directory">ディレクトリーを作成しますか？</string>
+        <string name="msgs_file_select_edit_confirm_create_file">ファイルを作成しますか？</string>
+        <string name="msgs_file_select_select_this_entry">選択する</string>
+        <string name="msgs_file_select_unselect_this_entry">選択を解除</string>
+    <!-- msgs_common_dialog -->
+        <string name="msgs_common_dialog_information">情報</string>
+        <string name="msgs_common_dialog_warning">警告</string>
+        <string name="msgs_common_dialog_error">エラー</string>
+        <string name="msgs_common_dialog_ok">了解</string>
+        <string name="msgs_common_dialog_cancel">キャンセル</string>
+        <string name="msgs_common_dialog_canceling">キャンセルしています</string>
+        <string name="msgs_common_dialog_save">保存</string>
+        <string name="msgs_common_dialog_add">追加</string>
+        <string name="msgs_common_dialog_search">検索</string>
+        <string name="msgs_common_dialog_close">閉じる</string>
+        <string name="msgs_common_dialog_select">選択</string>
+        <string name="msgs_progress_spin_dlg_processing">処理中です、お待ちください。</string>
+        <string name="msgs_dlg_hardkey_back_button">「戻るキー」は使用できません、画面のボタンを押してください。</string>
+    <!-- msgs_common_file_selector -->
+        <string name="msgs_common_file_selector_up_btn">上へ</string>
+        <string name="msgs_common_file_selector_top_btn">トップ</string>
+        <string name="msgs_common_file_selector_create_btn">作成</string>
+        <string name="msgs_common_file_selector_refresh_btn">再読込み</string>
+    <!-- msgs_log_management -->
+        <string name="msgs_log_file_list_title">ログ管理</string>
+        <string name="msgs_log_file_list_label_delete">ログの削除</string>
+        <string name="msgs_log_file_list_label_share">ログの共有</string>
+        <string name="msgs_log_file_list_label_select_all">全てを選択</string>
+        <string name="msgs_log_file_list_label_unselect_all">全ての選択を解除</string>
+        <string name="msgs_log_file_list_delete_confirm_msg">下記のログファイルを削除しますか？</string>
+        <string name="msgs_log_file_list_dlg_send_zip_file_creating">zipファイルの作成中</string>
+        <string name="msgs_log_file_list_dlg_send_zip_file_cancelled">zipファイル作成がキャンセルされました</string>
+        <string name="msgs_log_file_list_log_save">保存</string>
+        <string name="msgs_log_file_list_log_send_dev">開発者にログを送る</string>
+        <string name="msgs_log_file_list_log_title">活動ログ</string>
+        <string name="msgs_log_file_list_log_enable_title">ログを記録する</string>
+        <string name="msgs_log_file_list_log_toggle_enabled">ログ記録を有効にする</string>
+        <string name="msgs_log_file_list_log_toggle_disabled">ログ記録を無効にする</string>
+        <string name="msgs_log_file_list_log_archive_title">保存ログ一覧</string>
+        <string name="msgs_log_file_list_confirm_log_save">ログファイルを保存してよろしいでしょうか?</string>
+        <string name="msgs_log_file_list_confirm_log_delete">ログファイルを削除しよろしいでしょうか?</string>
+        <string name="msgs_log_file_list_confirm_log_disable">ロゴ記録を無効にしてよろしいでしょうか?</string>
+        <string name="msgs_log_file_list_confirm_log_enable">ログ記録を有効にしてよろしいでしょうか?</string>
+        <string name="msgs_log_file_list_confirm_log_enable_msg">有効にすることによりアプリのログが記録されるようになります。アプリの操作を行いエラーを記録した後に「開発者にログを送る」をタップしてください。</string>
+        <string name="msgs_log_file_list_empty_can_not_send">ログファイルが空のため開発者に送れません。アプリの操作を行いエラーを記録した後に「開発者にログを送る」をタップしてください。</string>
+        <string name="msgs_log_file_list_no_log_files">ログファイルが存在しません</string>
+        <string name="msgs_log_file_list_confirm_send_log_title">ログファイルを開発者に送信</string>
+        <string name="msgs_log_file_list_confirm_send_log_description">アプリの問題・疑問を記述してください。</string>
+        <string name="msgs_log_file_list_confirm_send_log_send">送信</string>
+        <string name="msgs_log_file_list_confirm_send_log_preview">内容表示</string>
+        <string name="msgs_log_file_list_confirm_send_log_msg">ログを開発者にE-Mailを使用して送信します。\n
+１．内容表示ボタンを押しtemp_log.txtを表示し、内容を確認してください（テキストファイルを表示するためのアプリケーション選択の画面が表示されたら、アプリケーションを表示してください）\n
+２．送信する内容を確認したら、送信ボタンを押しE-Mail選択ダイアログでE-Mailを選択\n
+３. E-Mail本文に問題/疑問を入力し、E-Mailを送信してください。（ログはzipに圧縮し、添付ファイルになっています）</string>
+        <string name="msgs_log_file_list_manage_logfile">ログファイル管理</string>
+        <string name="msgs_log_file_browse_app_can_not_found">テキストファイルを表示するアプリケーションが見つかりませんでした。</string>
+        <string name="msgs_log_file_send_app_can_not_found">ログを送信するアプリを呼び出す際にエラーが発生しました。</string>
+    <!-- msgs_password_input_preference -->
+        <string name="msgs_password_input_preference_hint_new_password">新パスワード</string>
+        <string name="msgs_password_input_preference_hint_confirm_password">確認パスワード</string>
+        <string name="msgs_password_input_preference_specify_new_password">新パスワードを入れてください</string>
+        <string name="msgs_password_input_preference_unmatch">新パスワードと確認パスワードが一致しません</string>
+        <string name="msgs_password_input_preference_match">新パスワードと確認パスワードが一致しました</string>
+        <string name="msgs_password_input_preference_new_not_specified">新パスワードが入力されていません</string>
+        <string name="msgs_password_input_preference_conf_not_specified">確認パスワードが入力されていません</string>
+        <string name="msgs_password_input_preference_less_than_min_length">パスワードは%s文字以上を指定してください</string>
+        <string name="msgs_ntstatus_common_info" formatted="false">ユーザー=%s, NT Status=0x%x, リモート=%s, 共有名=%s, ファイルパス=%s</string>
+        <string name="msgs_ntstatus_unsuccesful">システムに接続された装置が動作していません。</string>
+        <string name="msgs_ntstatus_access_denied">アクセスが拒否されました。</string>
+        <string name="msgs_ntstatus_logon_failure_unknown_user_name_or_bad_password">ユーザー名またはパスワードが間違っているためにログオンできませんでした。</string>
+        <string name="msgs_ntstatus_logon_failure_user_account_restriction">アカウントが制限されているためにログオンできませんでした。</string>
+        <string name="msgs_ntstatus_logon_failure_account_logon_time_restriction_violation">アカウントのログオン時間制限のためにログオンできませんでした。</string>
+        <string name="msgs_ntstatus_logon_failure_user_not_allowed_to_log_on_to_this_computer">アカウントはログオンを禁止されているためにログオンできませんでした。</string>
+        <string name="msgs_ntstatus_logon_failure_the_specified_account_password_has_expired">パスワードの有効期限が過ぎているためにログオンできませんでした。</string>
+        <string name="msgs_ntstatus_logon_failure_account_currently_disabled">アカウントが無効になっているためにログオンできませんでした。</string>
+        <string name="msgs_ntstatus_bad_network_name">共有名が正しくありません</string>
+</resources>
