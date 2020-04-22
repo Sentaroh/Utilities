@@ -461,7 +461,7 @@ public class FileSelectDialogFragment extends DialogFragment {
 				public void run() {
 					mDialog.hide();
 		        	saveViewContents();
-		    		mDialog.getWindow().getCurrentFocus().invalidate();
+		    		if (mDialog.getWindow()!=null && mDialog.getWindow().getCurrentFocus()!=null)mDialog.getWindow().getCurrentFocus().invalidate();
 		        	initViewWidget();
 		    		restoreViewContents();
 		    		CommonDialog.setDlgBoxSizeLimit(mDialog,true);
