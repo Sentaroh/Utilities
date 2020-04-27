@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<resources>
+    <!-- file_select_edit -->
+        <string name="msgs_file_select_edit_dlg_create">Создать</string>
+        <string name="msgs_file_select_edit_dlg_home_dir">Главная страница</string>
+        <string name="msgs_file_select_edit_dlg_refresh">Обновить</string>
+        <string name="msgs_file_select_edit_dlg_ok">OK</string>
+        <string name="msgs_file_select_edit_dlg_cancel">Отменить</string>
+        <string name="msgs_file_select_edit_dlg_filename">Имя файла</string>
+        <string name="msgs_file_select_edit_dlg_dir_name">Название каталога</string>
+        <string name="msgs_file_select_edit_dlg_dir_created">%создал</string>
+        <string name="msgs_file_select_edit_dlg_dir_not_created">%s не удалось создать</string>
+        <string name="msgs_file_select_edit_dlg_dir_create_file">Создать новый файл</string>
+        <string name="msgs_file_select_edit_dlg_filename_not_specified">Имя файла не указано</string>
+        <string name="msgs_file_select_edit_dlg_directory_not_specified">Каталог не указан</string>
+        <string name="msgs_file_select_edit_dlg_directory_not_selected">Каталог не выбран</string>
+        <string name="msgs_single_item_input_dlg_title">Создать каталог</string>
+        <string name="msgs_single_item_input_dlg_duplicate_dir">Указанное имя уже существует.</string>
+        <string name="msgs_file_select_edit_dir_empty">--- Каталог пуст ---</string>
+        <string name="msgs_file_select_edit_local_mount_point">Маунт-Пойнт</string>
+        <string name="msgs_file_select_edit_parent_directory">Родительский каталог</string>
+        <string name="msgs_file_select_edit_confirm_create_directory">Вы хотите создать каталог?</string>
+        <string name="msgs_file_select_edit_confirm_create_file">Вы хотите создать файл?</string>
+        <string name="msgs_file_select_select_this_entry">Выберите эту директорию/Файл</string>
+        <string name="msgs_file_select_unselect_this_entry">Отмените выбор этого "Дир/Файла</string>
+    <!-- msgs_common_dialog -->
+        <string name="msgs_common_dialog_information">Информация</string>
+        <string name="msgs_common_dialog_warning">Предупреждение</string>
+        <string name="msgs_common_dialog_error">Ошибка</string>
+        <string name="msgs_common_dialog_ok">OK</string>
+        <string name="msgs_common_dialog_cancel">Отменить</string>
+        <string name="msgs_common_dialog_canceling">Отмена</string>
+        <string name="msgs_common_dialog_save">Сохранить</string>
+        <string name="msgs_common_dialog_add">Добавить</string>
+        <string name="msgs_common_dialog_search">Поиск</string>
+        <string name="msgs_common_dialog_close">Закрыть</string>
+        <string name="msgs_common_dialog_select">Выберите</string>
+        <string name="msgs_progress_spin_dlg_processing">В процессе обработки, пожалуйста, подождите.</string>
+        <string name="msgs_dlg_hardkey_back_button">&#8220;Клавиша "Назад" &#8220; не может быть использована, нажмите кнопку на экране.</string>
+    <!-- msgs_common_file_selector -->
+        <string name="msgs_common_file_selector_up_btn">Up</string>
+        <string name="msgs_common_file_selector_top_btn">Топ</string>
+        <string name="msgs_common_file_selector_create_btn">Создать</string>
+        <string name="msgs_common_file_selector_refresh_btn">Обновить</string>
+    <!-- msgs_log_management -->
+        <string name="msgs_log_file_list_title">Управление журналами</string>
+        <string name="msgs_log_file_list_label_delete">Удалить элемент журнала</string>
+        <string name="msgs_log_file_list_label_share">Пункт журнала акции</string>
+        <string name="msgs_log_file_list_label_select_all">Выберите все записи в журнале</string>
+        <string name="msgs_log_file_list_label_unselect_all">Отменить выделение всех пунктов журнала</string>
+        <string name="msgs_log_file_list_delete_confirm_msg">Удалите следующие лог-файлы.</string>
+        <string name="msgs_log_file_list_dlg_send_zip_file_creating">Создание zip-файла</string>
+        <string name="msgs_log_file_list_dlg_send_zip_file_cancelled">Создание Zip-файла отменено</string>
+        <string name="msgs_log_file_list_log_save">Сохранить</string>
+        <string name="msgs_log_file_list_log_send_dev">Отправить разработчику</string>
+        <string name="msgs_log_file_list_log_title">Активный журнал</string>
+        <string name="msgs_log_file_list_log_enable_title">Включить протоколирование</string>
+        <string name="msgs_log_file_list_log_toggle_enabled">Для включения журнала</string>
+        <string name="msgs_log_file_list_log_toggle_disabled">Чтобы отключить журнал</string>
+        <string name="msgs_log_file_list_log_archive_title">Архивные лог-файлы</string>
+        <string name="msgs_log_file_list_confirm_log_save">Вы хотите сохранить журнал в файл?</string>
+        <string name="msgs_log_file_list_confirm_log_delete">Вы хотите стереть журнал?</string>
+        <string name="msgs_log_file_list_confirm_log_disable">Вы хотите отключить журнал?</string>
+        <string name="msgs_log_file_list_confirm_log_enable">Вы хотите включить журнал?</string>
+        <string name="msgs_log_file_list_confirm_log_enable_msg">Включив его, журнал приложения будет записываться. После выполнения операций и записи ошибок нажмите "Отправить журнал разработчикам".</string>
+        <string name="msgs_log_file_list_empty_can_not_send">Журнал пустой и не может быть отправлен разработчику. После выполнения операций и записи ошибок нажмите "Отправить лог разработчикам".</string>
+        <string name="msgs_log_file_list_no_log_files">Нет лог-файлов</string>
+        <string name="msgs_log_file_list_confirm_send_log_title">Отправьте лог-файл разработчику.</string>
+        <string name="msgs_log_file_list_confirm_send_log_description">Пожалуйста, опишите вашу проблему или вопрос ниже.\n\n\n.</string>
+        <string name="msgs_log_file_list_confirm_send_log_send">Отправить</string>
+        <string name="msgs_log_file_list_confirm_send_log_preview">Предварительный просмотр</string>
+        <string name="msgs_log_file_list_confirm_send_log_msg">Отправить лог-файл по электронной почте разработчику.\n1.Нажмите кнопку Предварительный просмотр, чтобы увидеть temp_log.txt, а затем, пожалуйста, проверьте содержание. (Если отображается экран выбора приложения, а затем выберите FAVORIT приложение для отображения текстового файла) \n2.Когда вы закончите читать файл для отправки, а затем выберите электронную почту в EMail диалог выбора.\n3.Пожалуйста, введите проблему / вопросы в электронную почту тела и отправить электронную почту. (лог-файл прилагается с сжатыми в zip и ).</string>
+        <string name="msgs_log_file_list_manage_logfile">Управлять лог-файлом</string>
+        <string name="msgs_log_file_browse_app_can_not_found">Приложение, отображающее текстовый файл, не найдено.</string>
+        <string name="msgs_log_file_send_app_can_not_found">Не найдено приложение для отправки журнала.</string>
+    <!-- msgs_password_input_preference -->
+        <string name="msgs_password_input_preference_hint_new_password">Новый пароль</string>
+        <string name="msgs_password_input_preference_hint_confirm_password">Подтвердить пароль</string>
+        <string name="msgs_password_input_preference_specify_new_password">Укажите новый пароль</string>
+        <string name="msgs_password_input_preference_unmatch">Новый пароль и пароль подтверждения не совпадают</string>
+        <string name="msgs_password_input_preference_match">Новое совпадение пароля и подтверждения пароля</string>
+        <string name="msgs_password_input_preference_new_not_specified">Новый пароль не указан</string>
+        <string name="msgs_password_input_preference_conf_not_specified">Пароль Confitm не указан</string>
+        <string name="msgs_password_input_preference_less_than_min_length">Пожалуйста, укажите пароль, состоящий не менее чем из %s символов.</string>
+    <!-- msgs_ntstatus -->
+        <string name="msgs_ntstatus_common_info" formatted="false">User=%s, NT Status=0x%x, Удаленный сервер=%s, Имя сети=%s, Путь к файлу=%s</string>
+        <string name="msgs_ntstatus_unsuccesful">Устройство, подключенное к системе, не работает.</string>
+        <string name="msgs_ntstatus_access_denied">Доступ запрещен.</string>
+        <string name="msgs_ntstatus_logon_failure_unknown_user_name_or_bad_password">Логин_неисправность: неизвестное имя пользователя или плохой пароль.</string>
+        <string name="msgs_ntstatus_logon_failure_user_account_restriction">Сбой при входе в систему : ограничение учетной записи пользователя.</string>
+        <string name="msgs_ntstatus_logon_failure_account_logon_time_restriction_violation">Сбой при входе в систему : нарушение ограничения по времени входа в систему.</string>
+        <string name="msgs_ntstatus_logon_failure_user_not_allowed_to_log_on_to_this_computer">Сбой при входе в систему : пользователь не может войти в систему на этом компьютере.</string>
+        <string name="msgs_ntstatus_logon_failure_the_specified_account_password_has_expired">Сбой при входе в систему : указанный пароль учетной записи истек.</string>
+        <string name="msgs_ntstatus_logon_failure_account_currently_disabled">Сбой при входе в систему : учетная запись в настоящее время отключена.</string>
+        <string name="msgs_ntstatus_bad_network_name">Имя сети не может быть найдено.</string>
+</resources>

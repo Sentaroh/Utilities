@@ -85,6 +85,7 @@
         <string name="msgs_password_input_preference_new_not_specified">新パスワードが入力されていません</string>
         <string name="msgs_password_input_preference_conf_not_specified">確認パスワードが入力されていません</string>
         <string name="msgs_password_input_preference_less_than_min_length">パスワードは%s文字以上を指定してください</string>
+    <!-- msgs_ntstatus -->
         <string name="msgs_ntstatus_common_info" formatted="false">ユーザー=%s, NT Status=0x%x, リモート=%s, 共有名=%s, ファイルパス=%s</string>
         <string name="msgs_ntstatus_unsuccesful">システムに接続された装置が動作していません。</string>
         <string name="msgs_ntstatus_access_denied">アクセスが拒否されました。</string>
