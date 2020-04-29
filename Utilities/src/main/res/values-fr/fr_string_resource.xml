@@ -69,11 +69,7 @@
         <string name="msgs_log_file_list_confirm_send_log_description">Décrivez tous les problèmes/questions que vous avez avec l\'application.</string>
         <string name="msgs_log_file_list_confirm_send_log_send">transmission</string>
         <string name="msgs_log_file_list_confirm_send_log_preview">indication du contenu</string>
-        <string name="msgs_log_file_list_confirm_send_log_msg">Envoyez le journal au développeur par courrier électronique.\n
-1.Appuyez sur le bouton d\'affichage du contenu pour afficher temp_log.txt et confirmer le contenu (lorsque l\'écran de sélection de l\'application pour afficher le fichier texte apparaît, veuillez afficher l\'application).\n
-2.Après avoir confirmé le contenu à envoyer, appuyez sur le bouton Envoyer et sélectionnez E-Mail dans le dialogue de sélection des E-Mails\n
-3.Saisissez votre problème/question dans le corps du courriel et envoyez-nous le courriel. (Les journaux sont zippés et attachés.)"
-</string>
+        <string name="msgs_log_file_list_confirm_send_log_msg">Envoyez le journal au développeur en utilisant un courriel.\nAppuyez sur le bouton d\'affichage du contenu pour afficher temp_log.txt et vérifier le contenu (lorsque l\'écran de sélection de la demande pour afficher le fichier texte apparaît, veuillez afficher la demande).\nAprès avoir confirmé le contenu à envoyer, appuyez sur le bouton Envoyer et sélectionnez le courrier électronique dans la boîte de dialogue de sélection des courriers électroniques.\nVeuillez saisir le problème/la question de la demande dans le corps du courriel et envoyer le courriel. (Le journal est zippé et attaché).</string>
         <string name="msgs_log_file_list_manage_logfile">la gestion des fichiers journaux</string>
         <string name="msgs_log_file_browse_app_can_not_found">Aucune application n\'a pu être trouvée pour afficher le fichier texte.</string>
         <string name="msgs_log_file_send_app_can_not_found">Aucune application n\'a été trouvée pour envoyer le journal.</string>

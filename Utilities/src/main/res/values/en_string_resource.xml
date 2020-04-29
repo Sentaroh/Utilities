@@ -69,7 +69,8 @@
         <string name="msgs_log_file_list_confirm_send_log_description">Please describe your problem or question below.\n\n\n</string>
         <string name="msgs_log_file_list_confirm_send_log_send">Send</string>
         <string name="msgs_log_file_list_confirm_send_log_preview">Preview</string>
-        <string name="msgs_log_file_list_confirm_send_log_msg">Send log file by E-Mail to the developer.\n1.Press the Preview button to see the temp_log.txt, then please check the contents.(If the selection screen of the application is displayed, and then select the FAVORIT application to display the text file.)\n2.When you are finished reading file to send, then select the E-Mail in EMail selection dialog.\n3.Please enter a problem/question in the E-Mail body and send an E-Mail.(The log file is attached with compressed into zip and )</string>
+        <string name="msgs_log_file_list_confirm_send_log_msg">Send the log to the developer using an email.\nPress the content display button to display temp_log.txt and check the contents (when the application selection screen to display the text file appears, please display the application).\nAfter confirming the contents to be sent, press the Send button and select the E-Mail in the E-Mail selection dialog.\nPlease enter the problem/question of the application in the body of the E-Mail and send the E-Mail. (The log is zipped and attached.)
+</string>
         <string name="msgs_log_file_list_manage_logfile">Manage log file</string>
         <string name="msgs_log_file_browse_app_can_not_found">Application that displays the text file was not found.</string>
         <string name="msgs_log_file_send_app_can_not_found">No application was found to send the log.</string>
