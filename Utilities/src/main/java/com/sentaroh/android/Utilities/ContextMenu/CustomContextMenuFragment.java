@@ -200,7 +200,7 @@ public class CustomContextMenuFragment extends DialogFragment {
 				public void run() {
 					mDialog.hide();
 //					mDialog.getWindow().getDecorView().invalidate();
-		        	mDialog.getWindow().getCurrentFocus().invalidate();
+		        	if (mDialog.getWindow()!=null && mDialog.getWindow().getCurrentFocus()!=null) mDialog.getWindow().getCurrentFocus().invalidate();
 		    		initViewWidget();
 		        	CommonDialog.setDlgBoxSizeCompact(mDialog);
 		        	mDialog.show();
