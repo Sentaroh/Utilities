@@ -50,7 +50,7 @@ public class SystemInfo {
 
         out.add("  Manufacturer="+ Build.MANUFACTURER+", Model="+Build.MODEL);
 
-        if (Build.VERSION.SDK_INT<26) out.addAll(listsMountPoint());
+        out.addAll(listsMountPoint());
 
         out.add("getSdcardRootPath=" + safMgr.getSdcardRootPath());
 
