@@ -52,9 +52,9 @@
         <string name="msgs_log_file_list_dlg_send_zip_file_creating">Création du fichier zip</string>
         <string name="msgs_log_file_list_dlg_send_zip_file_cancelled">La création du fichier zip a été annulée.</string>
         <string name="msgs_log_file_list_log_save">Sauvegarder</string>
-        <string name="msgs_log_file_list_log_send_dev">Envoyer au développeur</string>
+        <string name="msgs_log_file_list_log_send_dev">Envoyer</string>
         <string name="msgs_log_file_list_log_title">Journal des événements</string>
-        <string name="msgs_log_file_list_log_enable_title">Journalisation</string>
+        <string name="msgs_log_file_list_log_enable_title">Activer la journalisation</string>
         <string name="msgs_log_file_list_log_toggle_enabled">Journalisation activée</string>
         <string name="msgs_log_file_list_log_toggle_disabled">Journalisation désactivée</string>
         <string name="msgs_log_file_list_log_archive_title">Liste des journaux sauvegardés</string>
