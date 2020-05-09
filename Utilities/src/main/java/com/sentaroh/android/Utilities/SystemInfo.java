@@ -115,7 +115,7 @@ public class SystemInfo {
         out.add("Storage Manager:");
         try {
             StorageManager sm = (StorageManager) context.getSystemService(Context.STORAGE_SERVICE);
-            if (Build.VERSION.SDK_INT>=24 && Build.VERSION.SDK_INT<=28) {
+            if (Build.VERSION.SDK_INT>=24){// && Build.VERSION.SDK_INT<=28) {
                 List<StorageVolume> svl=sm.getStorageVolumes();
                 for(StorageVolume item:svl)
                     out.add("  "+item.getDescription(context)+", isPrimary="+item.isPrimary()+", isRemovable="+item.isRemovable()+", uuid="+item.getUuid());
