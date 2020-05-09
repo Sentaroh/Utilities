@@ -40,31 +40,35 @@
         android:text="@string/msgs_log_file_list_log_title" 
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
+    <CheckBox
+        android:id="@+id/log_file_list_dlg_log_enabled"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_gravity="center_vertical"
+        android:text="@string/msgs_log_file_list_log_enable_title" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp" >
+        android:layout_marginLeft="50dp" >
 
-        <CheckBox
-            android:id="@+id/log_file_list_dlg_log_enabled"
+        <Button
+            android:id="@+id/log_file_list_dlg_log_save"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:text="@string/msgs_log_file_list_log_enable_title" />
-
-        <Button
-            android:id="@+id/log_file_list_dlg_log_save"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/msgs_log_file_list_log_save" 
+            android:text="@string/msgs_log_file_list_log_save"
             android:textAppearance="?android:attr/textAppearanceSmall"/>
 
         <Button
             android:id="@+id/log_file_list_dlg_log_send"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/msgs_log_file_list_log_send_dev" 
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:text="@string/msgs_log_file_list_log_send_dev"
             android:textAppearance="?android:attr/textAppearanceSmall"/>
 
     </LinearLayout>
