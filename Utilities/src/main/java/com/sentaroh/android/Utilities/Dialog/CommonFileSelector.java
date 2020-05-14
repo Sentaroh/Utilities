@@ -555,11 +555,12 @@ public class CommonFileSelector extends DialogFragment {
                 mTreeFileListView.setScrollbarFadingEnabled(false);
             }
         });
-        createLocalFilelist(mDialogSelectCat==DIALOG_SELECT_CATEGORY_FILE, mDialogLocalMP, "", ntfy_file_list, false);
+        createLocalFilelist(mDialogSelectCat==DIALOG_SELECT_CATEGORY_FILE, mDialogLocalMP, mDialogLocalDir, ntfy_file_list, false);
         mTreeFileListView.setVisibility(TextView.INVISIBLE);
         tv_empty.setVisibility(TextView.GONE);
 
-        setTopUpButtonEnabled(false);
+        if (mDialogLocalDir.equals("")) setTopUpButtonEnabled(false);
+        else setTopUpButtonEnabled(true);
 
         if (mSavedViewContentsValue!=null && mSavedViewContentsValue.mainDialogFilename!=null) {
             et_file_name.setText(mSavedViewContentsValue.mainDialogFilename);
