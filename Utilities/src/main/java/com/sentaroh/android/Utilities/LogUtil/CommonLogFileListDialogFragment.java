@@ -378,6 +378,12 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
 				mDisableChangeLogEnabled=false;
 			}
     	});
+    	mUiHandler.post(new Runnable(){
+            @Override
+            public void run() {
+                mDisableChangeLogEnabled=false;
+            }
+        });
     	
     	btn_save.setOnClickListener(new OnClickListener(){
 			@Override
