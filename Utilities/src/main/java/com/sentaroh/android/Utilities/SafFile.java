@@ -459,9 +459,12 @@ public class SafFile {
                 Uri rename_result=move_result;
                 if (!getName().equalsIgnoreCase(to_file.getName())) {
                     if (to_file.exists()) to_file.delete();
-                    rename_result=DocumentsContract.renameDocument(mContext.getContentResolver(), mUri, to_file.getName());
-                    if (!to_file.exists()) {
-                        if (slf4jLog.isDebugEnabled()) putDebugMessage("moveTo rename result="+rename_result.getPath());
+                    try {
+                        rename_result=DocumentsContract.renameDocument(mContext.getContentResolver(), mUri, to_file.getName());
+                    } catch(Exception e) {
+                        if (!to_file.exists()) {
+                            if (slf4jLog.isDebugEnabled()) putDebugMessage("moveTo rename result="+rename_result.getPath());
+                        }
                     }
                 }
                 return true;
