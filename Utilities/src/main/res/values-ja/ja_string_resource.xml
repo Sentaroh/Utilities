@@ -42,6 +42,7 @@
         <string name="msgs_common_file_selector_top_btn">トップ</string>
         <string name="msgs_common_file_selector_create_btn">作成</string>
         <string name="msgs_common_file_selector_refresh_btn">再読込み</string>
+        <string name="msgs_common_file_selector_empty_directory">空のディレクトリ</string>
     <!-- msgs_log_management -->
         <string name="msgs_log_file_list_title">ログ管理</string>
         <string name="msgs_log_file_list_label_delete">ログの削除</string>

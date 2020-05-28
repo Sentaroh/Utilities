@@ -42,6 +42,7 @@
         <string name="msgs_common_file_selector_top_btn">Топ</string>
         <string name="msgs_common_file_selector_create_btn">Создать</string>
         <string name="msgs_common_file_selector_refresh_btn">Обновить</string>
+        <string name="msgs_common_file_selector_empty_directory">Пустой каталог</string>
     <!-- msgs_log_management -->
         <string name="msgs_log_file_list_title">Управление журналами</string>
         <string name="msgs_log_file_list_label_delete">Удалить элемент журнала</string>
