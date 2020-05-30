@@ -428,7 +428,7 @@ public class CommonFileSelector extends DialogFragment {
 
 
         final Activity activity=getActivity();
-        final Context context=activity.getApplicationContext();
+        final Context context=this.getActivity();
 
         if (mDialogEnableCreate) {
             btnCreate.setVisibility(TextView.VISIBLE);
