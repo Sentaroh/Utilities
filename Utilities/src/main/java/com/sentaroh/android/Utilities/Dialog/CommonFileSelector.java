@@ -428,7 +428,6 @@ public class CommonFileSelector extends DialogFragment {
 
 
         final Activity activity=getActivity();
-        final Context context=activity.getApplicationContext();
 
         if (mDialogEnableCreate) {
             btnCreate.setVisibility(TextView.VISIBLE);
@@ -437,12 +436,12 @@ public class CommonFileSelector extends DialogFragment {
         }
 
         mLocalMountPointSpinner=(Spinner) mDialog.findViewById(R.id.common_file_selector_storage_spinner);
-        setSpinnerBackground(context, mLocalMountPointSpinner, ThemeUtil.isLightThemeUsed(getActivity()));
+        setSpinnerBackground(activity, mLocalMountPointSpinner, ThemeUtil.isLightThemeUsed(getActivity()));
         mLocalMountPointSpinner.setVisibility(Spinner.VISIBLE);
         //	Root directory spinner
         CustomSpinnerAdapter adapter = new CustomSpinnerAdapter(activity, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
-        mLocalMountPointSpinner.setPrompt(context.getString(R.string.msgs_file_select_edit_local_mount_point));
+        mLocalMountPointSpinner.setPrompt(activity.getString(R.string.msgs_file_select_edit_local_mount_point));
         mLocalMountPointSpinner.setAdapter(adapter);
 
         int a_no=0;
@@ -537,7 +536,7 @@ public class CommonFileSelector extends DialogFragment {
 
         if (mDialogLocalMP.equals("")) mDialogLocalMP =ml.get(0);
 
-        NotifyEvent ntfy_file_list=new NotifyEvent(context);
+        NotifyEvent ntfy_file_list=new NotifyEvent(activity);
         ntfy_file_list.setListener(new NotifyEvent.NotifyEventListener() {
             @Override
             public void positiveResponse(Context c, Object[] o) {
@@ -590,7 +589,7 @@ public class CommonFileSelector extends DialogFragment {
 
         if (!mDialogSingleSelect) setButtonEnabled(activity, btnOk, false);
 
-        final NotifyEvent cb_ntfy=new NotifyEvent(context);
+        final NotifyEvent cb_ntfy=new NotifyEvent(activity);
         // set file list thread response listener
         cb_ntfy.setListener(new NotifyEvent.NotifyEventListener() {
             @Override
@@ -612,14 +611,14 @@ public class CommonFileSelector extends DialogFragment {
                             putDlgMsg(dlg_msg,"");
                         } else {
                             setButtonEnabled(activity, btnOk, false);
-                            putDlgMsg(dlg_msg, context.getString(R.string.msgs_file_select_edit_dlg_filename_not_specified));
+                            putDlgMsg(dlg_msg, activity.getString(R.string.msgs_file_select_edit_dlg_filename_not_specified));
                         }
                     } else {
                         if (mTreeFilelistAdapter.isDataItemIsSelected() || et_file_name.getText().length()>0) {
                             setButtonEnabled(activity, btnOk, true);
                             putDlgMsg(dlg_msg,"");
                         } else {
-                            putDlgMsg(dlg_msg,context.getString(R.string.msgs_file_select_edit_dlg_directory_not_selected));
+                            putDlgMsg(dlg_msg, activity.getString(R.string.msgs_file_select_edit_dlg_directory_not_selected));
                             setButtonEnabled(activity, btnOk, false);
                         }
                     }
@@ -669,7 +668,7 @@ public class CommonFileSelector extends DialogFragment {
         if (mDialogLocalMP.equals(et_file_name.getText().toString())) setButtonEnabled(activity, btnOk, false);
         if (mDialogSelectCat==DIALOG_SELECT_CATEGORY_FILE && mDialogFileName.equals("")) {
             setButtonEnabled(activity, btnOk, false);
-            putDlgMsg(dlg_msg, context.getString(R.string.msgs_file_select_edit_dlg_filename_not_specified));
+            putDlgMsg(dlg_msg, activity.getString(R.string.msgs_file_select_edit_dlg_filename_not_specified));
         }
         et_file_name.addTextChangedListener(new TextWatcher() {
             @Override
@@ -680,7 +679,7 @@ public class CommonFileSelector extends DialogFragment {
                         putDlgMsg(dlg_msg, "");
                     } else {
                         setButtonEnabled(activity, btnOk, false);
-                        putDlgMsg(dlg_msg, context.getString(R.string.msgs_file_select_edit_dlg_filename_not_specified));
+                        putDlgMsg(dlg_msg, activity.getString(R.string.msgs_file_select_edit_dlg_filename_not_specified));
                     }
                 }
             }
@@ -698,7 +697,7 @@ public class CommonFileSelector extends DialogFragment {
                 slf4jLog.info("TreeFileListView clicked pos="+pos+", name="+tfi.getName());
                 if (tfi.isDir()) {
                     if (tfi.getSubDirItemCount()>=0) {
-                        NotifyEvent ntfy=new NotifyEvent(context);
+                        NotifyEvent ntfy=new NotifyEvent(activity);
                         ntfy.setListener(new NotifyEvent.NotifyEventListener() {
                             @Override
                             public void positiveResponse(Context c, Object[] o) {
@@ -750,7 +749,7 @@ public class CommonFileSelector extends DialogFragment {
             @Override
             public void onClick(View view) {
                 slf4jLog.info("TreeFileListView top button clicked");
-                NotifyEvent ntfy_file_list=new NotifyEvent(context);
+                NotifyEvent ntfy_file_list=new NotifyEvent(activity);
                 ntfy_file_list.setListener(new NotifyEvent.NotifyEventListener() {
                     @Override
                     public void positiveResponse(Context c, Object[] o) {
@@ -795,7 +794,7 @@ public class CommonFileSelector extends DialogFragment {
                     dir_path.setText(mDialogLocalMP+mDialogLocalDir+"/");
                     setTopUpButtonEnabled(true);
                 }
-                NotifyEvent ntfy_file_list=new NotifyEvent(context);
+                NotifyEvent ntfy_file_list=new NotifyEvent(activity);
                 ntfy_file_list.setListener(new NotifyEvent.NotifyEventListener() {
                     @Override
                     public void positiveResponse(Context c, Object[] o) {
@@ -828,7 +827,7 @@ public class CommonFileSelector extends DialogFragment {
         btnCreate.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 slf4jLog.info("TreeFileListView create button clicked");
-                NotifyEvent ntfy=new NotifyEvent(context);
+                NotifyEvent ntfy=new NotifyEvent(activity);
                 // set file list thread response listener
                 ntfy.setListener(new NotifyEvent.NotifyEventListener() {
                     @Override
@@ -839,7 +838,7 @@ public class CommonFileSelector extends DialogFragment {
                     public void negativeResponse(Context c,Object[] o) {}
 
                 });
-                fileSelectEditDialogCreateBtn(activity, context,
+                fileSelectEditDialogCreateBtn(activity, activity,
                         dir_path.getText().toString().substring(0,dir_path.getText().length()-1),"",
                         mLocalMountPointSpinner.getSelectedItem().toString(),
                         mTreeFilelistAdapter, ntfy,mTreeFileListView);
@@ -851,7 +850,7 @@ public class CommonFileSelector extends DialogFragment {
             public void onClick(View v) {
                 slf4jLog.info("TreeFileListView refresh button clicked");
                 String mp=mLocalMountPointSpinner.getSelectedItem().toString();
-                NotifyEvent ntfy_file_list=new NotifyEvent(context);
+                NotifyEvent ntfy_file_list=new NotifyEvent(activity);
                 ntfy_file_list.setListener(new NotifyEvent.NotifyEventListener() {
                     @Override
                     public void positiveResponse(Context c, Object[] o) {
@@ -919,7 +918,7 @@ public class CommonFileSelector extends DialogFragment {
                         String turl=(String) spinner.getSelectedItem();
                         ArrayList<TreeFilelistItem> tfl =createLocalFilelist(mDialogSelectCat==DIALOG_SELECT_CATEGORY_FILE,turl,"");
                         if (tfl.size()<1)
-                            tfl.add(new TreeFilelistItem(context.getString(R.string.msgs_file_select_edit_dir_empty)));
+                            tfl.add(new TreeFilelistItem(activity.getString(R.string.msgs_file_select_edit_dir_empty)));
                         mTreeFilelistAdapter.setDataList(tfl);
                         mTreeFilelistAdapter.notifyDataSetChanged();
                         if (turl.startsWith(mSafFileMgr.getSdcardRootPath())) {

@@ -516,8 +516,8 @@ public class FileSelectDialogFragment extends DialogFragment {
 		
 		
 		final Activity activity=getActivity();
-		final Context context=activity.getApplicationContext();
-	
+		final Context context=activity;
+
 		if (mDialogEnableCreate) {
 			btnCreate.setVisibility(TextView.VISIBLE);
 		}
@@ -827,7 +827,7 @@ public class FileSelectDialogFragment extends DialogFragment {
 					public void negativeResponse(Context c,Object[] o) {}
 	
 				});
-				fileSelectEditDialogCreateBtn(activity, context, 
+				fileSelectEditDialogCreateBtn(activity, context,
 						dir_name.getText().toString().substring(0,dir_name.getText().length()-1),"",
 						mLocalMountPointSpinner.getSelectedItem().toString(), 
 						mTreeFilelistAdapter, ntfy,mTreeFileListView);

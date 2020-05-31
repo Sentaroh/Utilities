@@ -192,7 +192,7 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
     	mFragment=this;
         if (!mTerminateRequired) {
 //            mGp=(CommonGlobalParms)getActivity().getApplication();
-            mContext=getActivity().getApplicationContext();
+            mContext=getActivity();
             Bundle bd=getArguments();
             setRetainInstance(bd.getBoolean("retainInstance"));
             mDialogTitle=bd.getString("title");
