@@ -58,7 +58,7 @@ public class MessageDialogFragment extends DialogFragment {
 	private MessageDialogFragment mFragment=null;
 	private boolean terminateRequired=true;
 
-    private String mDialogTitleType="", mDialogTitle="",mDialogMsgText="";
+    private String mDialogTitleType="", mDialogTitle="",mDialogMsgText="", mDialogButtonTextOk="", mDialogButtonTextCancel="";
 	private boolean mDialogTypeNegative=false;
 	
 	private NotifyEvent mNotifyEvent=null;
@@ -70,12 +70,32 @@ public class MessageDialogFragment extends DialogFragment {
 		if (DEBUG_ENABLE) Log.v(APPLICATION_TAG,"newInstance sub="+title+", msg="+msgtext);
         MessageDialogFragment frag = new MessageDialogFragment();
         Bundle bundle = new Bundle();
+        bundle.putString("button_text_ok", "");
+        bundle.putString("button_text_cancel", "");
         if (title!=null) bundle.putString("title", title);
         else bundle.putString("title", "");
         
         if (msgtext!=null) bundle.putString("msgtext", msgtext);
         else bundle.putString("msgtext", "");
         
+        bundle.putString("type", type);
+        bundle.putBoolean("negative", negative);
+        frag.setArguments(bundle);
+        return frag;
+    }
+
+    public static MessageDialogFragment newInstance(boolean negative, String type, String title, String msgtext, String button_text_ok, String button_text_cancel) {
+        if (DEBUG_ENABLE) Log.v(APPLICATION_TAG,"newInstance sub="+title+", msg="+msgtext);
+        MessageDialogFragment frag = new MessageDialogFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("button_text_ok", button_text_ok);
+        bundle.putString("button_text_cancel", button_text_cancel);
+        if (title!=null) bundle.putString("title", title);
+        else bundle.putString("title", "");
+
+        if (msgtext!=null) bundle.putString("msgtext", msgtext);
+        else bundle.putString("msgtext", "");
+
         bundle.putString("type", type);
         bundle.putBoolean("negative", negative);
         frag.setArguments(bundle);
@@ -126,6 +146,8 @@ public class MessageDialogFragment extends DialogFragment {
         	mDialogTitle=bd.getString("title");
         	mDialogMsgText=bd.getString("msgtext");
         	mDialogTypeNegative=bd.getBoolean("negative");
+            mDialogButtonTextOk=bd.getString("button_text_ok", "");
+            mDialogButtonTextCancel=bd.getString("button_text_cancel", "");
         }
     	mFragment=this;
     }
@@ -257,9 +279,11 @@ public class MessageDialogFragment extends DialogFragment {
 		}
 		
 		final Button btnOk = (Button) mDialog.findViewById(R.id.common_dialog_btn_ok);
+		if (!mDialogButtonTextOk.equals("")) btnOk.setText(mDialogButtonTextOk);
 		final Button btnCancel = (Button) mDialog.findViewById(R.id.common_dialog_btn_cancel);
+        if (!mDialogButtonTextCancel.equals("")) btnCancel.setText(mDialogButtonTextCancel);
 		if (mDialogTypeNegative) btnCancel.setVisibility(View.VISIBLE);
-			else  btnCancel.setVisibility(View.GONE);
+		else  btnCancel.setVisibility(View.GONE);
 		
 //		if (Build.VERSION.SDK_INT<=10 && mThemeColorList.theme_is_light) {
 //			btnOk.setTextColor(mThemeColorList.text_color_info);
