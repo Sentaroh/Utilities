@@ -42,6 +42,7 @@
         <string name="msgs_common_file_selector_top_btn">Début</string>
         <string name="msgs_common_file_selector_create_btn">Créer</string>
         <string name="msgs_common_file_selector_refresh_btn">Actualiser</string>
+        <string name="msgs_common_file_selector_empty_directory">Dossier vide</string>
     <!-- msgs_log_management -->
         <string name="msgs_log_file_list_title">Gestion des journaux</string>
         <string name="msgs_log_file_list_label_delete">Suppression du journal</string>
