@@ -85,6 +85,17 @@
                     android:visibility="gone"
                     android:textAppearance="?android:attr/textAppearanceMedium"/>
 
+                <com.sentaroh.android.Utilities.Widget.NonWordwrapTextView
+                    android:id="@+id/common_dialog_nonwordwrap_text_view"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:gravity="center_vertical"
+                    android:minHeight="48dp"
+                    android:visibility="gone"
+                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+
             </LinearLayout>
 
         </ScrollView>
