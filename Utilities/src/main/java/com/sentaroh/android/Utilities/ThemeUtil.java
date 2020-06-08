@@ -12,6 +12,9 @@ public class ThemeUtil {
     public static final int THEME_DEFAULT=0;
     public static final int THEME_LIGHT=1;
 
+    public static final int FOREST_GREEN = 0xff228B22;//rgb(34,139,34)
+    public static final int DKCYAN = 0xff0088ff;//rgb(0, 136, 255)
+
 //	public static ThemeColorList getThemeColorList(Context a, boolean theme_is_light) {
 //        ThemeColorList tcd=new ThemeColorList();
 //
@@ -29,7 +32,7 @@ public class ThemeUtil {
         tcd.text_color_disabled=Color.GRAY;
 //        tcd.text_color_primary=0xde000000;
 //        tcd.text_color_dialog_title=0xffffffff;
-        tcd.text_background_color=0xffc0c0c0;
+        tcd.text_background_color=0xffc0c0c0;//rgb(192, 192, 192)
 //        if (Build.VERSION.SDK_INT>=21) {
 //            tcd.dialog_title_background_color=0xff303030;//515151;
 //            tcd.dialog_msg_background_color=0xffc0c0c0;
@@ -44,7 +47,13 @@ public class ThemeUtil {
 //        tcd.text_color_info=tcd.text_color_dialog_title;
         tcd.text_color_error=Color.RED;
         tcd.title_text_color=0xffffffff;
-        tcd.title_background_color=0xff202020;
+        tcd.title_background_color=0xff202020;//rgb(32, 32, 32)
+
+        tcd.text_color_sync_started = DKCYAN;
+        tcd.text_color_sync_success = FOREST_GREEN;
+        tcd.text_color_sync_cancel = tcd.text_color_warning;
+        tcd.text_color_file_delete = tcd.text_color_error;//Color.RED
+        tcd.text_color_file_replace = tcd.text_color_warning;
     }
 
     private static void setDefaultTheme(ThemeColorList tcd) {
@@ -53,7 +62,7 @@ public class ThemeUtil {
 //        tcd.text_color_dialog_title=0xffffffff;
 //        tcd.dialog_title_background_color=0xff303030;//515151;
 //        tcd.dialog_msg_background_color=0xff303030;
-        tcd.text_background_color=0xff303030;
+        tcd.text_background_color=0xff303030;//rgb(48, 48, 48)
 //        tcd.window_background_color_content=0xff303030;
         tcd.text_color_warning=Color.YELLOW;
 //
@@ -61,7 +70,13 @@ public class ThemeUtil {
         tcd.text_color_error=Color.RED;
         tcd.title_text_color=0xffffffff;
 //        tcd.title_background_color=0xff303030;
-        tcd.title_background_color=0xff202020;
+        tcd.title_background_color=0xff202020;//rgb(32, 32, 32)
+
+        tcd.text_color_sync_started = Color.WHITE;
+        tcd.text_color_sync_success = Color.GREEN;
+        tcd.text_color_sync_cancel = tcd.text_color_warning;//Color.YELLOW
+        tcd.text_color_file_delete = tcd.text_color_error;//Color.RED
+        tcd.text_color_file_replace = tcd.text_color_warning;//Color.YELLOW
     }
 
     private static void setBlackTheme(ThemeColorList tcd) {
@@ -78,6 +93,12 @@ public class ThemeUtil {
         tcd.text_color_error=Color.RED;
         tcd.title_text_color=0xffffffff;
         tcd.title_background_color=0xff000000;
+
+        tcd.text_color_sync_started = Color.WHITE;
+        tcd.text_color_sync_success = Color.GREEN;
+        tcd.text_color_sync_cancel = tcd.text_color_warning;//Color.YELLOW
+        tcd.text_color_file_delete = tcd.text_color_error;//Color.RED
+        tcd.text_color_file_replace = tcd.text_color_warning;//Color.YELLOW
     }
 
 
