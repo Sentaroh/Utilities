@@ -32,6 +32,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.support.v4.app.FragmentManager;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -40,10 +41,13 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class CommonDialog {
 	private FragmentManager mFragMgr =null;
@@ -58,6 +62,43 @@ public class CommonDialog {
         MessageDialogFragment cdf =MessageDialogFragment.newInstance(negative, type, title, msgtext);
         cdf.showDialog(mFragMgr,cdf,ntfy);
 	};
+
+    static public Toast getToastShort(Activity a, String msg) {
+        Toast toast=showToast(a, msg, Toast.LENGTH_SHORT);
+        return toast;
+    }
+
+    static public Toast getToastLong(Activity a, String msg) {
+        Toast toast=showToast(a, msg, Toast.LENGTH_LONG);
+        return toast;
+    }
+
+    static private Toast showToast(Activity a, String msg, int duration) {
+        Toast toast=Toast.makeText(a, msg, duration);
+        View tv=toast.getView();
+        int fg_color= Color.DKGRAY, bg_color=Color.LTGRAY;
+        if (ThemeUtil.isLightThemeUsed(a)) {
+            fg_color=Color.WHITE;
+            bg_color=0xff666666;//<-Color.DKGRAY 0xff444444;
+        }
+        GradientDrawable drawable = new GradientDrawable();
+        drawable.setStroke(3, bg_color);
+        drawable.setCornerRadius(22);
+        drawable.setColor(bg_color);
+        tv.setBackground(drawable);
+//        tv.setBackgroundColor(bg_color);
+        if (tv instanceof ViewGroup) {
+            ViewGroup vg = (ViewGroup)tv;
+            for (int i = 0; i < vg.getChildCount(); i++) {
+                View cv = vg.getChildAt(i);
+                if (cv instanceof TextView) {
+                    ((TextView) cv).setBackgroundColor(bg_color);
+                    ((TextView) cv).setTextColor(fg_color);
+                }
+            }
+        }
+        return toast;
+    }
 
     static public Dialog showProgressSpinIndicator(Activity a) {
         final Dialog dialog=new Dialog(a, android.R.style.Theme_Translucent);
