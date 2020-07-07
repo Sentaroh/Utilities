@@ -8,7 +8,7 @@
         <string name="msgs_file_select_edit_dlg_cancel">Отменить</string>
         <string name="msgs_file_select_edit_dlg_filename">Имя файла</string>
         <string name="msgs_file_select_edit_dlg_dir_name">Название каталога</string>
-        <string name="msgs_file_select_edit_dlg_dir_created">%создал</string>
+        <string name="msgs_file_select_edit_dlg_dir_created">%s создал</string>
         <string name="msgs_file_select_edit_dlg_dir_not_created">%s не удалось создать</string>
         <string name="msgs_file_select_edit_dlg_dir_create_file">Создать новый файл</string>
         <string name="msgs_file_select_edit_dlg_filename_not_specified">Имя файла не указано</string>
