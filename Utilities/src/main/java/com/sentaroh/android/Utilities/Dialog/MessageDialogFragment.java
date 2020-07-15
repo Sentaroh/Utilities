@@ -27,7 +27,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
-import android.os.Build;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.DialogFragment;
@@ -64,6 +64,8 @@ public class MessageDialogFragment extends DialogFragment {
 	private NotifyEvent mNotifyEvent=null;
 	
 	private ThemeColorList mThemeColorList;
+
+	private int mMessageTextColor =-1;
 
 	public static MessageDialogFragment newInstance(
 			boolean negative, String type, String title, String msgtext) {
@@ -242,7 +244,11 @@ public class MessageDialogFragment extends DialogFragment {
     		});
 		}
     };
-    
+
+    public void setMessageTextColor(int color) {
+        mMessageTextColor =color;
+    }
+
     private void initViewWidget() {
     	if (DEBUG_ENABLE) Log.v(APPLICATION_TAG,"initViewWidget");
 
@@ -257,27 +263,34 @@ public class MessageDialogFragment extends DialogFragment {
     	
     	LinearLayout btn_view=(LinearLayout)mDialog.findViewById(R.id.common_dialog_btn_view);
 //    	btn_view.setBackgroundColor(mThemeColorList.dialog_msg_background_color);
-    	
+
+        TextView msg_text=(TextView)mDialog.findViewById(R.id.common_dialog_msg);
+
 		if (mDialogTitleType.equals("I")) {
 			title_icon.setImageResource(R.drawable.dialog_information);
-//			title.setTextColor(mThemeColorList.text_color_info);
+			title.setTextColor(mThemeColorList.title_text_color);
 		} else if (mDialogTitleType.equals("W")) {
 			title_icon.setImageResource(R.drawable.dialog_warning);
-//			title.setTextColor(Color.YELLOW);
+			title.setTextColor(Color.YELLOW);
 		} else if (mDialogTitleType.equals("E")) {
 			title_icon.setImageResource(R.drawable.dialog_error);
-//			title.setTextColor(mThemeColorList.text_color_error);
+			title.setTextColor(mThemeColorList.text_color_error);
+        } else if (mDialogTitleType.equals("D")) {
+            title_icon.setImageResource(R.drawable.dialog_error);
+            title.setTextColor(mThemeColorList.text_color_error);
+            msg_view.setBackgroundColor(mThemeColorList.title_background_color);
+            btn_view.setBackgroundColor(mThemeColorList.title_background_color);
+            msg_text.setTextColor(mThemeColorList.text_color_error);
 		}
-		title.setTextColor(mThemeColorList.title_text_color);
-		title.setText(mDialogTitle);
-		TextView msg_text=(TextView)mDialog.findViewById(R.id.common_dialog_msg);
-		if (mDialogMsgText.equals("")) msg_text.setVisibility(View.GONE);
-		else {
-			msg_text.setText(mDialogMsgText);
+        if (mDialogMsgText.equals("")) msg_text.setVisibility(View.GONE);
+        else {
+            msg_text.setText(mDialogMsgText);
 //			msg_text.setTextColor(mThemeColorList.text_color_primary);
 //			msg_text.setBackgroundColor(mThemeColorList.dialog_msg_background_color);
-		}
-		
+            if (mMessageTextColor!=-1) msg_text.setTextColor(mMessageTextColor);
+        }
+		title.setText(mDialogTitle);
+
 		final Button btnOk = (Button) mDialog.findViewById(R.id.common_dialog_btn_ok);
 		if (!mDialogButtonTextOk.equals("")) btnOk.setText(mDialogButtonTextOk);
 		final Button btnCancel = (Button) mDialog.findViewById(R.id.common_dialog_btn_cancel);
