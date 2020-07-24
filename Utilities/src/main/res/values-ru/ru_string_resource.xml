@@ -27,10 +27,12 @@
         <string name="msgs_common_dialog_information">Информация</string>
         <string name="msgs_common_dialog_warning">Предупреждение</string>
         <string name="msgs_common_dialog_error">Ошибка</string>
+        <string name="msgs_common_dialog_danger">Опасный</string>
         <string name="msgs_common_dialog_ok">OK</string>
         <string name="msgs_common_dialog_cancel">Отменить</string>
         <string name="msgs_common_dialog_canceling">Отмена</string>
         <string name="msgs_common_dialog_save">Сохранить</string>
+        <string name="msgs_common_dialog_confirm">Подтвердите </string>
         <string name="msgs_common_dialog_add">Добавить</string>
         <string name="msgs_common_dialog_search">Поиск</string>
         <string name="msgs_common_dialog_close">Закрыть</string>
