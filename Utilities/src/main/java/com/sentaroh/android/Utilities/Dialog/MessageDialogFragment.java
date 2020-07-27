@@ -271,7 +271,8 @@ public class MessageDialogFragment extends DialogFragment {
 			title.setTextColor(mThemeColorList.title_text_color);
 		} else if (mDialogTitleType.equals("W")) {
 			title_icon.setImageResource(R.drawable.dialog_warning);
-			title.setTextColor(Color.YELLOW);
+            title.setTextColor(mThemeColorList.title_text_color);
+//			title.setTextColor(Color.YELLOW);
 		} else if (mDialogTitleType.equals("E")) {
 			title_icon.setImageResource(R.drawable.dialog_error);
 			title.setTextColor(mThemeColorList.text_color_error);
