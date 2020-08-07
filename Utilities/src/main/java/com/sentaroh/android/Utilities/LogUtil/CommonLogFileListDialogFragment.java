@@ -33,12 +33,14 @@ import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -510,10 +512,13 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
 		btn_preview.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
-				Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
-				intent.setDataAndType(Uri.parse("file://"+getTempLogFilePath()), "text/plain");
-//				startActivity(intent);
-                startActivity(Intent.createChooser(intent, getTempLogFilePath()));
+			    try {
+                    startLogfileViewerIntent(mContext, getTempLogFilePath());
+                } catch(Exception e) {
+                    MessageDialogFragment mdf =MessageDialogFragment.newInstance(false, "W",
+                            mContext.getString(R.string.msgs_log_file_browse_app_can_not_found), e.getMessage());
+                    mdf.showDialog(mFragment.getFragmentManager(), mdf, null);
+                }
 			}
 		});
 
@@ -541,8 +546,13 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
 		});
 
 		dialog.show();
-		
 	};
+
+	public void startLogfileViewerIntent(Context c, String fpath) {
+        Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
+        intent.setDataAndType(Uri.parse("file://"+fpath), "text/plain");
+        startActivity(Intent.createChooser(intent, fpath));
+    }
 
 	private void deleteTempLogFile() {
 	    String fp=getTempLogFilePath();
@@ -625,7 +635,8 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
 //		    intent.putExtra(Intent.EXTRA_BCC, new String[]{"bcc@example.com"});  
 	    intent.putExtra(Intent.EXTRA_SUBJECT, mSendSubject);
 	    intent.putExtra(Intent.EXTRA_TEXT, mContext.getString(R.string.msgs_log_file_list_confirm_send_log_description));
-	    intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(lf));
+	    Uri file_uri=createLogFileUri(mContext, lf.getPath());
+	    intent.putExtra(Intent.EXTRA_STREAM, file_uri);//Uri.fromFile(lf));
 	    try {
             mContext.startActivity(intent);
         } catch (Exception e) {
@@ -634,7 +645,12 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
                     mContext.getString(R.string.msgs_log_file_send_app_can_not_found), e.getMessage(), null);
         }
 	};
-    
+
+    public Uri createLogFileUri(Context c, String fpath) {
+        Uri uri=Uri.fromFile(new File(fpath));
+        return uri;
+    }
+
     private boolean mDisableChangeLogEnabled=false;
 	final private void confirmSettingsLogOption(final boolean enabled) {
     	final Button btn_save=(Button)mDialog.findViewById(R.id.log_file_list_dlg_log_save);
