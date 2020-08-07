@@ -169,6 +169,14 @@ public class SafManager {
         return result;
     }
 
+    public String getSdcardUuid() {
+        return sdcardRootUuid;
+    }
+
+    public String getUsbUuid() {
+        return usbRootUuid;
+    }
+
     public void loadSafFile() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         String uuid_list=prefs.getString(SDCARD_UUID_KEY, "");
@@ -181,8 +189,8 @@ public class SafManager {
             for(String uuid:uuid_array) {
                 if (!isUsbUuid(uuid)) {
                     SafFile sf= SafFile.fromTreeUri(mContext, Uri.parse("content://com.android.externalstorage.documents/tree/"+uuid+"%3A"));
-                    if (sf!=null && sf.getName()!=null) {
-                        sdcardRootUuid=uuid;
+                    sdcardRootUuid=uuid;
+                    if ((sf!=null && sf.getName()!=null) || Build.VERSION.SDK_INT>=30) {
                         String esd="";
                         if (Build.VERSION.SDK_INT>=23) {//for Huawei mediapad
                             esd="/storage/"+uuid;
@@ -211,12 +219,12 @@ public class SafManager {
             for(String uuid:uuid_array) {
                 if (isUsbUuid(uuid)) {
                     SafFile sf= SafFile.fromTreeUri(mContext, Uri.parse("content://com.android.externalstorage.documents/tree/"+uuid+"%3A"));
-                    if (sf!=null && sf.getName()!=null) {
+                    usbRootUuid=uuid;
+                    if (sf!=null && sf.getName()!=null || Build.VERSION.SDK_INT>=30) {
                         File ufp=new File("/storage/"+uuid);
                         if (ufp.exists()) {
                             usbRootDirectory="/storage/"+uuid;
                             usbRootSafFile=sf;
-                            usbRootUuid=uuid;
                             putInfoMessage("loadSafFile USB uuid found, uuid="+uuid);
                         } else {
                             putErrorMessage("loadSafFile USB uuid found but mount point does not exists, uuid="+uuid);
