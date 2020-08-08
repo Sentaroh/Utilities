@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -1152,7 +1153,7 @@ public class CommonFileSelector extends DialogFragment {
                     public void positiveResponse(Context c, Object[] o) {
                         File lf= new File(n_path);
                         boolean rc_create=false;
-                        if (c_dir.startsWith(mSafFileMgr.getSdcardRootPath())) {
+                        if (c_dir.startsWith(mSafFileMgr.getSdcardRootPath()) && Build.VERSION.SDK_INT<=29) {
                             SafFile sf=mSafFileMgr.createSdcardItem(n_path, true);
                             if (sf==null) {
                                 CommonDialog cd=new CommonDialog(context, getFragmentManager());
@@ -1163,7 +1164,7 @@ public class CommonFileSelector extends DialogFragment {
                                 return;
                             }
                             rc_create=sf.exists();
-                        } else if (c_dir.startsWith(mSafFileMgr.getUsbRootPath())) {
+                        } else if (c_dir.startsWith(mSafFileMgr.getUsbRootPath()) && Build.VERSION.SDK_INT<=29) {
                             SafFile sf=mSafFileMgr.createUsbItem(n_path, true);
                             if (sf==null) {
                                 CommonDialog cd=new CommonDialog(context, getFragmentManager());
