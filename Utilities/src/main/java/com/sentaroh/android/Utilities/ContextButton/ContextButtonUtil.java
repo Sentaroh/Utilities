@@ -42,13 +42,14 @@ public class ContextButtonUtil {
 		return px;
 	};
 
-    public static void setButtonLabelListener(final Activity a, ImageButton ib, final String label) {
+    public static void setButtonLabelListener(final Activity a, final ImageButton ib, final String label) {
         ib.setOnLongClickListener(new OnLongClickListener(){
             @Override
             public boolean onLongClick(View v) {
-                Toast toast= CommonDialog.getToastShort(a, label);
-                positionToast(toast, v, a.getWindow(), 0, 0);
-                toast.show();
+//                Toast toast= CommonDialog.getToastShort(a, label);
+//                positionToast(toast, v, a.getWindow(), 0, 0);
+//                toast.show();
+                CommonDialog.showPopupMessageAsUpAnchorView(a, ib, label, 2);
                 return true;
             }
         });
