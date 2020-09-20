@@ -41,6 +41,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.FileProvider;
+import android.text.Editable;
+import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -53,8 +56,10 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CheckedTextView;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -525,7 +530,8 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
 		btn_ok.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
-				sendLogFileToDeveloper(getTempLogFilePath());
+//				sendLogFileToDeveloper(getTempLogFilePath());
+				getProblemDescription(getTempLogFilePath());
 				dialog.dismiss();
 			}
 		});
@@ -554,7 +560,182 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
         startActivity(Intent.createChooser(intent, fpath));
     }
 
-	private void deleteTempLogFile() {
+    private void getProblemDescription(final String fp) {
+        final Dialog dialog = new Dialog(getActivity());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.confirm_send_log_option_dlg);
+
+        final LinearLayout ll_dlg_view = (LinearLayout) dialog.findViewById(R.id.confirm_send_log_option_dlg_view);
+//        CommonUtilities.setDialogBoxOutline(mContext, ll_dlg_view);
+//        ll_dlg_view.setBackgroundColor(mGp.themeColorList.dialog_msg_background_color);
+
+        final LinearLayout title_view = (LinearLayout) dialog.findViewById(R.id.confirm_send_log_option_dlg_title_view);
+        final TextView tv_title = (TextView) dialog.findViewById(R.id.confirm_send_log_option_dlg_title);
+        title_view.setBackgroundColor(mThemeColorList.title_background_color);
+        tv_title.setTextColor(mThemeColorList.title_text_color);
+
+        final TextView tv_msg=(TextView)dialog.findViewById(R.id.confirm_send_log_option_dlg_msg);
+        tv_msg.setTextColor(mThemeColorList.text_color_error);
+        final EditText et_prob=(EditText)dialog.findViewById(R.id.confirm_send_log_option_dlg_question);
+        et_prob.setHint(mContext.getString(R.string.msgs_log_file_prob_question_desc_title));
+        et_prob.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+
+        final CheckedTextView ct_use_password=(CheckedTextView)dialog.findViewById(R.id.confirm_send_log_option_dlg_use_password);
+        final LinearLayout ll_password_view=(LinearLayout)dialog.findViewById(R.id.confirm_send_log_option_dlg_password_view);
+        final EditText et_password=(EditText)dialog.findViewById(R.id.confirm_send_log_option_dlg_password);
+        final EditText et_confirm_password=(EditText)dialog.findViewById(R.id.confirm_send_log_option_dlg_confirm_password);
+        final Button btn_ok=(Button)dialog.findViewById(R.id.confirm_send_log_option_dlg_ok_btn);
+        final Button btn_cancel=(Button)dialog.findViewById(R.id.confirm_send_log_option_dlg_cancel_btn);
+
+        CommonDialog.setDlgBoxSizeLimit(dialog,true);
+
+        ct_use_password.setChecked(true);
+        ct_use_password.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean isChecked=!ct_use_password.isChecked();
+                ct_use_password.setChecked(isChecked);
+                if (isChecked) ll_password_view.setVisibility(LinearLayout.VISIBLE);
+                else ll_password_view.setVisibility(LinearLayout.GONE);
+                setSendButtonEnabled(dialog);
+            }
+        });
+        et_prob.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                setSendButtonEnabled(dialog);
+            }
+        });
+        et_password.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                setSendButtonEnabled(dialog);
+            }
+        });
+        et_confirm_password.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                setSendButtonEnabled(dialog);
+            }
+        });
+
+        setSendButtonEnabled(dialog);
+        btn_ok.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendLogFileToDeveloper(getTempLogFilePath(), et_prob.getText().toString(), et_password.getText().toString());
+                if (ct_use_password.isChecked() && !et_password.getText().toString().equals("")) {
+                    confirmSendPassword(et_password.getText().toString());
+                }
+                dialog.dismiss();
+            }
+        });
+
+        btn_cancel.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                btn_cancel.performClick();
+            }
+        });
+
+        dialog.show();
+    }
+
+    private void setSendButtonEnabled(Dialog dialog) {
+        final TextView msg=(TextView)dialog.findViewById(R.id.confirm_send_log_option_dlg_msg);
+
+        final Button btn_ok=(Button)dialog.findViewById(R.id.confirm_send_log_option_dlg_ok_btn);
+        final Button btn_cancel=(Button)dialog.findViewById(R.id.confirm_send_log_option_dlg_cancel_btn);
+
+        final CheckedTextView ct_use_password=(CheckedTextView)dialog.findViewById(R.id.confirm_send_log_option_dlg_use_password);
+        final LinearLayout ll_password_view=(LinearLayout)dialog.findViewById(R.id.confirm_send_log_option_dlg_password_view);
+        final EditText et_prob=(EditText)dialog.findViewById(R.id.confirm_send_log_option_dlg_question);
+        final EditText et_password=(EditText)dialog.findViewById(R.id.confirm_send_log_option_dlg_password);
+        final EditText et_confirm_password=(EditText)dialog.findViewById(R.id.confirm_send_log_option_dlg_confirm_password);
+        if(et_prob.getText().length()<10) {
+            msg.setText(mContext.getString(R.string.msgs_log_file_list_confirm_send_log_description));
+            CommonDialog.setViewEnabled(getActivity(), btn_ok, false);
+            et_prob.requestFocus();
+            return;
+        }
+        if (ct_use_password.isChecked()) {
+            if (et_password.length()==0) {
+                msg.setText(mContext.getString(R.string.msgs_log_file_list_confirm_send_log_password_not_specified));
+                CommonDialog.setViewEnabled(getActivity(), btn_ok, false);
+                return;
+            }
+            if (et_confirm_password.length()==0) {
+                msg.setText(mContext.getString(R.string.msgs_log_file_list_confirm_send_log_confirm_password_not_specified));
+                CommonDialog.setViewEnabled(getActivity(), btn_ok, false);
+                return;
+            }
+            if (et_password.getText().length()<6 || et_password.getText().length()>20) {
+                msg.setText(mContext.getString(R.string.msgs_log_file_list_confirm_send_log_password_length_error));
+                CommonDialog.setViewEnabled(getActivity(), btn_ok, false);
+                return;
+            }
+            if (!et_password.getText().toString().equals(et_confirm_password.getText().toString())) {
+                msg.setText(mContext.getString(R.string.msgs_log_file_list_confirm_send_log_password_and_confirm_password_not_matched));
+                CommonDialog.setViewEnabled(getActivity(), btn_ok, false);
+                return;
+            }
+        }
+        msg.setText("");
+        CommonDialog.setViewEnabled(getActivity(), btn_ok, true);
+    }
+
+    private void confirmSendPassword(final String password) {
+        NotifyEvent ntfy=new NotifyEvent(mContext);
+        ntfy.setListener(new NotifyEventListener() {
+            @Override
+            public void positiveResponse(Context c, Object[] o) {
+                sendPasswordMail(password);
+            }
+
+            @Override
+            public void negativeResponse(Context c, Object[] o) {
+
+            }
+        });
+        MessageDialogFragment mdf=MessageDialogFragment.newInstance(true, "W",
+                mContext.getString(R.string.msgs_log_file_list_confirm_send_log_send_password_title),
+                mContext.getString(R.string.msgs_log_file_list_confirm_send_log_send_password_message));
+        mdf.showDialog(getFragmentManager(), mdf, ntfy);
+    }
+
+
+    private void sendPasswordMail(String password) {
+        Intent intent=new Intent();
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setAction(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{MAIL_TO});
+        intent.putExtra(Intent.EXTRA_SUBJECT, "None");
+        intent.putExtra(Intent.EXTRA_TEXT, password);
+        mContext.startActivity(intent);
+    }
+
+    private void deleteTempLogFile() {
 	    String fp=getTempLogFilePath();
 	    if (fp!=null) {
             File lf=new File(fp);
@@ -611,7 +792,7 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
 		}
 	};
 
-	final public void sendLogFileToDeveloper(String log_file_path) {
+	final public void sendLogFileToDeveloper(String log_file_path, String desc, String password) {
 		CommonLogUtil.resetLogReceiver(mContext, mGp);
 		
 		String zip_file_name=getZipLogFilePath();
@@ -622,8 +803,11 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
 //		createZipFile(zip_file_name,log_file_path);
 		String[] lmp=LocalMountPoint.convertFilePathToMountpointFormat(mContext, log_file_path);
 		ZipUtil.createZipFile(mContext, null, null, zip_file_name, lmp[0], log_file_path);
-		
-	    Intent intent=new Intent();
+//        ZipUtil.createAes256EncZipFile(mContext, null, null, zip_file_name, lmp[0], "com.sentaroh.android.LogSend", log_file_path);
+        if (password.equals("")) ZipUtil.createZipFile(mContext, null, null, zip_file_name, lmp[0], log_file_path);
+        else ZipUtil.createAes256EncZipFile(mContext, null, null, zip_file_name, lmp[0], password, log_file_path);
+
+        Intent intent=new Intent();
 	    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 	    intent.setAction(Intent.ACTION_SEND);  
 //	    intent.setType("message/rfc822");  
@@ -634,7 +818,7 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
 //		    intent.putExtra(Intent.EXTRA_CC, new String[]{"cc@example.com"});  
 //		    intent.putExtra(Intent.EXTRA_BCC, new String[]{"bcc@example.com"});  
 	    intent.putExtra(Intent.EXTRA_SUBJECT, mSendSubject);
-	    intent.putExtra(Intent.EXTRA_TEXT, mContext.getString(R.string.msgs_log_file_list_confirm_send_log_description));
+	    intent.putExtra(Intent.EXTRA_TEXT, desc);//mContext.getString(R.string.msgs_log_file_list_confirm_send_log_description));
 	    Uri file_uri=createLogFileUri(mContext, lf.getPath());
 	    intent.putExtra(Intent.EXTRA_STREAM, file_uri);//Uri.fromFile(lf));
 	    try {
