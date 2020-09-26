@@ -27,7 +27,7 @@
         <string name="msgs_common_dialog_information">Information</string>
         <string name="msgs_common_dialog_warning">Warnning</string>
         <string name="msgs_common_dialog_error">Error</string>
-        <string name="msgs_common_dialog_danger">Dangerous</string>
+        <string name="msgs_common_dialog_danger">Danger</string>
         <string name="msgs_common_dialog_ok">OK</string>
         <string name="msgs_common_dialog_cancel">Cancel</string>
         <string name="msgs_common_dialog_canceling">Canceling</string>
@@ -78,7 +78,7 @@
         <string name="msgs_log_file_list_confirm_send_log_password_not_specified">No password was entered.</string>
         <string name="msgs_log_file_list_confirm_send_log_confirm_password_not_specified">No confirmation password was entered.</string>
         <string name="msgs_log_file_list_confirm_send_log_password_length_error">Your password must be between 6 and 20 characters long.</string>
-        <string name="msgs_log_file_list_confirm_send_log_password_and_confirm_password_not_matched">Password and verification password do not match.</string>
+        <string name="msgs_log_file_list_confirm_send_log_password_and_confirm_password_not_matched">Password and confirmation password do not match.</string>
         <string name="msgs_log_file_list_confirm_send_log_send_password_title">Sending log file passwords</string>
         <string name="msgs_log_file_list_confirm_send_log_send_password_message">Do you want to send the log file password to the developer?</string>
         <string name="msgs_log_file_list_confirm_send_log_send">Send</string>

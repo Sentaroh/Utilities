@@ -27,7 +27,7 @@
         <string name="msgs_common_dialog_information">Information</string>
         <string name="msgs_common_dialog_warning">Avertissement</string>
         <string name="msgs_common_dialog_error">Erreur</string>
-        <string name="msgs_common_dialog_danger">Dangereux</string>
+        <string name="msgs_common_dialog_danger">Danger</string>
         <string name="msgs_common_dialog_ok">OK</string>
         <string name="msgs_common_dialog_cancel">Annuler</string>
         <string name="msgs_common_dialog_canceling">Annulation</string>
@@ -75,11 +75,11 @@
         <string name="msgs_log_file_list_confirm_send_log_password">mot de passe</string>
         <string name="msgs_log_file_list_confirm_send_log_confirm_password">Mot de passe de confirmation</string>
         <string name="msgs_log_file_list_confirm_send_log_password_desc">Lorsque vous protégez vos fichiers journaux avec un mot de passe, veuillez envoyer le mot de passe au développeur dans un courriel séparé.</string>
-        <string name="msgs_log_file_list_confirm_send_log_password_not_specified">Aucun mot de passe n\'a été saisi.</string>
-        <string name="msgs_log_file_list_confirm_send_log_confirm_password_not_specified">Aucun mot de passe de confirmation n\'a été saisi.</string>
+        <string name="msgs_log_file_list_confirm_send_log_password_not_specified">Aucun mot de passe saisi.</string>
+        <string name="msgs_log_file_list_confirm_send_log_confirm_password_not_specified">Mot de passe de confirmation non saisi.</string>
         <string name="msgs_log_file_list_confirm_send_log_password_length_error">Votre mot de passe doit comporter entre 6 et 20 caractères.</string>
-        <string name="msgs_log_file_list_confirm_send_log_password_and_confirm_password_not_matched">Le mot de passe et le mot de passe de vérification ne correspondent pas.</string>
-        <string name="msgs_log_file_list_confirm_send_log_send_password_title">Envoi des mots de passe des fichiers journaux</string>
+        <string name="msgs_log_file_list_confirm_send_log_password_and_confirm_password_not_matched">Le mot de passe et celui de confirmation ne correspondent pas.</string>
+        <string name="msgs_log_file_list_confirm_send_log_send_password_title">Envoi du mot de passe des fichiers journaux</string>
         <string name="msgs_log_file_list_confirm_send_log_send_password_message">Voulez-vous envoyer le mot de passe du fichier journal au développeur ?</string>
         <string name="msgs_log_file_list_confirm_send_log_send">Envoyer</string>
         <string name="msgs_log_file_list_confirm_send_log_preview">Aperçu</string>
