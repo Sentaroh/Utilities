@@ -87,13 +87,18 @@ public class CommonDialog {
         return newColor;
     }
 
+    static private final int TOAST_MESSAGE_FG_COLOR=Color.BLACK;
+    static private final int TOAST_MESSAGE_FG_COLOR_LIGHT=Color.WHITE;
+    static private final int TOAST_MESSAGE_BG_COLOR=Color.LTGRAY;
+    static private final int TOAST_MESSAGE_BG_COLOR_LIGHT=0xff666666;
+    static private final float TOAST_MESSAGE_TRANSLUCENT_RATIO =1.0f;
     static private Toast showToast(Activity a, String msg, int duration) {
         Toast toast=Toast.makeText(a, msg, duration);
         View tv=toast.getView();
-        int fg_color= Color.BLACK, bg_color=getColorWithAlpha(Color.LTGRAY, 0.8f);
+        int fg_color= TOAST_MESSAGE_FG_COLOR, bg_color=getColorWithAlpha(TOAST_MESSAGE_BG_COLOR, TOAST_MESSAGE_TRANSLUCENT_RATIO);
         if (ThemeUtil.isLightThemeUsed(a)) {
-            fg_color=Color.WHITE;
-            bg_color=getColorWithAlpha(0xff666666, 0.8f);//<-Color.DKGRAY 0xff444444;
+            fg_color=TOAST_MESSAGE_FG_COLOR_LIGHT;
+            bg_color=getColorWithAlpha(TOAST_MESSAGE_BG_COLOR_LIGHT, TOAST_MESSAGE_TRANSLUCENT_RATIO);//<-Color.DKGRAY 0xff444444;
         }
 
         GradientDrawable drawable = new GradientDrawable();
@@ -171,10 +176,10 @@ public class CommonDialog {
     }
 
     static private void setToastMessageView(Activity a, View custom_toast_view, TextView toast_message) {
-        int fg_color= Color.BLACK, bg_color=getColorWithAlpha(Color.LTGRAY, 0.8f);
+        int fg_color= TOAST_MESSAGE_FG_COLOR, bg_color=getColorWithAlpha(TOAST_MESSAGE_BG_COLOR, TOAST_MESSAGE_TRANSLUCENT_RATIO);
         if (ThemeUtil.isLightThemeUsed(a)) {
-            fg_color=Color.WHITE;
-            bg_color=getColorWithAlpha(0xff666666, 0.8f);//<-Color.DKGRAY 0xff444444;
+            fg_color=TOAST_MESSAGE_FG_COLOR_LIGHT;
+            bg_color=getColorWithAlpha(TOAST_MESSAGE_BG_COLOR_LIGHT, TOAST_MESSAGE_TRANSLUCENT_RATIO);//<-Color.DKGRAY 0xff444444;
         }
 
         toast_message.setTextColor(fg_color);
