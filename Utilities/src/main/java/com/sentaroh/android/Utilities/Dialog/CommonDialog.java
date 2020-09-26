@@ -77,14 +77,25 @@ public class CommonDialog {
         return toast;
     }
 
+    static private int getColorWithAlpha(int color, float ratio) {
+        int newColor = 0;
+        int alpha = Math.round(Color.alpha(color) * ratio);
+        int r = Color.red(color);
+        int g = Color.green(color);
+        int b = Color.blue(color);
+        newColor = Color.argb(alpha, r, g, b);
+        return newColor;
+    }
+
     static private Toast showToast(Activity a, String msg, int duration) {
         Toast toast=Toast.makeText(a, msg, duration);
         View tv=toast.getView();
-        int fg_color= Color.DKGRAY, bg_color=Color.LTGRAY;
+        int fg_color= Color.BLACK, bg_color=getColorWithAlpha(Color.LTGRAY, 0.8f);
         if (ThemeUtil.isLightThemeUsed(a)) {
             fg_color=Color.WHITE;
-            bg_color=0xff666666;//<-Color.DKGRAY 0xff444444;
+            bg_color=getColorWithAlpha(0xff666666, 0.8f);//<-Color.DKGRAY 0xff444444;
         }
+
         GradientDrawable drawable = new GradientDrawable();
         drawable.setStroke(3, bg_color);
         drawable.setCornerRadius(22);
@@ -96,7 +107,7 @@ public class CommonDialog {
             for (int i = 0; i < vg.getChildCount(); i++) {
                 View cv = vg.getChildAt(i);
                 if (cv instanceof TextView) {
-                    ((TextView) cv).setBackgroundColor(bg_color);
+                    //((TextView) cv).setBackgroundColor(bg_color);
                     ((TextView) cv).setTextColor(fg_color);
                 }
             }
@@ -160,13 +171,12 @@ public class CommonDialog {
     }
 
     static private void setToastMessageView(Activity a, View custom_toast_view, TextView toast_message) {
-        int fg_color= Color.DKGRAY, bg_color=Color.LTGRAY;
+        int fg_color= Color.BLACK, bg_color=getColorWithAlpha(Color.LTGRAY, 0.8f);
         if (ThemeUtil.isLightThemeUsed(a)) {
             fg_color=Color.WHITE;
-            bg_color=0xff666666;//<-Color.DKGRAY 0xff444444;
-        } else {
-            fg_color=Color.BLACK;
+            bg_color=getColorWithAlpha(0xff666666, 0.8f);//<-Color.DKGRAY 0xff444444;
         }
+
         toast_message.setTextColor(fg_color);
         GradientDrawable drawable = new GradientDrawable();
         drawable.setStroke(3, bg_color);
