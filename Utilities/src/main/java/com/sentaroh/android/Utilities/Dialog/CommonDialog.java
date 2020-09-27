@@ -33,6 +33,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.support.v4.app.FragmentManager;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -115,6 +116,8 @@ public class CommonDialog {
             for (int i = 0; i < vg.getChildCount(); i++) {
                 View cv = vg.getChildAt(i);
                 if (cv instanceof TextView) {
+                    if (Build.VERSION.SDK_INT >= 23) ((TextView) cv).setTextAppearance(android.R.style.TextAppearance_Medium);
+                    else ((TextView) cv).setTextSize(TypedValue.COMPLEX_UNIT_PX, a.getResources().getDimension(R.dimen.text_medium));
                     //((TextView) cv).setBackgroundColor(bg_color);
                     ((TextView) cv).setTextColor(fg_color);
                 }
