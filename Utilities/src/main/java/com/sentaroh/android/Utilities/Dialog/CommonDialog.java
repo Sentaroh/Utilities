@@ -89,19 +89,19 @@ public class CommonDialog {
 
     static private final int TOAST_MESSAGE_FG_COLOR=Color.BLACK;
     static private final int TOAST_MESSAGE_FG_COLOR_LIGHT=Color.WHITE;
-    static private final int TOAST_MESSAGE_BG_COLOR=Color.LTGRAY;
+    static private final int TOAST_MESSAGE_BG_COLOR=Color.WHITE;
     static private final int TOAST_MESSAGE_BG_COLOR_LIGHT=0xff666666;
     static private final float TOAST_MESSAGE_OPACITY_100=1.0f;
-    static private final float TOAST_MESSAGE_OPACITY_80=0.8f;
+    static private final float TOAST_MESSAGE_OPACITY_90=0.9f;
 
     //mainly used for App system notifications (Autosave settings, Sync task started...)
     static private Toast showToast(Activity a, String msg, int duration) {
         Toast toast=Toast.makeText(a, msg, duration);
         View tv=toast.getView();
-        int fg_color= TOAST_MESSAGE_FG_COLOR, bg_color=getColorWithAlpha(TOAST_MESSAGE_BG_COLOR, TOAST_MESSAGE_OPACITY_80);
+        int fg_color= TOAST_MESSAGE_FG_COLOR, bg_color=getColorWithAlpha(TOAST_MESSAGE_BG_COLOR, TOAST_MESSAGE_OPACITY_90);
         if (ThemeUtil.isLightThemeUsed(a)) {
             fg_color=TOAST_MESSAGE_FG_COLOR_LIGHT;
-            bg_color=getColorWithAlpha(TOAST_MESSAGE_BG_COLOR_LIGHT, TOAST_MESSAGE_OPACITY_80);//<-Color.DKGRAY 0xff444444;
+            bg_color=getColorWithAlpha(TOAST_MESSAGE_BG_COLOR_LIGHT, TOAST_MESSAGE_OPACITY_90);//<-Color.DKGRAY 0xff444444;
         }
 
         GradientDrawable drawable = new GradientDrawable();
