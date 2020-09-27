@@ -88,43 +88,47 @@ public class CommonDialog {
         return newColor;
     }
 
-    static private final int TOAST_MESSAGE_FG_COLOR=Color.BLACK;
-    static private final int TOAST_MESSAGE_FG_COLOR_LIGHT=Color.WHITE;
-    static private final int TOAST_MESSAGE_BG_COLOR=0xffdcdcdc; //RGB (220.220.220)
-    static private final int TOAST_MESSAGE_BG_COLOR_LIGHT=0xff666666;
-    static private final float TOAST_MESSAGE_OPACITY_100=1.0f;
-    static private final float TOAST_MESSAGE_OPACITY_90=0.9f;
-
     //mainly used for App system notifications (Autosave settings, Sync task started...)
     static private Toast showToast(Activity a, String msg, int duration) {
         Toast toast=Toast.makeText(a, msg, duration);
-        View tv=toast.getView();
-        int fg_color= TOAST_MESSAGE_FG_COLOR, bg_color=getColorWithAlpha(TOAST_MESSAGE_BG_COLOR, TOAST_MESSAGE_OPACITY_90);
-        if (ThemeUtil.isLightThemeUsed(a)) {
-            fg_color=TOAST_MESSAGE_FG_COLOR_LIGHT;
-            bg_color=getColorWithAlpha(TOAST_MESSAGE_BG_COLOR_LIGHT, TOAST_MESSAGE_OPACITY_90);//<-Color.DKGRAY 0xff444444;
-        }
-
-        GradientDrawable drawable = new GradientDrawable();
-        drawable.setStroke(3, bg_color);
-        drawable.setCornerRadius(22);
-        drawable.setColor(bg_color);
-        tv.setBackground(drawable);
-//        tv.setBackgroundColor(bg_color);
-        if (tv instanceof ViewGroup) {
-            ViewGroup vg = (ViewGroup)tv;
-            for (int i = 0; i < vg.getChildCount(); i++) {
-                View cv = vg.getChildAt(i);
-                if (cv instanceof TextView) {
-                    if (Build.VERSION.SDK_INT >= 23) ((TextView) cv).setTextAppearance(android.R.style.TextAppearance_Medium);
-                    else ((TextView) cv).setTextSize(TypedValue.COMPLEX_UNIT_PX, a.getResources().getDimension(R.dimen.text_medium));
-                    //((TextView) cv).setBackgroundColor(bg_color);
-                    ((TextView) cv).setTextColor(fg_color);
-                }
-            }
-        }
+        LayoutInflater inflater = a.getLayoutInflater();
+        LinearLayout custom_toast_view=(LinearLayout)inflater.inflate( R.layout.custom_toast_view, null);
+        TextView toast_message = (TextView)custom_toast_view.findViewById(R.id.custom_toast_message);
+        toast_message.setText(msg);
+        setToastMessageView(a, custom_toast_view, toast_message);
+        toast.setView(custom_toast_view);
         return toast;
     }
+
+//    static private Toast showToast(Activity a, String msg, int duration) {
+//        Toast toast=Toast.makeText(a, msg, duration);
+//        View tv=toast.getView();
+//        int fg_color= TOAST_MESSAGE_FG_COLOR, bg_color=getColorWithAlpha(TOAST_MESSAGE_BG_COLOR, TOAST_MESSAGE_OPACITY_90);
+//        if (ThemeUtil.isLightThemeUsed(a)) {
+//            fg_color=TOAST_MESSAGE_FG_COLOR_LIGHT;
+//            bg_color=getColorWithAlpha(TOAST_MESSAGE_BG_COLOR_LIGHT, TOAST_MESSAGE_OPACITY_90);//<-Color.DKGRAY 0xff444444;
+//        }
+//
+//        GradientDrawable drawable = new GradientDrawable();
+//        drawable.setStroke(3, bg_color);
+//        drawable.setCornerRadius(22);
+//        drawable.setColor(bg_color);
+//        tv.setBackground(drawable);
+////        tv.setBackgroundColor(bg_color);
+//        if (tv instanceof ViewGroup) {
+//            ViewGroup vg = (ViewGroup)tv;
+//            for (int i = 0; i < vg.getChildCount(); i++) {
+//                View cv = vg.getChildAt(i);
+//                if (cv instanceof TextView) {
+//                    if (Build.VERSION.SDK_INT >= 23) ((TextView) cv).setTextAppearance(android.R.style.TextAppearance_Medium);
+//                    else ((TextView) cv).setTextSize(TypedValue.COMPLEX_UNIT_PX, a.getResources().getDimension(R.dimen.text_medium));
+//                    //((TextView) cv).setBackgroundColor(bg_color);
+//                    ((TextView) cv).setTextColor(fg_color);
+//                }
+//            }
+//        }
+//        return toast;
+//    }
 
     static public void showPopupMessageAsUpAnchorView(Activity a, View anchor, String msg, int duration) {
         showPopupDropDownMessage(false, a, anchor, msg, duration, 0);
@@ -180,6 +184,13 @@ public class CommonDialog {
         }
 
     }
+
+    static private final int TOAST_MESSAGE_FG_COLOR=Color.BLACK;
+    static private final int TOAST_MESSAGE_FG_COLOR_LIGHT=Color.WHITE;
+    static private final int TOAST_MESSAGE_BG_COLOR=0xffdcdcdc; //RGB (220.220.220)
+    static private final int TOAST_MESSAGE_BG_COLOR_LIGHT=0xff666666;
+    static private final float TOAST_MESSAGE_OPACITY_100=1.0f;
+    static private final float TOAST_MESSAGE_OPACITY_90=0.9f;
 
     //mainly used for context buttons notification info
     static private void setToastMessageView(Activity a, View custom_toast_view, TextView toast_message) {
