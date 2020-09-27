@@ -89,7 +89,7 @@ public class CommonDialog {
 
     static private final int TOAST_MESSAGE_FG_COLOR=Color.BLACK;
     static private final int TOAST_MESSAGE_FG_COLOR_LIGHT=Color.WHITE;
-    static private final int TOAST_MESSAGE_BG_COLOR=Color.WHITE;
+    static private final int TOAST_MESSAGE_BG_COLOR=0xffdcdcdc; //RGB (220.220.220)
     static private final int TOAST_MESSAGE_BG_COLOR_LIGHT=0xff666666;
     static private final float TOAST_MESSAGE_OPACITY_100=1.0f;
     static private final float TOAST_MESSAGE_OPACITY_90=0.9f;
@@ -180,10 +180,10 @@ public class CommonDialog {
 
     //mainly used for context buttons notification info
     static private void setToastMessageView(Activity a, View custom_toast_view, TextView toast_message) {
-        int fg_color= TOAST_MESSAGE_FG_COLOR, bg_color=getColorWithAlpha(TOAST_MESSAGE_BG_COLOR, TOAST_MESSAGE_OPACITY_100);
+        int fg_color= TOAST_MESSAGE_FG_COLOR, bg_color=getColorWithAlpha(TOAST_MESSAGE_BG_COLOR, TOAST_MESSAGE_OPACITY_90);
         if (ThemeUtil.isLightThemeUsed(a)) {
             fg_color=TOAST_MESSAGE_FG_COLOR_LIGHT;
-            bg_color=getColorWithAlpha(TOAST_MESSAGE_BG_COLOR_LIGHT, TOAST_MESSAGE_OPACITY_100);//<-Color.DKGRAY 0xff444444;
+            bg_color=getColorWithAlpha(TOAST_MESSAGE_BG_COLOR_LIGHT, TOAST_MESSAGE_OPACITY_90);//<-Color.DKGRAY 0xff444444;
         }
 
         toast_message.setTextColor(fg_color);
