@@ -98,7 +98,7 @@
         <string name="msgs_password_input_preference_conf_not_specified">Confirmation password not specified</string>
         <string name="msgs_password_input_preference_less_than_min_length">Please specify at least a %s characters password.</string>
     <!-- msgs_ntstatus -->
-        <string name="msgs_ntstatus_common_info" formatted="false">User=%s, NT Status=0x%x, Remote server=%s, Network name=%s, File path=%s</string>
+        <string name="msgs_ntstatus_common_info">User=%1$s, NT Status=0x%2$x, Remote server=%3$s, Network name=%4$s, File path=%5$s</string>
         <string name="msgs_ntstatus_unsuccesful">A device attached to the system is not functioning.</string>
         <string name="msgs_ntstatus_access_denied">Access is denied.</string>
         <string name="msgs_ntstatus_logon_failure_unknown_user_name_or_bad_password">Logon failure : unknown user name or bad password.</string>

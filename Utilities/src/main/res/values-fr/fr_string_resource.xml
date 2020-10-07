@@ -98,7 +98,7 @@
         <string name="msgs_password_input_preference_conf_not_specified">Le mot de passe de confirmation n\'a pas été saisi.</string>
         <string name="msgs_password_input_preference_less_than_min_length">Le mot de passe doit comporter au moins %s caractères</string>
     <!-- msgs_ntstatus -->
-        <string name="msgs_ntstatus_common_info" formatted="false">Utilisateur=%s, Etat du réseau=0x%x, Serveur distant=%s, Nom du réseau=%s, Localisation du fichier=%s</string>
+        <string name="msgs_ntstatus_common_info">Utilisateur=%1$s, Etat du réseau=0x%2$x, Serveur distant=%3$s, Nom du réseau=%4$s, Localisation du fichier=%5$s</string>
         <string name="msgs_ntstatus_unsuccesful">Un dispositif relié au système ne fonctionne pas.</string>
         <string name="msgs_ntstatus_access_denied">L\'accès est refusé.</string>
         <string name="msgs_ntstatus_logon_failure_unknown_user_name_or_bad_password">Échec de connexion : nom d\'utilisateur inconnu ou mot de passe erroné.</string>
