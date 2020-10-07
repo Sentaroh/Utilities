@@ -81,6 +81,7 @@
         <string name="msgs_log_file_list_confirm_send_log_password_and_confirm_password_not_matched">パスワードと確認パスワードが一致していません。</string>
         <string name="msgs_log_file_list_confirm_send_log_send_password_title">ログファイルのパスワード送信</string>
         <string name="msgs_log_file_list_confirm_send_log_send_password_message">ログファイルのパスワードを開発者に送りますか？</string>
+        <string name="msgs_log_file_list_confirm_send_log_send_password_button_title">ZIPファイルパスワードを送信</string>
         <string name="msgs_log_file_list_confirm_send_log_send">送信</string>
         <string name="msgs_log_file_list_confirm_send_log_preview">内容表示</string>
         <string name="msgs_log_file_list_confirm_send_log_msg">ログを開発者にE-Mailを使用して送信します。\n１．内容表示ボタンを押しtemp_log.txtを表示し、内容を確認してください（テキストファイルを表示するためのアプリケーション選択の画面が表示されたら、アプリケーションを表示してください）\n２．送信する内容を確認したら、送信ボタンを押しE-Mail選択ダイアログでE-Mailを選択\n３. E-Mail本文に問題/疑問を入力し、E-Mailを送信してください。（ログはzipに圧縮し、添付ファイルになっています）</string>

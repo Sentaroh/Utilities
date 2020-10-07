@@ -81,6 +81,7 @@
         <string name="msgs_log_file_list_confirm_send_log_password_and_confirm_password_not_matched">Password and confirmation password do not match.</string>
         <string name="msgs_log_file_list_confirm_send_log_send_password_title">Sending log file passwords</string>
         <string name="msgs_log_file_list_confirm_send_log_send_password_message">Do you want to send the log file password to the developer?</string>
+        <string name="msgs_log_file_list_confirm_send_log_send_password_button_title">Send ZIP file password</string>
         <string name="msgs_log_file_list_confirm_send_log_send">Send</string>
         <string name="msgs_log_file_list_confirm_send_log_preview">Preview</string>
         <string name="msgs_log_file_list_confirm_send_log_msg">Send log file to the developer by E-Mail.\n1.Press the Preview button to see the temp_log.txt, then please check the contents.(If the selection screen of the application is displayed, select the FAVORIT application to display the text file.)\n2.If you agree to the file contents to be sent, select the E-Mail in EMail selection dialog.\n3.Please enter a problem/question in the E-Mail body and send an E-Mail (the log file is compressed into zip and sent as an attachement).</string>

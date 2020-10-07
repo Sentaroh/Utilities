@@ -64,6 +64,13 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/msgs_log_file_list_confirm_send_log_preview" />
 
+    <Button
+        android:id="@+id/confirm_send_log_dlg_send_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/msgs_log_file_list_confirm_send_log_send_password_button_title" />
+
     <include layout="@layout/confirm_send_log_dlg_ok_cancel" />
 
 </LinearLayout>

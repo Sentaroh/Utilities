@@ -81,6 +81,7 @@
         <string name="msgs_log_file_list_confirm_send_log_password_and_confirm_password_not_matched">Пароль и пароль проверки не совпадают.</string>
         <string name="msgs_log_file_list_confirm_send_log_send_password_title">Отправка паролей к лог-файлам</string>
         <string name="msgs_log_file_list_confirm_send_log_send_password_message">Вы хотите отправить разработчику пароль к лог-файлу?</string>
+        <string name="msgs_log_file_list_confirm_send_log_send_password_button_title">Отправить пароль к файлу ZIP</string>
         <string name="msgs_log_file_list_confirm_send_log_send">Отправить</string>
         <string name="msgs_log_file_list_confirm_send_log_preview">Предварительный просмотр</string>
         <string name="msgs_log_file_list_confirm_send_log_msg">Отправить лог-файл по электронной почте разработчику.\n1.Нажмите кнопку Предварительный просмотр, чтобы увидеть temp_log.txt, а затем, пожалуйста, проверьте содержание. (Если отображается экран выбора приложения, а затем выберите FAVORIT приложение для отображения текстового файла) \n2.Когда вы закончите читать файл для отправки, а затем выберите электронную почту в EMail диалог выбора.\n3.Пожалуйста, введите проблему / вопросы в электронную почту тела и отправить электронную почту. (лог-файл прилагается с сжатыми в zip и ).</string>
