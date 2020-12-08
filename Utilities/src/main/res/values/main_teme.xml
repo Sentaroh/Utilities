@@ -22,6 +22,7 @@
     </style>
 
     <style name="MainBlack" parent="Base.Theme.AppCompat">
+        <item name="android:spinnerStyle">@style/spinner_normal</item>
         <item name="colorPrimary">@color/colorPrimaryBlack</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkBlack</item>
         <!--<item name="colorAccent">@color/colorAccentBlack</item>-->
