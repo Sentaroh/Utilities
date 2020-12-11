@@ -4,7 +4,6 @@
 
 - Clone or download from Github.
 - Open Android Studio.
-- Build->Select build variant->select "relase"
 - Rebuild(Buid->Rebuild project)
 
 # License information
