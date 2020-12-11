@@ -2,8 +2,10 @@
 
 # How to Build
 
-- Clone from Github(https://github.com/Sentaroh/Utilities.git) using Android Studio 3.0 or higher(VCS-> Checkout from Version Control-> GitHub).
-- Build by Android Studio.
+- Clone or download from Github.
+- Open Android Studio.
+- Build->Select build variant->select "relase"
+- Rebuild(Buid->Rebuild project)
 
 # License information
 
