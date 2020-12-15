@@ -74,7 +74,11 @@ public class SystemInfo {
 
         out.addAll(listsMountPoint());
 
+        out.add("usbUuidList=" + safMgr.getUsbUuidList());
+
         out.add("getSdcardRootPath=" + safMgr.getSdcardRootPath());
+
+        out.add("getUsbRootPath=" + safMgr.getUsbRootPath());
 
         out.add("getExternalStorageDirectory="+LocalMountPoint.getExternalStorageDir());
 

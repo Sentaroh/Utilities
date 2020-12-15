@@ -62,6 +62,16 @@ public class SafManager {
 
     private static Logger slf4jLog = LoggerFactory.getLogger(SafManager.class);
 
+    private ArrayList<String>usbUuidList=new ArrayList<String>();
+
+    public void setUsbUuidList(ArrayList<String> list) {
+        usbUuidList=list;
+    }
+
+    public ArrayList<String> getUsbUuidList() {
+        return usbUuidList;
+    }
+
     private void putDebugMessage(String msg) {
         slf4jLog.debug(msg);
     }
@@ -497,9 +507,20 @@ public class SafManager {
 //                String path = (String) getPath.invoke(volume);
                 putInfoMessage("getSdcardUuidFromStorageManager uuid found="+uuid+", Label="+label);
 //                if (uuid!=null && (!primary && !label.toLowerCase().contains("usb"))) {
-                if (uuid!=null && (removable && !label.toLowerCase().contains("usb"))) {
-                    uuids.add(uuid);
-                    putInfoMessage("getSdcardUuidFromStorageManager added="+uuid);
+                if (uuid!=null && removable) {
+                    if (!label.toLowerCase().contains("usb")) {
+                        boolean found=false;
+                        for(String item:usbUuidList) {
+                            if (uuid.equals(item)) {
+                                found=true;
+                                break;
+                            }
+                        }
+                        if (!found) {
+                            uuids.add(uuid);
+                            putInfoMessage("getSdcardUuidFromStorageManager added="+uuid);
+                        }
+                    }
                 }
             }
         } catch (ClassCastException e) {
@@ -558,7 +579,7 @@ public class SafManager {
             Object[] volumeList = (Object[]) getVolumeList.invoke(sm);
             for (Object volume : volumeList) {
 //                Method getPath = volume.getClass().getDeclaredMethod("getPath");
-//	            Method isRemovable = volume.getClass().getDeclaredMethod("isRemovable");
+	            Method isRemovable = volume.getClass().getDeclaredMethod("isRemovable");
                 Method isPrimary = volume.getClass().getDeclaredMethod("isPrimary");
                 Method getUuid = volume.getClass().getDeclaredMethod("getUuid");
                 Method toString = volume.getClass().getDeclaredMethod("toString");
@@ -566,11 +587,22 @@ public class SafManager {
                 Method getLabel = volume.getClass().getDeclaredMethod("getUserLabel");
                 String uuid=(String) getUuid.invoke(volume);
                 String label=(String) getLabel.invoke(volume);
+                boolean removable=(boolean)isRemovable.invoke(volume);
 //                String path = (String) getPath.invoke(volume);
                 putInfoMessage("getUsbUuidFromStorageManager uuid found="+uuid+", Label="+label);
-                if (uuid!=null && ( label.toLowerCase().contains("usb") )) {
-                    uuids.add(uuid);
-                    putInfoMessage("getUsbUuidFromStorageManager added="+uuid);
+                if (uuid!=null && removable) {
+                    if (label.toLowerCase().contains("usb")) {
+                        uuids.add(uuid);
+                        putInfoMessage("getSdcardUuidFromStorageManager added="+uuid);
+                    } else {
+                        for(String item:usbUuidList) {
+                            if (uuid.equals(item)) {
+                                uuids.add(uuid);
+                                putInfoMessage("getSdcardUuidFromStorageManager added="+uuid);
+                                break;
+                            }
+                        }
+                    }
                 }
             }
         } catch (ClassCastException e) {
