@@ -513,6 +513,7 @@ public class SafManager {
                         for(String item:usbUuidList) {
                             if (uuid.equals(item)) {
                                 found=true;
+                                putInfoMessage("getSdcardUuidFromStorageManager SDCARD UUID ignored because USB UUID specified, UUID="+uuid);
                                 break;
                             }
                         }
@@ -593,12 +594,12 @@ public class SafManager {
                 if (uuid!=null && removable) {
                     if (label.toLowerCase().contains("usb")) {
                         uuids.add(uuid);
-                        putInfoMessage("getSdcardUuidFromStorageManager added="+uuid);
+                        putInfoMessage("getUsbUuidFromStorageManager added="+uuid);
                     } else {
                         for(String item:usbUuidList) {
                             if (uuid.equals(item)) {
                                 uuids.add(uuid);
-                                putInfoMessage("getSdcardUuidFromStorageManager added="+uuid);
+                                putInfoMessage("getUsbUuidFromStorageManager added by USB UUID list UUID="+uuid);
                                 break;
                             }
                         }
