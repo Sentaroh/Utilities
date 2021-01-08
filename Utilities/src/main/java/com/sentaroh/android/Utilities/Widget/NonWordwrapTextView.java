@@ -113,8 +113,7 @@ public class NonWordwrapTextView extends TextView {
         if (mDebugEnabled) log.info("setText length="+text.length()+", type="+type.toString()+", text="+text);
     }
 
-    @Override
-    public CharSequence getText() {
+    public CharSequence getOriginalText() {
         return mOrgText;
     }
 

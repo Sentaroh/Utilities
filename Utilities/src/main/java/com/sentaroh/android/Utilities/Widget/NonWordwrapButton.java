@@ -81,7 +81,7 @@ public class NonWordwrapButton extends Button {
         if (mDebugEnabled) log.info("onLayout changed="+changed+", left="+left+", top="+top+", right="+right+", bottom="+bottom);
         if (!isWordWrapEnabled() && (getMaxLines() > 1 || getMaxLines() < 0)) {
             super.setText(mSpannableSplitText, mOrgBufferType);
-            if (mDebugEnabled) log.info("onLayout setText issued");
+            if (mDebugEnabled) log.info("onLayout setText issued, length="+mSpannableSplitText.length());
         }
     }
 
@@ -92,6 +92,7 @@ public class NonWordwrapButton extends Button {
         if (!isWordWrapEnabled() && (getMaxLines() > 1 || getMaxLines() < 0)) {
             mSpannableSplitText=buildSplitText(MeasureSpec.getSize(w), MeasureSpec.getSize(h));
             super.setText(mSpannableSplitText, BufferType.SPANNABLE);//mOrgBufferType);
+            if (mDebugEnabled) log.info("onMeasure setText issued, length="+mSpannableSplitText.length());
             super.onMeasure(w, h);
         } else {
             super.onMeasure(w, h);
@@ -113,8 +114,7 @@ public class NonWordwrapButton extends Button {
         if (mDebugEnabled) log.info("setText length="+text.length()+", type="+type.toString()+", text="+text);
     }
 
-    @Override
-    public CharSequence getText() {
+    public CharSequence getOriginalText() {
         return mOrgText;
     }
 
