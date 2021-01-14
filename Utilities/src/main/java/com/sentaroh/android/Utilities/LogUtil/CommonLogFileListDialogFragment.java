@@ -1075,7 +1075,10 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
 //				    intent.setType("message/rfc822");  
 //				    intent.setType("text/plain");
 				    intent.setType("application/zip");
-				    intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(lf)); 
+
+                    Uri file_uri=createLogFileUri(mContext, lf.getPath());
+                    intent.putExtra(Intent.EXTRA_STREAM, file_uri);//Uri.fromFile(lf));
+
                     try {
                         mFragment.getActivity().startActivity(intent);
                     } catch (Exception e) {
