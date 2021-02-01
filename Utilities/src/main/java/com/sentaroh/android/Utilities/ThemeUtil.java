@@ -22,6 +22,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 */
 package com.sentaroh.android.Utilities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -152,6 +153,14 @@ public class ThemeUtil {
 	}
 
     public static boolean isLightThemeUsed(Context a) {
+        TypedValue outValue = new TypedValue();
+        boolean rc=a.getTheme().resolveAttribute(R.attr.AppUsedTheme, outValue, true);
+        boolean result=false;
+        if (outValue.data==THEME_LIGHT) result=true;
+        return result;
+    }
+
+    public static boolean isLightThemeUsed(Activity a) {
         TypedValue outValue = new TypedValue();
         boolean rc=a.getTheme().resolveAttribute(R.attr.AppUsedTheme, outValue, true);
         boolean result=false;
