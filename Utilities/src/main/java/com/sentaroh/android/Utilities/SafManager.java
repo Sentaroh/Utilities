@@ -749,7 +749,7 @@ public class SafManager {
                                 if (slf4jLog.isDebugEnabled()) putDebugMessage("Directory was created name="+c_dir+", result="+nextDocument);
 //                			Log.v("","saf="+document.getMsgArea());
                             } else {
-                                nextDocument = document.createFile("", parts[i]);
+                                nextDocument = document.createFile(client, "", parts[i]);
                                 if (slf4jLog.isDebugEnabled()) putDebugMessage("File was created name="+parts[i]+", result="+nextDocument);
                             }
                         }

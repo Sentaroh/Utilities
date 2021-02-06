@@ -108,6 +108,7 @@ public class SafFile {
     }
 
     public SafFile createFile(String mimeType, String displayName) {
+        long b_time=System.currentTimeMillis();
         Uri result=null;
         try {
             result=DocumentsContract.createDocument(mContext.getContentResolver(), mUri, mimeType, displayName);
@@ -122,7 +123,39 @@ public class SafFile {
         }
         SafFile saf=null;
         if (result != null) saf=new SafFile(mContext, result);
+        if (slf4jLog.isDebugEnabled()) slf4jLog.debug("createFile elapsed="+(System.currentTimeMillis()-b_time));
         return saf;
+    }
+
+    public SafFile createFile(ContentProviderClient cpc, String mimeType, String displayName) {
+        long b_time=System.currentTimeMillis();
+        Uri result=null;
+        try {
+            result=createDocument(cpc,  mUri, mimeType, displayName);
+//            putDebugMessage("SafFile#createFile result="+result);
+        } catch (Exception e) {
+            StackTraceElement[] st=e.getStackTrace();
+            String stm="";
+            for (int i=0;i<st.length;i++) {
+                stm+="\n at "+st[i].getClassName()+"."+ st[i].getMethodName()+"("+st[i].getFileName()+ ":"+st[i].getLineNumber()+")";
+            }
+            putErrorMessage("SafFile#createFile Failed to create file, Error="+e.getMessage()+stm);
+        }
+        SafFile saf=null;
+        if (result != null) saf=new SafFile(mContext, result);
+        if (slf4jLog.isDebugEnabled()) slf4jLog.debug("createFile elapsed="+(System.currentTimeMillis()-b_time));
+        return saf;
+    }
+
+    private static Uri createDocument(ContentProviderClient client, Uri parentDocumentUri,
+                                      String mimeType, String displayName) throws RemoteException {
+        final Bundle in = new Bundle();
+        in.putParcelable(EXTRA_URI, parentDocumentUri);
+        in.putString(DocumentsContract.Document.COLUMN_MIME_TYPE, mimeType);
+        in.putString(DocumentsContract.Document.COLUMN_DISPLAY_NAME, displayName);
+
+        final Bundle out = client.call(METHOD_CREATE_DOCUMENT, null, in);
+        return out.getParcelable(EXTRA_URI);
     }
 
     public SafFile createDirectory(String displayName) {
