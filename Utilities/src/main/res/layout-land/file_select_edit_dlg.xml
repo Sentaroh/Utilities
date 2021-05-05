@@ -67,7 +67,7 @@
     <include layout="@layout/divider_line1" />
 
     <ListView
-        android:id="@+id/android:list"
+        android:id="@+id/file_select_edit_dlg_listview"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="1.00"

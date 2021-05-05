@@ -578,7 +578,7 @@ public class FileSelectDialogFragment extends DialogFragment {
 //		ll_mp.setVisibility(LinearLayout.GONE);
 		
 	//	final TextView v_spacer=(TextView)mDialog.findViewById(R.id.file_select_edit_dlg_spacer);
-		mTreeFileListView = (ListView) mDialog.findViewById(android.R.id.list);
+		mTreeFileListView = (ListView) mDialog.findViewById(R.id.file_select_edit_dlg_listview);
 		final CustomTextView dir_name = (CustomTextView) mDialog.findViewById(R.id.file_select_edit_dlg_dir_name);
 //		dir_name.setTextColor(mThemeColorList.text_color_primary);
 		final EditText file_name = (EditText) mDialog.findViewById(R.id.file_select_edit_dlg_file_name);

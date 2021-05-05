@@ -35,7 +35,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Locale;
 import com.sentaroh.android.Utilities.MiscUtil;
-import com.sentaroh.android.Utilities.LocalMountPoint;
 import com.sentaroh.android.Utilities.NotifyEvent;
 import com.sentaroh.android.Utilities.NotifyEvent.NotifyEventListener;
 import com.sentaroh.android.Utilities.R;
@@ -47,7 +46,6 @@ import com.sentaroh.android.Utilities.TreeFilelist.TreeFilelistItem;
 import com.sentaroh.android.Utilities.Widget.CustomSpinnerAdapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.os.Handler;
@@ -64,7 +62,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.TextView;
 
 public class DirectorySelectPreference extends DialogPreference{
 	private final static boolean DEBUG_ENABLE=false;
@@ -329,7 +326,7 @@ public class DirectorySelectPreference extends DialogPreference{
 //        else mLocalMountPointSpinner.setEnabled(false);
 	    
 	//	final TextView v_spacer=(TextView)mDialog.findViewById(R.id.file_select_edit_dlg_spacer);
-		mTreeFileListView = (ListView) file_select_view.findViewById(android.R.id.list);
+		mTreeFileListView = (ListView) file_select_view.findViewById(R.id.file_select_edit_dlg_listview);
 		final EditText filename = (EditText) file_select_view.findViewById(R.id.directory_select_preference_filename);
 	//    if (dirs.size()<=2)	v_spacer.setVisibility(TextView.VISIBLE);
 		
