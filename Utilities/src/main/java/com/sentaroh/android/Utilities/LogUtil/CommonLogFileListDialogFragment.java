@@ -1017,8 +1017,16 @@ public class CommonLogFileListDialogFragment extends DialogFragment{
     private void showLogFile(CommonLogFileListAdapter lfm_adapter, int pos) {
 		Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		intent.setDataAndType(Uri.parse("file://"+lfm_adapter.getItem(pos).log_file_path), "text/plain");
-		
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//        if (Build.VERSION.SDK_INT>=23) {
+//            Uri uri= FileProvider.getUriForFile(mContext, mGp.getLogFileProviderAuth(), new File(lfm_adapter.getItem(pos).log_file_path));
+//            intent.setDataAndType(uri, "text/plain");
+//        } else {
+//            intent.setDataAndType(Uri.parse("file://"+lfm_adapter.getItem(pos).log_file_path), "text/plain");
+//        }
+        Uri uri= FileProvider.getUriForFile(mContext, mGp.getLogFileProviderAuth(), new File(lfm_adapter.getItem(pos).log_file_path));
+        intent.setDataAndType(uri, "text/plain");
+
 		try {
 			startActivity(intent);
 		} catch (ActivityNotFoundException e) {

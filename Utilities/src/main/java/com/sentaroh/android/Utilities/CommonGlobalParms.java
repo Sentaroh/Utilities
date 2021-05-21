@@ -61,6 +61,11 @@ public class CommonGlobalParms {
 	public void setLogFileName(String p) {log_file_name=p;}
 	public String getLogFileName() {return log_file_name;}
 
+	private String log_auth_id="";
+	public void setLogFileProviderAuth(String auth_id) {log_auth_id=auth_id;}
+
+    public String getLogFileProviderAuth() {return log_auth_id;}
+
 	private String appl_tag="";
 	public void setApplicationTag(String p) {appl_tag=p;}
 	public String getApplicationTag() {return appl_tag;}
