@@ -29,6 +29,6 @@ import android.content.Context;
 
 public interface CallBackListener extends EventListener{
 	
-	public boolean onCallBack(Context c, Object o1, Object[] o2) ;
+	public boolean onCallBack(Context c, boolean positive, Object[] o2) ;
 
 }
